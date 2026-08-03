@@ -1,0 +1,7 @@
+{
+  "spec": "common",
+  "specVersion": "1.0.0",
+  "id": "not a uri",
+  "revision": "rev-1",
+  "title": "id must be an absolute URI"
+}

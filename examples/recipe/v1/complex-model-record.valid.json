@@ -1,0 +1,75 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/dragon-bust-as-painted",
+  "revision": "rev-2026-08-02",
+  "title": "Dragon bust — as-painted record",
+  "description": "Recorded while painting so the exact paints and working mixtures can be resumed later.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["workflow", "record", "display-model"],
+  "target": {
+    "kind": "model",
+    "description": "Large resin dragon bust",
+    "substrate": "resin"
+  },
+  "paints": [
+    { "ref": "black-red", "manufacturer": "Example Paints", "name": "Black Red" },
+    { "ref": "crimson", "manufacturer": "Example Paints", "name": "Deep Crimson" },
+    { "ref": "orange", "manufacturer": "Example Paints", "name": "Ember Orange" },
+    { "ref": "ivory", "manufacturer": "Example Paints", "name": "Warm Ivory" },
+    {
+      "ref": "glaze-medium",
+      "manufacturer": "Example Paints",
+      "name": "Acrylic Glaze Medium",
+      "kind": "medium",
+      "chemistry": "acrylic"
+    }
+  ],
+  "resources": [
+    { "name": "Wet palette", "kind": "tool" },
+    { "name": "Soft round brush", "kind": "tool", "specification": "Size 4" }
+  ],
+  "steps": [
+    {
+      "id": "scale-shadow",
+      "title": "Scale shadows",
+      "instruction": "Work Black Red into the lower half of each scale while the crimson layer remains slightly damp.",
+      "role": "shadow",
+      "technique": "wet blending",
+      "targetArea": "lower half of the neck scales",
+      "paintRefs": ["black-red", "crimson"],
+      "method": "brush",
+      "expectedResult": "A soft transition from near-black red to crimson."
+    },
+    {
+      "id": "warm-transition",
+      "title": "Warm transition",
+      "instruction": "Glaze the upward-facing scale surfaces with the recorded crimson and orange mixture.",
+      "role": "glaze",
+      "targetArea": "upper half of the neck scales",
+      "mix": [
+        { "paint": "crimson", "parts": 4 },
+        { "paint": "orange", "parts": 1 },
+        { "paint": "glaze-medium", "parts": 5 }
+      ],
+      "mixNote": "4 drops crimson, 1 drop orange, 5 drops glaze medium; add one wet brush-tip of water.",
+      "method": "brush",
+      "coats": 3,
+      "dryingNotes": "Let each glaze lose its surface sheen before applying the next."
+    },
+    {
+      "id": "scale-points",
+      "title": "Scale points",
+      "instruction": "Add tiny point highlights using the orange and ivory mixture.",
+      "role": "spot_highlight",
+      "targetArea": "tips of the most exposed scales",
+      "mix": [
+        { "paint": "orange", "parts": 2 },
+        { "paint": "ivory", "parts": 1 }
+      ],
+      "mixNote": "2:1 orange to ivory; this was brighter than the original plan.",
+      "method": "brush"
+    }
+  ]
+}

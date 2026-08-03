@@ -1,0 +1,78 @@
+{
+  "$schema": "https://brushcodex.com/schemas/project/v1/project.schema.json",
+  "spec": "project",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/projects/marine-squad",
+  "revision": "rev-2026-07-15T13-30-00Z-bb22cc",
+  "title": "Marine squad — rusted armour",
+  "description": "Exercises every member (incl. a private journal entry) for round-trip and shared-profile coverage.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T13:30:00Z",
+  "language": "en",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["squad", "example"],
+  "links": {
+    "source": "https://example.org/tutorials/rusted-armour",
+    "forkOrigin": "urn:uuid:00000000-0000-4000-8000-0000000000aa"
+  },
+  "summary": "A five-model squad in the rusted-armour scheme.",
+  "status": "active",
+  "progress": 40,
+  "subjects": [
+    {
+      "ref": "sgt",
+      "name": "Sergeant",
+      "status": "in_progress",
+      "progress": 60,
+      "stages": [
+        { "name": "Basecoat", "status": "done" },
+        { "name": "Weathering", "status": "in_progress" }
+      ],
+      "checklist": [
+        { "task": "Seal after weathering", "done": false },
+        { "task": "Base rim", "done": false }
+      ]
+    },
+    { "name": "Trooper A", "status": "not_started" }
+  ],
+  "recipeRefs": [
+    { "id": "urn:brushcodex:recipe:rusted-armour:v1", "title": "Rusted power armour" }
+  ],
+  "paletteRefs": [{ "id": "https://example.org/brushcodex/palettes/rusted-steel" }],
+  "substitutions": [
+    {
+      "original": { "manufacturer": "Some Brand", "name": "Steel" },
+      "substitute": { "name": "Owned cold steel" },
+      "type": "mathematical",
+      "note": "Nearest owned color by CIEDE2000 — a color-distance claim only."
+    }
+  ],
+  "journal": [
+    {
+      "at": "2026-07-05T18:00:00Z",
+      "body": "Airbrushed the base metal on the whole squad.",
+      "minutesSpent": 40,
+      "subjectRef": "sgt"
+    },
+    {
+      "at": "2026-07-08T20:00:00Z",
+      "body": "Personal note: my custom rust mix ratio.",
+      "visibility": "private"
+    }
+  ],
+  "results": [
+    {
+      "url": "https://example.org/media/sgt-wip.jpg",
+      "kind": "image",
+      "caption": "Sergeant WIP",
+      "license": { "spdxId": "CC-BY-4.0" }
+    }
+  ],
+  "toolsUsed": [
+    { "name": "Airbrush", "kind": "tool" },
+    { "name": "Weathering sponge", "kind": "material" }
+  ],
+  "extensions": {
+    "com.example.tool:board": { "column": "in-progress" }
+  }
+}

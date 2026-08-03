@@ -1,0 +1,169 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/recipes/rusty-power-armour",
+  "revision": "rev-2026-07-15T11-00-00Z-9f8e7d",
+  "title": "Rusty power armour",
+  "description": "A weathered metal scheme exercising every recipe member for round-trip coverage.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T11:00:00Z",
+  "language": "en",
+  "authors": [{ "name": "A. Painter", "role": "author" }],
+  "attribution": "Based on a scheme taught at the Tuesday club night; posted with the group's blessing.",
+  "license": { "spdxId": "CC-BY-4.0", "url": "https://creativecommons.org/licenses/by/4.0/" },
+  "links": {
+    "forkOrigin": "urn:uuid:00000000-0000-4000-8000-0000000000aa"
+  },
+  "tags": ["metal", "weathering", "example"],
+  "summary": "Chipped, rusted power armour over a dark metal base.",
+  "difficulty": "intermediate",
+  "estimatedActiveMinutes": 90,
+  "dryingNotes": "Allow washes to cure fully before edge highlighting.",
+  "target": {
+    "kind": "miniature",
+    "description": "28mm heavy infantry",
+    "scale": { "system": "nominal_mm", "value": "28" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    {
+      "ref": "steel",
+      "manufacturer": "Some Brand",
+      "range": "Metal Color",
+      "name": "Steel",
+      "code": "SB-701",
+      "chemistry": "acrylic",
+      "color": { "hex": "#8a8d90" },
+      "provenance": [
+        {
+          "sourceType": "manufacturer_digital_swatch",
+          "confidence": "medium",
+          "note": "Screen swatch; approximate, not a physical measurement."
+        }
+      ]
+    },
+    { "ref": "rust", "manufacturer": "Some Brand", "name": "Rust Wash", "kind": "paint" },
+    { "ref": "bone", "name": "Bonewhite" },
+    {
+      "ref": "varnish",
+      "manufacturer": "Some Brand",
+      "name": "Matt Varnish",
+      "kind": "varnish",
+      "chemistry": "acrylic"
+    }
+  ],
+  "resources": [
+    { "name": "Airbrush", "kind": "tool", "specification": "0.3 mm nozzle" },
+    { "name": "Detail brush", "kind": "tool", "specification": "Size 1 sable", "optional": true },
+    {
+      "name": "Makeup sponge",
+      "kind": "material",
+      "quantity": "a torn-off piece",
+      "note": "For chipping the edges."
+    },
+    { "name": "Odourless thinner", "kind": "material" }
+  ],
+  "techniqueRefs": [
+    {
+      "id": "https://example.org/brushcodex/techniques/sponge-chipping",
+      "title": "Sponge chipping"
+    }
+  ],
+  "media": [
+    {
+      "id": "tutorial",
+      "url": "https://example.org/videos/weathered-armour-tutorial",
+      "kind": "video",
+      "relation": "source",
+      "caption": "The tutorial these steps were transcribed from",
+      "creator": { "name": "Example Painting Academy", "url": "https://example.org/academy" },
+      "license": { "spdxId": "NOASSERTION" },
+      "rightsNote": "Linked with the creator's permission; the video itself is not covered by this recipe's licence."
+    },
+    {
+      "id": "finished",
+      "url": "https://example.org/media/finished-model.jpg",
+      "kind": "image",
+      "relation": "result",
+      "caption": "The finished model",
+      "license": { "spdxId": "CC-BY-4.0" }
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Base metal",
+      "instruction": "Airbrush the armour with Steel.",
+      "role": "basecoat",
+      "targetArea": "armour plates",
+      "paintRefs": ["steel"],
+      "method": "airbrush",
+      "coats": 2,
+      "thinning": "2:1 paint:thinner",
+      "expectedResult": "An even cold steel base.",
+      "source": {
+        "media": "tutorial",
+        "startSeconds": 60,
+        "endSeconds": 95,
+        "label": "1:00-1:35"
+      },
+      "media": [
+        {
+          "url": "https://example.org/media/base-metal.jpg",
+          "kind": "image",
+          "caption": "After the steel basecoat",
+          "license": { "spdxId": "CC-BY-4.0" },
+          "rightsNote": "Photographed by the author."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "instruction": "Apply Rust Wash into recesses and let it pool.",
+      "role": "wash",
+      "paintRefs": ["rust"],
+      "mixNote": "About one part Rust Wash to four parts water — water is not a declared paint, so this mixture has no structured form.",
+      "warnings": ["Do not flood flat plates; keep it in recesses."],
+      "alternatives": [
+        {
+          "type": "mathematical",
+          "paint": "bone",
+          "note": "Nearest owned color by CIEDE2000 — a color-distance claim only."
+        },
+        {
+          "type": "verified_practical",
+          "paintRef": { "manufacturer": "Some Brand", "name": "Typhus-style Corrosion" },
+          "note": "Verified against a physical test swatch."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "instruction": "Edge highlight chipped areas with a steel/bone mix.",
+      "role": "edge_highlight",
+      "technique": "edge highlighting",
+      "source": { "media": "tutorial", "startSeconds": 372, "label": "6:12" },
+      "mix": [
+        { "paint": "steel", "parts": 3 },
+        { "paint": "bone", "parts": 1 }
+      ],
+      "mixNote": "3:1 Steel to Bonewhite, thinned until it flows off the edge of the brush.",
+      "method": "brush"
+    },
+    {
+      "id": "s4",
+      "instruction": "Seal the model with matt varnish once everything is cured.",
+      "role": "varnish",
+      "technique": "spray varnish",
+      "paintRefs": ["varnish"],
+      "method": "airbrush",
+      "source": { "startSeconds": 742.5, "label": "12:22" }
+    }
+  ],
+  "extensions": {
+    "com.example.tool:chipMap": {
+      "regions": [{ "id": "r1", "chips": [{ "x": 0.3, "y": 0.7 }] }]
+    }
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/project/v1/project.schema.json",
+  "title": "BrushCodex Project v1 (draft)",
+  "description": "A portable painting project: one or more miniatures/subprojects with stages and checklists, selected Painting Workflow ('recipe') and Palette documents, accepted substitutions (classified), a journal with time logs, results, and tools used. Private journal entries can be omitted from a shared export. Archive is a non-destructive status. Embeds the Common document envelope; links.source records source material or context and links.forkOrigin a personal fork. DRAFT: not frozen; see specs/project/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "spec": { "const": "project" },
+        "summary": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["active", "on_hold", "completed", "archived"],
+          "description": "'archived' is a non-destructive state; the project is retained, not deleted."
+        },
+        "progress": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall completion percentage."
+        },
+        "subjects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/subject" },
+          "description": "The miniatures or subprojects in this project."
+        },
+        "recipeRefs": {
+          "type": "array",
+          "items": {
+        "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+      },
+          "description": "Selected Painting Workflow documents using the 'recipe' spec (by stable id URI)."
+        },
+        "paletteRefs": {
+          "type": "array",
+          "items": {
+        "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+      },
+          "description": "Selected palette documents (by stable id URI)."
+        },
+        "substitutions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/substitution" }
+        },
+        "journal": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/journalEntry" }
+        },
+        "results": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mediaRef" }
+        },
+        "toolsUsed": {
+          "type": "array",
+          "items": {
+            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "colorValue": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+    },
+    "paintRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "enum": ["not_started", "in_progress", "done"] }
+      }
+    },
+    "checkItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task"],
+      "properties": {
+        "task": { "type": "string", "minLength": 1 },
+        "done": { "type": "boolean" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-local anchor journal entries can point to."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "in_progress", "blocked", "done"]
+        },
+        "progress": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "stages": { "type": "array", "items": { "$ref": "#/$defs/stage" } },
+        "checklist": { "type": "array", "items": { "$ref": "#/$defs/checkItem" } },
+        "note": { "type": "string" }
+      }
+    },
+    "substitution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["original", "substitute"],
+      "description": "An accepted paint substitution, classified so a mathematical match never masquerades as a verified practical one.",
+      "properties": {
+        "original": { "$ref": "#/$defs/paintRef" },
+        "substitute": { "$ref": "#/$defs/paintRef" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "authored",
+            "manufacturer_published",
+            "mathematical",
+            "community_tested",
+            "verified_practical"
+          ]
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "journalEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body"],
+      "properties": {
+        "at": { "type": "string", "format": "date-time" },
+        "body": { "type": "string", "minLength": 1 },
+        "minutesSpent": { "type": "number", "minimum": 0 },
+        "subjectRef": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor into subjects[].ref this entry is about."
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["shareable", "private"],
+          "description": "Default shareable. A 'private' entry is omitted from a shared export profile."
+        }
+      }
+    },
+    "mediaRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaRef"
+    }
+  }
+}

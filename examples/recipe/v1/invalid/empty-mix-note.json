@@ -1,0 +1,13 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0117",
+  "revision": "rev-1",
+  "title": "An empty mix note describes no mixture at all",
+  "steps": [
+    {
+      "instruction": "Basecoat the model.",
+      "mixNote": ""
+    }
+  ]
+}

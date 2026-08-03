@@ -1,0 +1,65 @@
+{
+  "$schema": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
+  "spec": "palette",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/palettes/rusted-steel",
+  "revision": "rev-2026-07-15T12-00-00Z-abc123",
+  "title": "Rusted steel palette",
+  "description": "Every optional member exercised for round-trip coverage.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T12:00:00Z",
+  "language": "en",
+  "authors": [{ "name": "A. Painter", "role": "author" }],
+  "license": { "spdxId": "CC-BY-4.0" },
+  "tags": ["metal", "weathering", "example"],
+  "summary": "Cold steel base with warm rust accents.",
+  "intent": "cold steel with warm rust",
+  "target": { "kind": "miniature", "description": "28mm heavy infantry" },
+  "entries": [
+    {
+      "ref": "steel",
+      "name": "Base steel",
+      "role": "basecoat",
+      "paint": {
+        "manufacturer": "Some Brand",
+        "range": "Metal Color",
+        "name": "Steel",
+        "code": "SB-701",
+        "color": { "hex": "#8a8d90" },
+        "provenance": [
+          {
+            "sourceType": "manufacturer_digital_swatch",
+            "confidence": "medium",
+            "note": "Screen swatch; approximate."
+          }
+        ]
+      }
+    },
+    { "ref": "rust", "name": "Rust accent", "role": "weathering", "color": { "hex": "#8a4b2f" } },
+    {
+      "ref": "bone",
+      "name": "Chip highlight",
+      "role": "edge_highlight",
+      "paint": { "name": "Bonewhite" }
+    },
+    {
+      "name": "Chipped edge mix",
+      "role": "edge_highlight",
+      "mix": [
+        { "paint": "steel", "parts": 3 },
+        { "paint": "bone", "parts": 1 }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "type": "shadow_to_highlight",
+      "sequence": ["steel", "bone"],
+      "note": "Base to chip highlight."
+    },
+    { "type": "complementary", "sequence": ["steel", "rust"] }
+  ],
+  "extensions": {
+    "com.example.tool:swatchOrder": { "order": ["steel", "rust", "bone"] }
+  }
+}

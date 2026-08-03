@@ -1,0 +1,29 @@
+name: Standard change proposal
+description: Propose a portable format change backed by a concrete consumer need.
+title: "[Proposal]: "
+labels: [proposal]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Concrete consumer need
+      description: Name the operation that cannot work with the current representation.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current representation
+      description: Explain why existing fields, extensions, or a sibling document type are insufficient.
+    validations:
+      required: true
+  - type: dropdown
+    id: compatibility
+    attributes:
+      label: Expected compatibility
+      options:
+        - Editorial (patch)
+        - Backward-compatible addition (minor)
+        - Breaking change (major)
+    validations:
+      required: true

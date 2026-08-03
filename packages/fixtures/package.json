@@ -1,0 +1,40 @@
+{
+  "name": "@brushcodex/fixtures",
+  "version": "0.9.0-draft",
+  "private": true,
+  "type": "module",
+  "description": "The BrushCodex canonical example & conformance fixture corpus, as a self-contained package: a stable manifest plus a Node loader. Ships the corpus so consumers never read the source repo.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Brushcodex/standard.git",
+    "directory": "packages/fixtures"
+  },
+  "homepage": "https://brushcodex.com/standard",
+  "bugs": "https://github.com/Brushcodex/standard/issues",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./manifest": { "types": "./dist/manifest.d.ts", "import": "./dist/manifest.js" },
+    "./node": { "types": "./dist/node.d.ts", "import": "./dist/node.js" }
+  },
+  "files": ["dist", "corpus", "LICENSE", "NOTICE"],
+  "scripts": {
+    "generate": "node scripts/generate-manifest.mjs",
+    "build": "node scripts/generate-manifest.mjs && tsc -p tsconfig.build.json",
+    "prepack": "node scripts/generate-manifest.mjs && tsc -p tsconfig.build.json",
+    "pretest": "node scripts/generate-manifest.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@brushcodex/validator": "workspace:*",
+    "@types/node": "20.14.13",
+    "typescript": "5.5.4",
+    "vitest": "2.0.5"
+  }
+}

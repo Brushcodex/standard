@@ -1,0 +1,125 @@
+{
+  "description": "Maps each intentionally-invalid Recipe example to the constraint it must violate. The reference validator test suite asserts every file fails, and fails FOR THE STATED REASON. 'layer' is 'schema' when the JSON Schema (Common envelope + recipe, composed) rejects it, or 'semantic' when the document is schema-valid but violates a prose rule the reference validator enforces (e.g. anchor integrity).",
+  "cases": [
+    {
+      "file": "missing-steps.json",
+      "layer": "schema",
+      "reason": "The required 'steps' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "empty-step-instruction.json",
+      "layer": "schema",
+      "reason": "A step instruction is empty.",
+      "expect": { "keyword": "minLength", "instancePath": "/steps/0/instruction" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'recipe'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "paint-without-identity.json",
+      "layer": "schema",
+      "reason": "A paint reference carries neither manufacturer nor name.",
+      "expect": { "keyword": "anyOf", "instancePath": "/paints/0" }
+    },
+    {
+      "file": "unknown-step-role.json",
+      "layer": "schema",
+      "reason": "A step role is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/steps/0/role" }
+    },
+    {
+      "file": "unclassified-alternative.json",
+      "layer": "schema",
+      "reason": "An alternative is missing its required classification type.",
+      "expect": { "keyword": "required", "instancePath": "/steps/0/alternatives/0" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "dangling-paint-anchor.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but a step references a paint anchor no paints[] entry defines.",
+      "expect": { "rule": "paint-anchor-resolves" }
+    },
+    {
+      "file": "bad-paint-kind.json",
+      "layer": "schema",
+      "reason": "A paintRef kind is outside the controlled vocabulary (paint|medium|thinner|additive|varnish).",
+      "expect": { "keyword": "enum", "instancePath": "/paints/0/kind" }
+    },
+    {
+      "file": "bad-paint-chemistry.json",
+      "layer": "schema",
+      "reason": "A paintRef chemistry is outside the controlled vocabulary (acrylic|enamel|oil|lacquer|other).",
+      "expect": { "keyword": "enum", "instancePath": "/paints/0/chemistry" }
+    },
+    {
+      "file": "bad-target-substrate.json",
+      "layer": "schema",
+      "reason": "A target substrate is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/target/substrate" }
+    },
+    {
+      "file": "bad-scale-system.json",
+      "layer": "schema",
+      "reason": "A target scale system is outside the controlled vocabulary (nominal_mm|ratio).",
+      "expect": { "keyword": "enum", "instancePath": "/target/scale/system" }
+    },
+    {
+      "file": "bad-resource-kind.json",
+      "layer": "schema",
+      "reason": "A resource kind is outside the controlled vocabulary (tool|material).",
+      "expect": { "keyword": "enum", "instancePath": "/resources/0/kind" }
+    },
+    {
+      "file": "bad-media-relation.json",
+      "layer": "schema",
+      "reason": "A media relation is outside the controlled vocabulary (source|result|reference).",
+      "expect": { "keyword": "enum", "instancePath": "/media/0/relation" }
+    },
+    {
+      "file": "negative-citation-start.json",
+      "layer": "schema",
+      "reason": "A source citation starts before the beginning of the media item.",
+      "expect": { "keyword": "minimum", "instancePath": "/steps/0/source/startSeconds" }
+    },
+    {
+      "file": "dangling-media-anchor.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but a step cites a media anchor no media[] entry defines.",
+      "expect": { "rule": "media-anchor-resolves" }
+    },
+    {
+      "file": "ambiguous-media-citation.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but an anchorless citation is ambiguous when two media entries declare relation 'source'.",
+      "expect": { "rule": "media-citation-resolves" }
+    },
+    {
+      "file": "backwards-media-citation.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but the cited range ends before it starts.",
+      "expect": { "rule": "media-citation-range" }
+    },
+    {
+      "file": "duplicate-media-id.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two media entries claim the same document-local anchor, so a citation to it is not deterministic.",
+      "expect": { "rule": "media-id-unique" }
+    },
+    {
+      "file": "empty-mix-note.json",
+      "layer": "schema",
+      "reason": "A step mixNote is present but empty, which states no mixture; the member must be omitted instead.",
+      "expect": { "keyword": "minLength", "instancePath": "/steps/0/mixNote" }
+    }
+  ]
+}

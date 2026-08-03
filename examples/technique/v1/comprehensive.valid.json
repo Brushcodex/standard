@@ -1,0 +1,63 @@
+{
+  "$schema": "https://brushcodex.com/schemas/technique/v1/technique.schema.json",
+  "spec": "technique",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/techniques/edge-highlighting",
+  "revision": "rev-2026-07-15T12-30-00Z-def456",
+  "title": "Edge highlighting",
+  "description": "Every optional member exercised for round-trip coverage.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T12:30:00Z",
+  "language": "en",
+  "authors": [{ "name": "A. Painter", "role": "author" }],
+  "license": { "spdxId": "CC-BY-4.0" },
+  "tags": ["highlighting", "example"],
+  "purpose": "Define edges and raised areas with a fine, lighter line to increase contrast.",
+  "difficulty": "intermediate",
+  "prerequisites": ["Brush control", "Basecoating and layering"],
+  "tools": [
+    { "name": "Fine detail brush (size 1)", "kind": "tool" },
+    {
+      "name": "Wet palette",
+      "kind": "material",
+      "optional": true,
+      "note": "Keeps the paint workable."
+    }
+  ],
+  "steps": [
+    { "instruction": "Thin a lighter tone of the base color to a smooth, flowing consistency." },
+    {
+      "instruction": "Draw the brush along the topmost edges only, keeping the line fine.",
+      "note": "Less is more — build in passes."
+    }
+  ],
+  "parameters": [
+    {
+      "name": "Thinning",
+      "guidance": "Thin with medium until it flows off the brush",
+      "typicalValue": "~1:1"
+    }
+  ],
+  "suitablePaintClasses": ["acrylic", "contrast"],
+  "unsuitablePaintClasses": ["enamel"],
+  "commonProblems": [
+    {
+      "problem": "Lines look chalky or too wide",
+      "correction": "Thin further and use fewer, lighter passes."
+    }
+  ],
+  "safetyNotes": ["Wash brushes promptly; some pigments are staining."],
+  "citations": [
+    { "text": "Community edge-highlighting guide", "url": "https://example.org/guides/edge" }
+  ],
+  "variants": [
+    {
+      "name": "Two-tone edge",
+      "summary": "A midtone edge followed by a fine brightest edge.",
+      "note": "Higher contrast for display pieces."
+    }
+  ],
+  "extensions": {
+    "com.example.tool:brushProfile": { "recommendedSizes": [0, 1] }
+  }
+}

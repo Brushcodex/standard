@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "title": "BrushCodex Recipe v1 (draft)",
+  "description": "A Painting Workflow: an ordered, reproducible record of paints, mixtures, materials, techniques, and actions used or intended to be used to paint a subject. It may be a reusable scheme, a plan, an as-painted record, a derived workflow, or published guidance. 'recipe' is the stable technical spec name. Embeds the Common document envelope and remains valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/recipe/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["steps"],
+      "properties": {
+        "spec": { "const": "recipe" },
+        "summary": { "type": "string" },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "estimatedActiveMinutes": { "type": "integer", "minimum": 0 },
+        "dryingNotes": { "type": "string" },
+        "target": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+        },
+        "paints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/paintRef" },
+          "description": "Paints referenced by the workflow. Each may be a literal reference; a central catalogue id is optional."
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+          },
+          "description": "Tools and non-paint materials needed to reproduce the workflow (brushes, airbrush, wet palette, sponge, UV lamp, gloves, PVA, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where not represented as paints). Ordinary tools and scenic materials are never paintRefs."
+        },
+        "techniqueRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+          },
+          "description": "Soft references to Technique documents this workflow uses, by stable id URI. Consumers resolve them if held; an unresolved reference is not an error."
+        },
+        "media": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mediaRef" },
+          "description": "Media the workflow as a whole links: source work it was derived from (relation 'source'), a record of the finished result, or material consulted. A tutorial is one possible source, not a required origin. A step cites a moment in one of these by anchor (step.source), so the URL and its rights metadata are stated once."
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/step" }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "colorValue": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+    },
+    "paintRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+    },
+    "mixEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paint", "parts"],
+      "properties": {
+        "paint": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor into paints[].ref."
+        },
+        "parts": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Author-provided ratio part. Ratios are relative within one mixture."
+        }
+      }
+    },
+    "mediaRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaRef"
+    },
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "authored",
+            "manufacturer_published",
+            "mathematical",
+            "community_tested",
+            "verified_practical"
+          ]
+        },
+        "paint": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor into paints[].ref."
+        },
+        "paintRef": { "$ref": "#/$defs/paintRef" },
+        "note": { "type": "string" }
+      },
+      "anyOf": [{ "required": ["paint"] }, { "required": ["paintRef"] }]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instruction"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "instruction": { "type": "string", "minLength": 1 },
+        "role": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+        },
+        "technique": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text named technique/application for this step (e.g. 'wet blending', 'pin wash', 'zenithal'). The closed 'role' vocabulary groups steps; this labels the specific technique, so named techniques never force role-enum growth."
+        },
+        "targetArea": { "type": "string", "minLength": 1 },
+        "paintRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Anchors into paints[].ref used in this step."
+        },
+        "mix": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/mixEntry" },
+          "description": "A mixture of two or more paints with author-provided ratios."
+        },
+        "mixNote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The mixture as the author wrote it (e.g. '1:1 Caliban + Moot'), for a mixture the structured 'mix' cannot express — because a component is not a declared paint, or the ratio was written as prose. When 'mix' is also present it is authoritative for computation and this is the human wording; a consumer MUST NOT parse this member into ratios."
+        },
+        "method": {
+          "type": "string",
+          "enum": ["brush", "airbrush", "sponge", "stipple", "other"]
+        },
+        "coats": { "type": "integer", "minimum": 1 },
+        "thinning": { "type": "string" },
+        "dryingNotes": { "type": "string" },
+        "expectedResult": { "type": "string" },
+        "warnings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "media": { "type": "array", "items": { "$ref": "#/$defs/mediaRef" } },
+        "source": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaCitation",
+          "description": "The passage of a linked source item this step was taken from (for example 1:00-1:35 of a video, class recording, or demonstration in recipe.media). Deliberately singular: a step derives from one passage. Additional material a step merely shows belongs in step.media."
+        },
+        "alternatives": { "type": "array", "items": { "$ref": "#/$defs/alternative" } }
+      }
+    }
+  }
+}

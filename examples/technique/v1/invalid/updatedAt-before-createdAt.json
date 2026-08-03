@@ -1,0 +1,10 @@
+{
+  "spec": "technique",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:7a1b2c3d-4e5f-4061-8172-93a4b5c6d7e8",
+  "revision": "rev-1",
+  "title": "Schema-valid but updatedAt precedes createdAt (envelope prose rule)",
+  "purpose": "x",
+  "createdAt": "2026-07-15T12:30:00Z",
+  "updatedAt": "2026-07-01T09:00:00Z"
+}

@@ -1,0 +1,8 @@
+{
+  "spec": "bundle",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:8d9e0f10-2131-4243-8556-677889900aab",
+  "revision": "rev-1",
+  "title": "An entry spec must be a known specification",
+  "entries": [{ "path": "documents/x.json", "spec": "wizard", "mediaType": "application/json" }]
+}

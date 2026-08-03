@@ -1,0 +1,14 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:a1b2c3d4-e5f6-4712-8901-234567890abc",
+  "revision": "rev-1",
+  "title": "An alternative must declare its classification type",
+  "paints": [{ "ref": "a", "name": "Paint A" }],
+  "steps": [
+    {
+      "instruction": "Basecoat.",
+      "alternatives": [{ "paint": "a", "note": "missing the required type" }]
+    }
+  ]
+}

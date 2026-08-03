@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
+  "title": "BrushCodex Palette v1 (draft)",
+  "description": "A reusable, named set of paints, mixtures, and colors with semantic roles and optional relationships (e.g. a shadow-to-highlight sequence). Embeds the Common document envelope. Unlike a Painting Workflow ('recipe') it is not an ordered process. A palette MUST remain valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/palette/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["entries"],
+      "properties": {
+        "spec": { "const": "palette" },
+        "summary": { "type": "string" },
+        "intent": {
+          "type": "string",
+          "description": "Free-text aesthetic or material intent (e.g. 'cold steel with warm rust')."
+        },
+        "target": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/entry" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relationship" }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "colorValue": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+    },
+    "paintRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+    },
+    "mixEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paint", "parts"],
+      "properties": {
+        "paint": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor into another entry's `ref`."
+        },
+        "parts": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Author-provided ratio part, relative within one mixture."
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "description": "A named palette slot. It MUST carry at least one of a paint reference, a literal color, or a mixture.",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-local anchor other entries/relationships can point to."
+        },
+        "role": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+        },
+        "paint": { "$ref": "#/$defs/paintRef" },
+        "color": { "$ref": "#/$defs/colorValue" },
+        "mix": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/mixEntry" },
+          "description": "A mixture of two or more entries with author-provided ratios."
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/provenanceEntry"
+          }
+        },
+        "note": { "type": "string" }
+      },
+      "anyOf": [{ "required": ["paint"] }, { "required": ["color"] }, { "required": ["mix"] }]
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence"],
+      "description": "A relationship between entries, e.g. an ordered shadow-to-highlight sequence.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["shadow_to_highlight", "analogous", "complementary", "triadic", "custom"]
+        },
+        "sequence": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Ordered anchors into entries[].ref."
+        },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

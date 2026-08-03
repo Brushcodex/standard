@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/technique/v1/technique.schema.json",
+  "title": "BrushCodex Technique v1 (draft)",
+  "description": "A reusable technique definition: purpose, prerequisites, tools/materials, ordered instructions or parameter guidance, suitable/unsuitable paint classes, common problems and corrections, safety notes, citations, and variants. Embeds the Common document envelope. Referenced by recipes. DRAFT: not frozen; see specs/technique/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["purpose"],
+      "properties": {
+        "spec": { "const": "technique" },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the technique achieves and when to use it."
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Skills or prior techniques a painter should have first."
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/step" },
+          "description": "Ordered instructions. A technique MAY provide steps, parameter guidance, or neither (prose purpose only)."
+        },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/parameter" },
+          "description": "Parameter guidance (e.g. thinning ratio, airbrush pressure) instead of, or alongside, ordered steps."
+        },
+        "suitablePaintClasses": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/paintClass" },
+          "uniqueItems": true
+        },
+        "unsuitablePaintClasses": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/paintClass" },
+          "uniqueItems": true
+        },
+        "commonProblems": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/problem" }
+        },
+        "safetyNotes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Health and safety guidance where relevant."
+        },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/citation" }
+        },
+        "variants": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/variant" }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "paintClass": {
+      "type": "string",
+      "enum": [
+        "acrylic",
+        "oil",
+        "enamel",
+        "lacquer",
+        "ink",
+        "wash",
+        "contrast",
+        "technical",
+        "metallic"
+      ]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instruction"],
+      "properties": {
+        "instruction": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "guidance"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "guidance": { "type": "string", "minLength": 1 },
+        "typicalValue": { "type": "string" }
+      }
+    },
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem"],
+      "properties": {
+        "problem": { "type": "string", "minLength": 1 },
+        "correction": { "type": "string" }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

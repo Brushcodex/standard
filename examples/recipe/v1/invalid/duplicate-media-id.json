@@ -1,0 +1,27 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0116",
+  "revision": "rev-1",
+  "title": "Two media entries claim the same document-local anchor",
+  "media": [
+    {
+      "id": "tutorial",
+      "url": "https://example.org/videos/tutorial-part-one",
+      "kind": "video",
+      "relation": "source"
+    },
+    {
+      "id": "tutorial",
+      "url": "https://example.org/videos/tutorial-part-two",
+      "kind": "video",
+      "relation": "reference"
+    }
+  ],
+  "steps": [
+    {
+      "instruction": "Basecoat the model.",
+      "source": { "media": "tutorial", "startSeconds": 60, "label": "1:00" }
+    }
+  ]
+}

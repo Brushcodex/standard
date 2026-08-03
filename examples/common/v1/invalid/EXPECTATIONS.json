@@ -1,0 +1,59 @@
+{
+  "description": "Maps each intentionally-invalid Common envelope example to the specific constraint it must violate. The reference validator test suite (src/modules/standards/common/envelope.test.ts) asserts every file fails, and fails FOR THE STATED REASON — so a schema change that accidentally stops enforcing a rule is caught. 'layer' is 'schema' when the raw JSON Schema rejects it, or 'semantic' when the document is schema-valid but violates a prose rule the reference validator enforces.",
+  "cases": [
+    {
+      "file": "missing-required-spec.json",
+      "layer": "schema",
+      "reason": "The required 'spec' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "bad-spec-version.json",
+      "layer": "schema",
+      "reason": "specVersion '1.0' is not full SemVer major.minor.patch.",
+      "expect": { "keyword": "pattern", "instancePath": "/specVersion" }
+    },
+    {
+      "file": "non-uri-id.json",
+      "layer": "schema",
+      "reason": "id is not an absolute URI.",
+      "expect": { "keyword": "format", "instancePath": "/id" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must go under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "unknown-source-type.json",
+      "layer": "schema",
+      "reason": "provenance[0].sourceType is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/provenance/0/sourceType" }
+    },
+    {
+      "file": "unnamespaced-extension.json",
+      "layer": "schema",
+      "reason": "An extension key is not namespaced (no '.' or ':' separator).",
+      "expect": { "keyword": "propertyNames", "instancePath": "/extensions" }
+    },
+    {
+      "file": "license-without-identifier.json",
+      "layer": "schema",
+      "reason": "license carries neither spdxId nor name.",
+      "expect": { "keyword": "anyOf", "instancePath": "/license" }
+    },
+    {
+      "file": "updatedAt-before-createdAt.json",
+      "layer": "semantic",
+      "reason": "Document is schema-valid but updatedAt precedes createdAt.",
+      "expect": { "rule": "updatedAt-not-before-createdAt" }
+    },
+    {
+      "file": "empty-attribution.json",
+      "layer": "schema",
+      "reason": "attribution is present but empty, which credits nobody; the member must be omitted instead.",
+      "expect": { "keyword": "minLength", "instancePath": "/attribution" }
+    }
+  ]
+}

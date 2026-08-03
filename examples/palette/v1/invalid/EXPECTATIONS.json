@@ -1,0 +1,59 @@
+{
+  "description": "Maps each intentionally-invalid Palette example to the constraint it must violate. The reference validator test suite asserts every file fails, and fails FOR THE STATED REASON. 'layer' is 'schema' when the JSON Schema (Common envelope + palette, composed) rejects it, or 'semantic' when the document is schema-valid but violates a prose rule the reference validator enforces (anchor integrity).",
+  "cases": [
+    {
+      "file": "missing-entries.json",
+      "layer": "schema",
+      "reason": "The required 'entries' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "empty-entries.json",
+      "layer": "schema",
+      "reason": "entries is empty.",
+      "expect": { "keyword": "minItems", "instancePath": "/entries" }
+    },
+    {
+      "file": "entry-without-value.json",
+      "layer": "schema",
+      "reason": "An entry has neither paint, color, nor mix.",
+      "expect": { "keyword": "anyOf", "instancePath": "/entries/0" }
+    },
+    {
+      "file": "paint-without-identity.json",
+      "layer": "schema",
+      "reason": "A paint reference carries neither manufacturer nor name.",
+      "expect": { "keyword": "anyOf", "instancePath": "/entries/0/paint" }
+    },
+    {
+      "file": "unknown-role.json",
+      "layer": "schema",
+      "reason": "An entry role is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/entries/0/role" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'palette'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "dangling-mix-anchor.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but a mixture references an entry anchor no entry defines.",
+      "expect": { "rule": "entry-anchor-resolves" }
+    },
+    {
+      "file": "dangling-relationship-anchor.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but a relationship references an entry anchor no entry defines.",
+      "expect": { "rule": "entry-anchor-resolves" }
+    }
+  ]
+}

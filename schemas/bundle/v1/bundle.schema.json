@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/bundle/v1/bundle.schema.json",
+  "title": "BrushCodex Bundle Manifest v1 (draft)",
+  "description": "The manifest of a portable BrushCodex bundle (a ZIP named `.brushcodex.zip`). It lists the standard documents and permitted media the archive contains. Embeds the Common document envelope. The manifest itself lives at `manifest.json` inside the archive and does not list itself. Safe archive handling (path-traversal, archive-bomb, and unsupported-content rejection) is enforced by the reference reader, not the schema. DRAFT: not frozen; see specs/bundle/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["entries"],
+      "properties": {
+        "spec": { "const": "bundle" },
+        "summary": { "type": "string" },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/entry" }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "mediaType"],
+      "description": "One file in the archive. A `spec` marks it as a standard document (validated against that spec); its absence marks it as media.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9_][A-Za-z0-9._/-]*$",
+          "description": "Relative, forward-slash path within the archive. The reader additionally rejects '..' segments, absolute paths, and backslashes."
+        },
+        "spec": {
+          "type": "string",
+          "enum": ["common", "recipe", "palette", "technique", "inventory", "project"],
+          "description": "Present for document entries; the file is validated against this specification."
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Content type. Documents use application/json (or a vendor +json type); media MUST be a permitted image type (see the reference reader)."
+        },
+        "integrity": {
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/integrity"
+        }
+      }
+    }
+  }
+}

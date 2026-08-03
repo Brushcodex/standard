@@ -1,0 +1,58 @@
+{
+  "$schema": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
+  "spec": "inventory",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/inventories/my-metals",
+  "revision": "rev-2026-07-15T13-00-00Z-aa11bb",
+  "title": "My metal paints",
+  "description": "Exercises private fields and per-item visibility for round-trip and shared-profile coverage.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T13:00:00Z",
+  "language": "en",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["metal", "example"],
+  "summary": "Steels, a literal-only paint, and one private item.",
+  "items": [
+    {
+      "ref": "steel",
+      "paint": {
+        "manufacturer": "Some Brand",
+        "range": "Metal Color",
+        "name": "Steel",
+        "code": "SB-701",
+        "catalogueId": "pnt-some-brand-steel",
+        "color": { "hex": "#8a8d90" },
+        "provenance": [{ "sourceType": "manufacturer_digital_swatch", "confidence": "medium" }]
+      },
+      "quantity": 2,
+      "unit": "bottle",
+      "bottleSizeMl": 17,
+      "condition": "in_use",
+      "lowStock": false,
+      "aliases": ["cold steel"],
+      "visibility": "shareable",
+      "private": {
+        "storageLocation": "Drawer 1, row 3",
+        "notes": "Nozzle sometimes clogs.",
+        "lot": "L-2026-014",
+        "acquiredAt": "2026-03-02T00:00:00Z",
+        "acquiredNote": "Bought at the spring open day."
+      }
+    },
+    {
+      "paint": { "manufacturer": "Another Brand", "name": "Rust Wash" },
+      "quantity": 1,
+      "condition": "sealed"
+    },
+    {
+      "ref": "secret-recipe-base",
+      "paint": { "name": "Custom mixed base" },
+      "quantity": 1,
+      "visibility": "private",
+      "private": { "notes": "My personal signature basecoat mix." }
+    }
+  ],
+  "extensions": {
+    "com.example.tool:sortOrder": { "by": "manufacturer" }
+  }
+}

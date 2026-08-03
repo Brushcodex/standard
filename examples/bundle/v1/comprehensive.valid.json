@@ -1,0 +1,39 @@
+{
+  "$schema": "https://brushcodex.com/schemas/bundle/v1/bundle.schema.json",
+  "spec": "bundle",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/bundles/rusted-armour",
+  "revision": "rev-2026-07-15T14-00-00Z-ccdd",
+  "title": "Rusted armour bundle",
+  "description": "A recipe with its palette, technique, and a result photo.",
+  "createdAt": "2026-07-15T14:00:00Z",
+  "authors": [{ "name": "A. Painter" }],
+  "license": { "spdxId": "CC-BY-4.0" },
+  "tags": ["bundle", "example"],
+  "summary": "Everything needed to reproduce the rusted-armour scheme.",
+  "entries": [
+    {
+      "path": "documents/rusted-armour.brushrecipe.json",
+      "spec": "recipe",
+      "mediaType": "application/json"
+    },
+    {
+      "path": "documents/rusted-steel.brushpalette.json",
+      "spec": "palette",
+      "mediaType": "application/json"
+    },
+    {
+      "path": "documents/edge-highlighting.brushtechnique.json",
+      "spec": "technique",
+      "mediaType": "application/json"
+    },
+    {
+      "path": "media/sergeant-wip.jpg",
+      "mediaType": "image/jpeg",
+      "integrity": {
+        "algorithm": "sha-256",
+        "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

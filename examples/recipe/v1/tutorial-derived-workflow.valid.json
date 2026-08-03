@@ -1,0 +1,53 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/tutorial-derived-cloak",
+  "revision": "rev-1",
+  "title": "Green cloak workflow",
+  "summary": "A painting workflow derived from a linked video demonstration.",
+  "authors": [{ "name": "Workflow Recorder" }],
+  "attribution": "Adapted from Example Painter's green-cloak demonstration.",
+  "media": [
+    {
+      "id": "demonstration",
+      "url": "https://example.org/videos/green-cloak",
+      "kind": "video",
+      "relation": "source",
+      "caption": "Green cloak painting demonstration",
+      "creator": { "name": "Example Painter" },
+      "license": { "spdxId": "NOASSERTION" },
+      "rightsNote": "The linked work is separate from this workflow; no reuse rights are implied."
+    }
+  ],
+  "paints": [
+    { "ref": "dark-green", "name": "Dark Green" },
+    { "ref": "leaf-green", "name": "Leaf Green" }
+  ],
+  "steps": [
+    {
+      "instruction": "Basecoat the cloak with Dark Green.",
+      "role": "basecoat",
+      "targetArea": "cloak",
+      "paintRefs": ["dark-green"],
+      "source": {
+        "media": "demonstration",
+        "startSeconds": 48,
+        "endSeconds": 92,
+        "label": "0:48–1:32"
+      }
+    },
+    {
+      "instruction": "Layer the raised folds with Leaf Green.",
+      "role": "layer",
+      "targetArea": "raised cloak folds",
+      "paintRefs": ["leaf-green"],
+      "source": {
+        "media": "demonstration",
+        "startSeconds": 130,
+        "endSeconds": 205,
+        "label": "2:10–3:25"
+      }
+    }
+  ]
+}

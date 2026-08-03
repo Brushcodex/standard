@@ -1,0 +1,61 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/blue-army-armour",
+  "revision": "rev-1",
+  "title": "Reusable blue army armour",
+  "summary": "A repeatable armour workflow intended for every infantry model in an army.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["workflow", "army", "reusable"],
+  "target": {
+    "kind": "miniature",
+    "description": "28mm plastic infantry armour",
+    "scale": { "system": "nominal_mm", "value": "28" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "navy", "manufacturer": "Example Paints", "name": "Deep Navy" },
+    { "ref": "blue", "manufacturer": "Example Paints", "name": "Field Blue" },
+    { "ref": "ivory", "manufacturer": "Example Paints", "name": "Warm Ivory" }
+  ],
+  "resources": [
+    { "name": "Round brush", "kind": "tool", "specification": "Size 2" },
+    { "name": "Detail brush", "kind": "tool", "specification": "Size 0" }
+  ],
+  "steps": [
+    {
+      "id": "armour-base",
+      "title": "Armour base",
+      "instruction": "Apply two thin coats of Deep Navy to every armour panel.",
+      "role": "basecoat",
+      "targetArea": "armour panels",
+      "paintRefs": ["navy"],
+      "method": "brush",
+      "coats": 2,
+      "expectedResult": "An even, opaque navy base with the panel detail unobscured."
+    },
+    {
+      "id": "armour-layer",
+      "title": "Raised armour",
+      "instruction": "Layer the upward-facing areas with Field Blue, leaving Deep Navy in the recesses.",
+      "role": "layer",
+      "targetArea": "raised armour panels",
+      "paintRefs": ["blue"],
+      "method": "brush"
+    },
+    {
+      "id": "armour-highlight",
+      "title": "Final edge",
+      "instruction": "Edge highlight the most exposed corners with the blue and ivory mix.",
+      "role": "edge_highlight",
+      "targetArea": "upper armour edges",
+      "mix": [
+        { "paint": "blue", "parts": 3 },
+        { "paint": "ivory", "parts": 1 }
+      ],
+      "mixNote": "3:1 Field Blue to Warm Ivory; keep this ratio consistent across the army.",
+      "method": "brush"
+    }
+  ]
+}

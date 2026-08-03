@@ -1,0 +1,9 @@
+{
+  "spec": "technique",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:7a1b2c3d-4e5f-4061-8172-93a4b5c6d7e8",
+  "revision": "rev-1",
+  "title": "A tool/material must have a name",
+  "purpose": "x",
+  "tools": [{ "kind": "tool" }]
+}

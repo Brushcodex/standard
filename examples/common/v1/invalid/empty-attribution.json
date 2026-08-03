@@ -1,0 +1,8 @@
+{
+  "spec": "common",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:b7c8d9e0-1234-4567-8901-234567890def",
+  "revision": "rev-1",
+  "title": "An empty attribution states no credit at all",
+  "attribution": ""
+}

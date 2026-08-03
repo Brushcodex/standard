@@ -1,0 +1,8 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:7a1b2c3d-4e5f-4061-8172-93a4b5c6d7e8",
+  "revision": "rev-1",
+  "title": "spec must be 'technique' for a technique document",
+  "purpose": "x"
+}

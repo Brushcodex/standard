@@ -1,0 +1,21 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0112",
+  "revision": "rev-1",
+  "title": "A source citation starts before the beginning of the media item",
+  "media": [
+    {
+      "id": "tutorial",
+      "url": "https://example.org/videos/tutorial",
+      "kind": "video",
+      "relation": "source"
+    }
+  ],
+  "steps": [
+    {
+      "instruction": "Basecoat the model.",
+      "source": { "media": "tutorial", "startSeconds": -5 }
+    }
+  ]
+}

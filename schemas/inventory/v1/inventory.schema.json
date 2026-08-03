@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
+  "title": "BrushCodex Paint Inventory v1 (draft)",
+  "description": "A portable, personal paint collection. Each item identifies a paint by a stable external identifier when available, or by literal fallback identity, and records a user's OWN observations (quantity, condition, storage) — distinct from global catalogue truth. Private fields are separated into a per-item `private` object and per-item `visibility`, so a shareable export profile can omit sensitive data without destructive merging. Embeds the Common document envelope. DRAFT: not frozen; see specs/inventory/v1/README.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "spec": { "const": "inventory" },
+        "summary": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/item" },
+          "description": "The paints in the collection. MAY be empty (a collection with no items)."
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "colorValue": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+    },
+    "paintRef": {
+      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paint"],
+      "description": "One owned paint. Shareable fields describe the paint and the user's holding; private fields (storage, notes, lot, acquisition) live under `private` and are omitted from a shared export.",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-local anchor; also a non-destructive duplicate-detection hint."
+        },
+        "paint": { "$ref": "#/$defs/paintRef" },
+        "quantity": {
+          "type": "number",
+          "minimum": 0,
+          "description": "How many the user owns — a user observation, not catalogue truth."
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["bottle", "pot", "tube", "dropper", "ml", "g", "other"]
+        },
+        "bottleSizeMl": { "type": "number", "exclusiveMinimum": 0 },
+        "condition": {
+          "type": "string",
+          "enum": ["sealed", "in_use", "low", "empty", "dried_out", "unknown"]
+        },
+        "lowStock": { "type": "boolean" },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["shareable", "private"],
+          "description": "Default shareable. A 'private' item is omitted entirely from a shared export profile."
+        },
+        "private": { "$ref": "#/$defs/privateFields" }
+      }
+    },
+    "privateFields": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Sensitive, user-only fields. Removed by the shared export profile.",
+      "properties": {
+        "storageLocation": { "type": "string" },
+        "notes": { "type": "string" },
+        "lot": { "type": "string", "description": "Lot / batch identifier." },
+        "acquiredAt": { "type": "string", "format": "date-time" },
+        "acquiredNote": { "type": "string", "description": "Where/how it was acquired." }
+      }
+    }
+  }
+}

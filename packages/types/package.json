@@ -1,0 +1,36 @@
+{
+  "name": "@brushcodex/types",
+  "version": "0.9.0-draft",
+  "private": true,
+  "type": "module",
+  "description": "Canonical BrushCodex document TypeScript types, re-exported from the reference model.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Brushcodex/standard.git",
+    "directory": "packages/types"
+  },
+  "homepage": "https://brushcodex.com/standard",
+  "bugs": "https://github.com/Brushcodex/standard/issues",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist", "LICENSE", "NOTICE"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@brushcodex/validator": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.13",
+    "typescript": "5.5.4"
+  }
+}

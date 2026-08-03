@@ -1,0 +1,59 @@
+{
+  "description": "Maps each intentionally-invalid Inventory example to the constraint it must violate. The reference validator test suite asserts every file fails, and fails FOR THE STATED REASON. 'layer' is 'schema' when the JSON Schema (Common envelope + inventory, composed) rejects it, or 'semantic' when the document is schema-valid but violates an envelope prose rule the reference validator enforces.",
+  "cases": [
+    {
+      "file": "missing-items.json",
+      "layer": "schema",
+      "reason": "The required 'items' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "item-without-paint.json",
+      "layer": "schema",
+      "reason": "An item does not identify its paint.",
+      "expect": { "keyword": "required", "instancePath": "/items/0" }
+    },
+    {
+      "file": "paint-without-identity.json",
+      "layer": "schema",
+      "reason": "A paint carries neither manufacturer nor name.",
+      "expect": { "keyword": "anyOf", "instancePath": "/items/0/paint" }
+    },
+    {
+      "file": "bad-condition.json",
+      "layer": "schema",
+      "reason": "condition is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/items/0/condition" }
+    },
+    {
+      "file": "negative-quantity.json",
+      "layer": "schema",
+      "reason": "quantity is negative.",
+      "expect": { "keyword": "minimum", "instancePath": "/items/0/quantity" }
+    },
+    {
+      "file": "unknown-private-field.json",
+      "layer": "schema",
+      "reason": "The private object contains a field outside the defined set.",
+      "expect": { "keyword": "additionalProperties", "instancePath": "/items/0/private" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'inventory'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "updatedAt-before-createdAt.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but updatedAt precedes createdAt.",
+      "expect": { "rule": "updatedAt-not-before-createdAt" }
+    }
+  ]
+}

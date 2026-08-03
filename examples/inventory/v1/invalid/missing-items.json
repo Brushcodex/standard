@@ -1,0 +1,7 @@
+{
+  "spec": "inventory",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:9b8c7d6e-5f40-4132-8a24-b3c4d5e6f708",
+  "revision": "rev-1",
+  "title": "An inventory must have an items member (even if empty)"
+}

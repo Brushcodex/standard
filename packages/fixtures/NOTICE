@@ -1,0 +1,11 @@
+BrushCodex @brushcodex/fixtures
+
+Copyright (c) 2026 The BrushCodex authors.
+
+The package code, manifest, generators, and loaders are licensed under the
+Apache License, Version 2.0. The bundled example and conformance corpus under
+corpus/examples is dedicated under CC0 1.0 Universal. The complete text of
+both instruments is included in this package's LICENSE file.
+
+"BrushCodex" and associated logos are trademarks; no trademark license is
+granted by Apache-2.0 or CC0-1.0.

@@ -1,0 +1,9 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:44444444-4444-4444-8444-444444444444",
+  "revision": "rev-1",
+  "title": "Target scale system must be from the controlled vocabulary",
+  "target": { "description": "A figure", "scale": { "system": "true_height", "value": "180" } },
+  "steps": [{ "instruction": "Do a thing." }]
+}

@@ -1,0 +1,53 @@
+{
+  "description": "Maps each intentionally-invalid Bundle manifest example to the constraint it must violate. All are schema-layer (the safe-archive semantics are enforced by the reference reader and tested separately in bundle.test.ts, not by the manifest validator).",
+  "cases": [
+    {
+      "file": "missing-entries.json",
+      "layer": "schema",
+      "reason": "The required 'entries' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "empty-entries.json",
+      "layer": "schema",
+      "reason": "entries is empty.",
+      "expect": { "keyword": "minItems", "instancePath": "/entries" }
+    },
+    {
+      "file": "entry-without-path.json",
+      "layer": "schema",
+      "reason": "An entry has no path.",
+      "expect": { "keyword": "required", "instancePath": "/entries/0" }
+    },
+    {
+      "file": "entry-without-mediatype.json",
+      "layer": "schema",
+      "reason": "An entry has no mediaType.",
+      "expect": { "keyword": "required", "instancePath": "/entries/0" }
+    },
+    {
+      "file": "unknown-entry-spec.json",
+      "layer": "schema",
+      "reason": "An entry spec is not a known specification.",
+      "expect": { "keyword": "enum", "instancePath": "/entries/0/spec" }
+    },
+    {
+      "file": "unsafe-entry-path.json",
+      "layer": "schema",
+      "reason": "An absolute entry path fails the path pattern.",
+      "expect": { "keyword": "pattern", "instancePath": "/entries/0/path" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'bundle'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    }
+  ]
+}

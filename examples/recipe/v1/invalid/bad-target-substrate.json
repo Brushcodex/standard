@@ -1,0 +1,9 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:33333333-3333-4333-8333-333333333333",
+  "revision": "rev-1",
+  "title": "Target substrate must be from the controlled vocabulary",
+  "target": { "description": "A resin bust", "substrate": "cardboard" },
+  "steps": [{ "instruction": "Do a thing." }]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "@brushcodex/validator",
+  "version": "0.9.0-draft",
+  "private": true,
+  "type": "module",
+  "description": "Reference validators, conformance runner, and renderer for the BrushCodex open standard. Framework-agnostic; runs without any web application.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Brushcodex/standard.git",
+    "directory": "packages/validator"
+  },
+  "homepage": "https://brushcodex.com/standard",
+  "bugs": "https://github.com/Brushcodex/standard/issues",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./registry": { "types": "./dist/registry.d.ts", "import": "./dist/registry.js" },
+    "./conformance": { "types": "./dist/conformance.d.ts", "import": "./dist/conformance.js" },
+    "./render": { "types": "./dist/render/index.d.ts", "import": "./dist/render/index.js" },
+    "./migrate": { "types": "./dist/migrate/index.d.ts", "import": "./dist/migrate/index.js" },
+    "./authoring": { "types": "./dist/authoring/index.d.ts", "import": "./dist/authoring/index.js" },
+    "./common": { "types": "./dist/common/index.d.ts", "import": "./dist/common/index.js" },
+    "./recipe": { "types": "./dist/recipe/index.d.ts", "import": "./dist/recipe/index.js" },
+    "./palette": { "types": "./dist/palette/index.d.ts", "import": "./dist/palette/index.js" },
+    "./inventory": { "types": "./dist/inventory/index.d.ts", "import": "./dist/inventory/index.js" },
+    "./project": { "types": "./dist/project/index.d.ts", "import": "./dist/project/index.js" },
+    "./technique": { "types": "./dist/technique/index.d.ts", "import": "./dist/technique/index.js" },
+    "./bundle": { "types": "./dist/bundle/index.d.ts", "import": "./dist/bundle/index.js" }
+  },
+  "files": ["dist", "LICENSE", "NOTICE"],
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -p tsconfig.build.json",
+    "prepack": "node scripts/build.mjs && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8",
+    "ajv-formats": "^3",
+    "fflate": "^0.8",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@brushcodex/schema": "workspace:*",
+    "@types/node": "20.14.13",
+    "esbuild": "0.21.5",
+    "typescript": "5.5.4",
+    "vitest": "2.0.5"
+  }
+}

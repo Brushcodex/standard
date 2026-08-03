@@ -1,0 +1,17 @@
+{
+  "spec": "palette",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:5e7c9a10-2b3c-4d5e-8f61-0a1b2c3d4e5f",
+  "revision": "rev-1",
+  "title": "A mixture references an entry anchor no entry defines",
+  "entries": [
+    { "ref": "steel", "name": "Steel", "paint": { "name": "Steel" } },
+    {
+      "name": "Bad mix",
+      "mix": [
+        { "paint": "steel", "parts": 1 },
+        { "paint": "ghost", "parts": 1 }
+      ]
+    }
+  ]
+}

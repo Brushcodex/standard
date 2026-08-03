@@ -1,0 +1,27 @@
+{
+  "name": "brushcodex-standard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BrushCodex open standard — specs, schemas, conformance corpus, and toolkit packages.",
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "fast-uri": "3.1.5"
+    }
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:gate": "node --test scripts/check-consistency.test.mjs scripts/verify-packed.test.mjs",
+    "typecheck": "pnpm -r typecheck",
+    "conformance": "pnpm --filter @brushcodex/cli run conformance",
+    "check:consistency": "node scripts/check-consistency.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:public-snapshot": "node scripts/check-public-snapshot.mjs",
+    "verify:packed": "node scripts/verify-packed.mjs"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0114",
+  "revision": "rev-1",
+  "title": "An anchorless citation with two source media items cites nothing definite",
+  "media": [
+    {
+      "id": "part-one",
+      "url": "https://example.org/videos/tutorial-part-one",
+      "kind": "video",
+      "relation": "source"
+    },
+    {
+      "id": "part-two",
+      "url": "https://example.org/videos/tutorial-part-two",
+      "kind": "video",
+      "relation": "source"
+    }
+  ],
+  "steps": [
+    {
+      "instruction": "Basecoat the model.",
+      "source": { "startSeconds": 60, "label": "1:00" }
+    }
+  ]
+}

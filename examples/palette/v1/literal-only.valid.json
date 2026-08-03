@@ -1,0 +1,23 @@
+{
+  "spec": "palette",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:0c0ffee0-2222-4333-8444-555566667777",
+  "revision": "rev-1",
+  "title": "Leather palette (literal paints, no catalogue)",
+  "summary": "Demonstrates a palette that is fully valid using only literal paint references — no catalogue id and no color value.",
+  "entries": [
+    {
+      "ref": "brown",
+      "name": "Strap brown",
+      "role": "basecoat",
+      "paint": { "manufacturer": "Some Brand", "range": "Model Color", "name": "Flat Brown" }
+    },
+    {
+      "ref": "bone",
+      "name": "Highlight bone",
+      "role": "edge_highlight",
+      "paint": { "name": "Bonewhite" }
+    }
+  ],
+  "relationships": [{ "type": "shadow_to_highlight", "sequence": ["brown", "bone"] }]
+}

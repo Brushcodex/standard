@@ -1,0 +1,9 @@
+{
+  "spec": "project",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:3c4d5e6f-7081-4293-8a4b-5c6d7e8f9012",
+  "revision": "rev-1",
+  "title": "progress must be between 0 and 100",
+  "status": "active",
+  "progress": 120
+}

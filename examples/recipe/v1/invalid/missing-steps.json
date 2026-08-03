@@ -1,0 +1,7 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:a1b2c3d4-e5f6-4712-8901-234567890abc",
+  "revision": "rev-1",
+  "title": "A recipe must have at least one step"
+}

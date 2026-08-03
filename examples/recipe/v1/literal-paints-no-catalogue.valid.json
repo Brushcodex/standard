@@ -1,0 +1,29 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:0c0ffee0-1111-4222-8333-444455556666",
+  "revision": "rev-1",
+  "title": "Leather straps (literal paints, no catalogue)",
+  "summary": "Demonstrates that a recipe is fully valid using only literal paint references — no central catalogue id and no color value.",
+  "difficulty": "beginner",
+  "paints": [
+    { "ref": "brown", "manufacturer": "Some Brand", "range": "Model Color", "name": "Flat Brown" },
+    { "ref": "bone", "name": "Bonewhite" }
+  ],
+  "steps": [
+    {
+      "instruction": "Basecoat the straps with Flat Brown.",
+      "role": "basecoat",
+      "targetArea": "leather straps",
+      "paintRefs": ["brown"]
+    },
+    {
+      "instruction": "Edge highlight with a brown/bone mix.",
+      "role": "edge_highlight",
+      "mix": [
+        { "paint": "brown", "parts": 2 },
+        { "paint": "bone", "parts": 1 }
+      ]
+    }
+  ]
+}

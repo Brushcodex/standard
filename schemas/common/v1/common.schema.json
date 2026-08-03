@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brushcodex.com/schemas/common/v1/common.schema.json",
+  "title": "BrushCodex Common Document Envelope v1 (draft)",
+  "description": "Shared envelope embedded by every BrushCodex document (recipe, palette, inventory, project, technique). Defines stable identity, versioning, attribution, licensing, provenance, links (revision/fork lineage), translations, namespaced extensions, and integrity. Concrete specifications compose `$defs/envelopeCore` via allOf and close the object with `unevaluatedProperties: false`. DRAFT: not frozen; see specs/common/v1/README.md.",
+  "type": "object",
+  "allOf": [{ "$ref": "#/$defs/envelopeCore" }],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "envelopeCore": {
+      "$comment": "Reusable, OPEN envelope fragment. Does not close the object, so concrete specs can add their own members via allOf and close with unevaluatedProperties.",
+      "type": "object",
+      "required": ["spec", "specVersion", "id", "revision", "title"],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Optional pointer to the schema this document claims to conform to."
+        },
+        "spec": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Specification name, e.g. 'common', 'recipe', 'palette'."
+        },
+        "specVersion": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+          "description": "Semantic version (SemVer 2.0.0) of the specification the document targets."
+        },
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "description": "Stable, globally unique document identifier as an absolute URI (e.g. urn:uuid:... or https://...). MUST NOT require a central BrushCodex registry."
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Opaque revision identifier for this exact document state (UUID, hash, or monotonic token)."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional human-readable description."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 creation timestamp, when known."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 last-modified timestamp, when known. SHOULD be >= createdAt."
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^(und|[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*)$",
+          "description": "Primary content language as a BCP 47 tag, or 'und' if undetermined."
+        },
+        "authors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/agent" },
+          "description": "Primary authors of the content."
+        },
+        "contributors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/agent" },
+          "description": "Additional contributors."
+        },
+        "attribution": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable credit for the document as a whole: who or what it is based on, and any acknowledgement the author owes. Free text because credit obligations are prose, not structure. It does NOT state or grant a licence (see license), does NOT make anyone an author (see authors), and a consumer MUST preserve it verbatim and MUST NOT parse it into agents. An empty string is invalid — omit the member instead."
+        },
+        "license": { "$ref": "#/$defs/license" },
+        "links": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Cross-document links expressing provenance, canonical location, and revision/fork lineage.",
+          "properties": {
+            "source": { "type": "string", "format": "uri" },
+            "canonical": { "type": "string", "format": "uri" },
+            "predecessor": { "type": "string", "format": "uri" },
+            "successor": { "type": "string", "format": "uri" },
+            "forkOrigin": { "type": "string", "format": "uri" }
+          }
+        },
+        "provenance": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/provenanceEntry" },
+          "description": "Provenance entries describing where the document (or values within it) came from."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "translations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/translation" }
+        },
+        "extensions": {
+          "type": "object",
+          "description": "Namespaced extension data. Keys MUST be namespaced (reverse-DNS or colon-qualified). Unknown extensions are preserved on round trip when preservation is claimed.",
+          "propertyNames": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*[.:][A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "additionalProperties": true
+        },
+        "integrity": { "$ref": "#/$defs/integrity" }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "format": "uri" },
+        "role": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Content license. At least one of spdxId or name MUST be present. Unknown values are never invented.",
+      "properties": {
+        "spdxId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SPDX license identifier (e.g. CC-BY-4.0, Apache-2.0, LicenseRef-... , or the SPDX 'NONE'/'NOASSERTION' tokens)."
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "notice": { "type": "string" }
+      },
+      "anyOf": [{ "required": ["spdxId"] }, { "required": ["name"] }]
+    },
+    "provenanceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceType"],
+      "properties": {
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "manufacturer_digital_swatch",
+            "physical_measurement",
+            "community_estimate",
+            "digital_approximation",
+            "photographed_sample",
+            "synthetic_test_fixture",
+            "unknown"
+          ],
+          "description": "Controlled source class. Color-bearing measurements MUST NOT be labelled as physical_measurement unless produced by instrument measurement of a physical sample. digital_approximation is a screen-display approximation of unstated or derived origin (e.g. a third-party colour list) and carries no manufacturer or measurement authority."
+        },
+        "reviewStatus": {
+          "type": "string",
+          "enum": ["pending_review", "approved", "rejected", "deprecated"],
+          "description": "Review state under the project's policy. 'approved' does not imply manufacturer endorsement."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "unknown"]
+        },
+        "sourceName": { "type": "string" },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "contributor": { "type": "string" },
+        "retrievedAt": { "type": "string", "format": "date-time" },
+        "license": { "$ref": "#/$defs/license" },
+        "transformationVersion": {
+          "type": "string",
+          "description": "Version of the importer/transformer that produced this entry."
+        },
+        "method": {
+          "type": "string",
+          "description": "Methodology detail (e.g. measurement geometry, illuminant) for physical measurements."
+        },
+        "derivedFrom": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "URIs of documents/values this entry was derived from."
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "colorValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hex"],
+      "description": "An sRGB color value. Its meaning (measured, digital swatch, estimate) is declared by the owning item's provenance; never presented as a physical measurement unless provenance says so.",
+      "properties": {
+        "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+      }
+    },
+    "paintRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Canonical paint reference shared by every BrushCodex spec (Recipe, Palette, Inventory, Project). At least one of manufacturer or name MUST be present; nothing else is required, so a literal paint with no catalogue id or color stays valid (the literal fallback for paints with no shared catalogue entry).",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL document-local anchor other members can point to (e.g. a Recipe step or mixture). Specs without intra-document anchoring simply omit it."
+        },
+        "manufacturer": { "type": "string", "minLength": 1 },
+        "range": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The manufacturer's printed product code / item number on the bottle (e.g. a Vallejo item number such as 70.950). Distinct from catalogueId (an external stable identifier) and from any internal database id, which MUST NOT appear here."
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["paint", "medium", "thinner", "additive", "varnish"],
+          "description": "Classifies a paint-like bottled product. Absence means an ordinary pigment paint. Non-pigment products (mediums, thinners, varnishes) that are referenced the way paints are (in paints[]/mix[]) are marked here so the color engine skips them in matching and a renderer does not draw a swatch. Ordinary tools and scenic materials are resources, never paintRefs."
+        },
+        "chemistry": {
+          "type": "string",
+          "enum": ["acrylic", "enamel", "oil", "lacquer", "other"],
+          "description": "Binder/solvent family — the substitution-safety axis (an enamel MUST NOT be silently substituted for an acrylic layer). These four named values are the binder-family subset of Technique's paintClass vocabulary, plus 'other'; chemistry is distinct from paintClass, which is a broader product-type advisory."
+        },
+        "catalogueId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL external stable identifier (opaque token or URI). Never required."
+        },
+        "color": { "$ref": "#/$defs/colorValue" },
+        "provenance": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/provenanceEntry" }
+        },
+        "note": { "type": "string" }
+      },
+      "anyOf": [{ "required": ["manufacturer"] }, { "required": ["name"] }]
+    },
+    "translation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language"],
+      "properties": {
+        "language": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "type": "string", "enum": ["sha-256", "sha-512"] },
+        "value": { "type": "string", "pattern": "^[0-9a-f]+$" }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "description": "A tool or non-paint material needed to reproduce a workflow (brush, airbrush, wet palette, sponge, hobby knife, UV lamp, gloves, PVA glue, masking putty, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where NOT represented as a paint). Shared by Recipe.resources, Technique.tools, and Project.toolsUsed. Carries no manufacturer or catalogue identity. Ordinary tools and scenic materials MUST NOT be modelled as a paintRef.",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": {
+          "type": "string",
+          "enum": ["tool", "material"],
+          "description": "A reusable tool vs a consumable non-paint material."
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "True when the item is optional rather than required. Absence means required."
+        },
+        "specification": {
+          "type": "string",
+          "description": "Optional human-readable specification, e.g. 'Size 2 round', '0.3 mm nozzle', '120-grit'. Never an invented precise value."
+        },
+        "quantity": {
+          "type": "string",
+          "description": "Optional human-readable quantity, e.g. 'a few drops', '2 sheets'. Never an invented precise measurement."
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "documentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "description": "A soft reference to another BrushCodex document by its stable id URI. The referenced document need not be resolvable by the consumer; an unresolved reference is not an error. Shared by Project (recipeRefs/paletteRefs) and Recipe (techniqueRefs).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "description": "The referenced document's stable id URI (its envelope id)."
+        },
+        "title": { "type": "string" }
+      }
+    },
+    "role": {
+      "type": "string",
+      "description": "Coarse, closed grouping/ordering vocabulary shared by Recipe steps and Palette entries. Named specific techniques (pin wash, zenithal, wet blending) use a free-text field (e.g. Recipe step.technique), never this enum, so the vocabulary stays small and stable across the freeze.",
+      "enum": [
+        "primer",
+        "basecoat",
+        "undercoat",
+        "shadow",
+        "midtone",
+        "layer",
+        "highlight",
+        "edge_highlight",
+        "spot_highlight",
+        "wash",
+        "glaze",
+        "drybrush",
+        "weathering",
+        "metallic",
+        "texture",
+        "decal",
+        "varnish",
+        "other"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "description": "The subject a document is for. Shared by Recipe and Palette so the two cannot drift.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["miniature", "model", "material", "surface", "terrain", "generic"]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "scale": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["system", "value"],
+          "description": "Optional scale. Deliberately small: only the two observed measurement systems. Physical height and subject form (e.g. bust) are intentionally NOT collapsed into scale — form belongs to kind/description, and a physical-height system may be added in a future minor version only if evidenced.",
+          "properties": {
+            "system": {
+              "type": "string",
+              "enum": ["nominal_mm", "ratio"],
+              "description": "nominal_mm = wargame/heroic nominal size (value like '28' or '32'); ratio = scale-model ratio (value like '1:35')."
+            },
+            "value": { "type": "string", "minLength": 1 }
+          }
+        },
+        "substrate": {
+          "type": "string",
+          "enum": ["resin", "plastic", "metal", "mdf", "foam", "pla", "other"],
+          "description": "Physical composition of the subject (drives priming and solvent safety, e.g. a solvent primer will melt bare foam). Distinct from kind (a category) and from the kind value 'material'."
+        }
+      }
+    },
+    "mediaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "description": "A linked media item with its own rights metadata. Shared by Recipe (document media and step media) and Project (results) so the two cannot drift. Media is referenced, never embedded; the author is responsible for the rights of what they link, and a consumer MUST NOT auto-dereference the URL without user intent.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL document-local anchor, unique within the owning media[] array, so a mediaCitation can point at this item. Not a global identifier and never a database id."
+        },
+        "url": { "type": "string", "format": "uri" },
+        "kind": { "type": "string", "enum": ["image", "video", "other"] },
+        "relation": {
+          "type": "string",
+          "enum": ["source", "result", "reference"],
+          "description": "OPTIONAL relationship to the document. 'source' = a work the document was derived from (for example a tutorial, class, article, demonstration, or prior record); 'result' = a record of the outcome; 'reference' = material consulted but not derived from. Absent means unstated — never infer one.",
+          "$comment": "Deliberately three evidenced values. 'source' carries an attribution obligation: it does NOT grant any licence to the linked work."
+        },
+        "caption": { "type": "string" },
+        "creator": {
+          "$ref": "#/$defs/agent",
+          "description": "OPTIONAL creator of the linked media, when known — the attribution target for a 'source' relation. Distinct from the document's own authors: deriving a workflow from another work does not make that work's creator an author of the document. MUST NOT be invented."
+        },
+        "license": {
+          "$ref": "#/$defs/license",
+          "description": "OPTIONAL licence of the linked media itself, which is independent of the document's licence. Publicly reachable media is NOT thereby openly licensed; absent means unknown."
+        },
+        "rightsNote": { "type": "string" }
+      }
+    },
+    "mediaCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startSeconds"],
+      "description": "A citation of a moment or range in a time-based source the document links (for example the passage of a video, class recording, or demonstration from which a step was derived). Time is carried as seconds so any consumer can seek deterministically without parsing human timecode text.",
+      "properties": {
+        "media": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor into the owning document's media[].id. OPTIONAL only when the document has exactly one media entry with relation 'source', which the citation then targets."
+        },
+        "startSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Offset from the start of the media item, in seconds. Fractional values are allowed."
+        },
+        "endSeconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "OPTIONAL end of the cited range, in seconds. When present it MUST be greater than startSeconds (a semantic rule the schema cannot express). Absent means the citation is a single point, not a zero-length range."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL citation as the author wrote it (e.g. '1:00-1:35'), preserved verbatim so a round trip through a human-timecode format is loss-free. Renderers MAY show it; they MUST NOT parse it in preference to the seconds members."
+        }
+      }
+    }
+  }
+}

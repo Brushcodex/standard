@@ -1,0 +1,77 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-gate:
+    name: Full gate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Check out the clean snapshot
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa
+        with:
+          version: 8.15.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 20.11.0
+          cache: pnpm
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Public snapshot, history, and sensitive-content scan
+        if: github.event_name == 'push'
+        run: pnpm check:public-snapshot
+
+      - name: Proposed-tree sensitive-content scan
+        if: github.event_name == 'pull_request'
+        run: pnpm check:public-snapshot -- --tree-only
+
+      - name: Local link validation
+        run: pnpm check:links
+
+      - name: Consistency (prose and schema)
+        run: pnpm check:consistency
+
+      - name: Build packages
+        run: pnpm -r build
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Unit and integration tests
+        run: pnpm -r test
+
+      - name: Conformance (92/92)
+        run: pnpm conformance
+
+      - name: Gate helper regression tests
+        run: pnpm test:gate
+
+      - name: Packed release and licensing gate
+        run: pnpm verify:packed
+
+      - name: Production dependency audit
+        run: pnpm audit --prod

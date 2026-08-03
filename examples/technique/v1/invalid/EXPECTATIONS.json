@@ -1,0 +1,53 @@
+{
+  "description": "Maps each intentionally-invalid Technique example to the constraint it must violate. The reference validator test suite asserts every file fails, and fails FOR THE STATED REASON. 'layer' is 'schema' when the JSON Schema (Common envelope + technique, composed) rejects it, or 'semantic' when the document is schema-valid but violates an envelope prose rule the reference validator enforces.",
+  "cases": [
+    {
+      "file": "missing-purpose.json",
+      "layer": "schema",
+      "reason": "The required 'purpose' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "empty-purpose.json",
+      "layer": "schema",
+      "reason": "purpose is empty.",
+      "expect": { "keyword": "minLength", "instancePath": "/purpose" }
+    },
+    {
+      "file": "unknown-paint-class.json",
+      "layer": "schema",
+      "reason": "A paint class is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/suitablePaintClasses/0" }
+    },
+    {
+      "file": "unknown-difficulty.json",
+      "layer": "schema",
+      "reason": "difficulty is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/difficulty" }
+    },
+    {
+      "file": "tool-without-name.json",
+      "layer": "schema",
+      "reason": "A tool/material has no name.",
+      "expect": { "keyword": "required", "instancePath": "/tools/0" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'technique'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "updatedAt-before-createdAt.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but updatedAt precedes createdAt.",
+      "expect": { "rule": "updatedAt-not-before-createdAt" }
+    }
+  ]
+}

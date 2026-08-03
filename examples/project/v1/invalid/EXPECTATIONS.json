@@ -1,0 +1,65 @@
+{
+  "description": "Maps each intentionally-invalid Project example to the constraint it must violate. The reference validator test suite asserts every file fails, and fails FOR THE STATED REASON. 'layer' is 'schema' when the JSON Schema (Common envelope + project, composed) rejects it, or 'semantic' when the document is schema-valid but violates a prose rule the reference validator enforces (subject-anchor integrity).",
+  "cases": [
+    {
+      "file": "missing-status.json",
+      "layer": "schema",
+      "reason": "The required 'status' member is absent.",
+      "expect": { "keyword": "required", "instancePath": "" }
+    },
+    {
+      "file": "bad-status.json",
+      "layer": "schema",
+      "reason": "status is outside the controlled vocabulary.",
+      "expect": { "keyword": "enum", "instancePath": "/status" }
+    },
+    {
+      "file": "progress-out-of-range.json",
+      "layer": "schema",
+      "reason": "progress exceeds 100.",
+      "expect": { "keyword": "maximum", "instancePath": "/progress" }
+    },
+    {
+      "file": "subject-without-name.json",
+      "layer": "schema",
+      "reason": "A subject has no name.",
+      "expect": { "keyword": "required", "instancePath": "/subjects/0" }
+    },
+    {
+      "file": "journal-without-body.json",
+      "layer": "schema",
+      "reason": "A journal entry has no body.",
+      "expect": { "keyword": "required", "instancePath": "/journal/0" }
+    },
+    {
+      "file": "documentref-without-id.json",
+      "layer": "schema",
+      "reason": "A recipe selection has no document id.",
+      "expect": { "keyword": "required", "instancePath": "/recipeRefs/0" }
+    },
+    {
+      "file": "substitution-missing-substitute.json",
+      "layer": "schema",
+      "reason": "A substitution is missing its substitute paint.",
+      "expect": { "keyword": "required", "instancePath": "/substitutions/0" }
+    },
+    {
+      "file": "wrong-spec.json",
+      "layer": "schema",
+      "reason": "spec is not the constant 'project'.",
+      "expect": { "keyword": "const", "instancePath": "/spec" }
+    },
+    {
+      "file": "unknown-top-level-member.json",
+      "layer": "schema",
+      "reason": "A non-standard top-level member is present; extra data must be namespaced under extensions.",
+      "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
+    },
+    {
+      "file": "dangling-subject-ref.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but a journal entry references a subject anchor no subject defines.",
+      "expect": { "rule": "subject-anchor-resolves" }
+    }
+  ]
+}

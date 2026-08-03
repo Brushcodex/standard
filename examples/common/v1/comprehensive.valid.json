@@ -1,0 +1,81 @@
+{
+  "$schema": "https://brushcodex.com/schemas/common/v1/common.schema.json",
+  "spec": "common",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/documents/atlas-blue-envelope",
+  "revision": "rev-2026-07-15T10-30-00Z-a1b2c3",
+  "title": "Comprehensive Common envelope example",
+  "description": "Exercises every optional member so round-trip and preservation tests have real data to move through the parser.",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-15T10:30:00Z",
+  "language": "en-GB",
+  "authors": [
+    {
+      "name": "A. Painter",
+      "id": "https://orcid.org/0000-0002-1825-0097",
+      "role": "author",
+      "url": "https://example.org/painters/a-painter"
+    }
+  ],
+  "contributors": [{ "name": "Reviewer Two", "role": "reviewer" }],
+  "license": {
+    "spdxId": "CC-BY-4.0",
+    "name": "Creative Commons Attribution 4.0 International",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "notice": "Author-declared license; not verified by BrushCodex."
+  },
+  "links": {
+    "source": "https://example.org/source/original-notes",
+    "canonical": "https://example.org/brushcodex/documents/atlas-blue-envelope",
+    "predecessor": "urn:uuid:00000000-0000-4000-8000-000000000001",
+    "forkOrigin": "urn:uuid:00000000-0000-4000-8000-0000000000ff"
+  },
+  "provenance": [
+    {
+      "sourceType": "community_estimate",
+      "reviewStatus": "pending_review",
+      "confidence": "medium",
+      "sourceName": "Community swatch thread",
+      "sourceUrl": "https://example.org/threads/42",
+      "contributor": "A. Painter",
+      "retrievedAt": "2026-06-20T12:00:00Z",
+      "transformationVersion": "importer@0.1.0",
+      "note": "Screen estimate; approximate, not a measurement.",
+      "derivedFrom": ["urn:uuid:00000000-0000-4000-8000-0000000000ab"]
+    },
+    {
+      "sourceType": "digital_approximation",
+      "reviewStatus": "pending_review",
+      "confidence": "low",
+      "sourceName": "Aggregated third-party colour list",
+      "sourceUrl": "https://example.org/datasets/colour-list",
+      "retrievedAt": "2026-06-22T08:15:00Z",
+      "license": { "spdxId": "CC0-1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/" },
+      "method": "Screen approximation of derived origin; carries neither manufacturer nor measurement authority.",
+      "note": "Approximate sRGB value; MUST NOT be presented as a physical paint measurement.",
+      "derivedFrom": ["https://example.org/datasets/colour-list#atlas-blue"]
+    },
+    {
+      "sourceType": "synthetic_test_fixture",
+      "reviewStatus": "approved",
+      "confidence": "high",
+      "method": "Generated fixture for round-trip coverage."
+    }
+  ],
+  "tags": ["example", "envelope", "draft"],
+  "translations": [{ "language": "fr", "title": "Exemple complet d'enveloppe Common" }],
+  "extensions": {
+    "com.example.tool:layerMap": {
+      "version": 3,
+      "regions": [
+        { "id": "r1", "label": "cloak", "points": [0.1, 0.2, 0.3] },
+        { "id": "r2", "label": "trim", "nested": { "deep": { "keep": true } } }
+      ]
+    },
+    "org.miniac.difficulty": "intermediate"
+  },
+  "integrity": {
+    "algorithm": "sha-256",
+    "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,20 @@
+BrushCodex — open standard and reference toolkit for portable
+miniature-painting recipes, palettes, inventories, techniques, and projects.
+
+Copyright (c) 2026 The BrushCodex authors.
+
+This product includes software developed by the BrushCodex authors.
+
+The BrushCodex open standard — the specification text (specs/), JSON Schemas
+(schemas/), and the reference validators, SDK, CLI, and tooling (packages/,
+scripts/) — is licensed under the Apache License, Version 2.0. You may obtain a
+copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+and in the file LICENSES/LICENSE-APACHE-2.0.txt distributed with this repository.
+
+The example documents and conformance fixtures (examples/, conformance/) are
+dedicated to the public domain under CC0 1.0 (see LICENSES/LICENSE-CC0-1.0.txt).
+
+See docs/LICENSING.md for the full per-path license matrix and rationale.
