@@ -6,6 +6,113 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### The public snapshot gate now verifies what it claimed to — 2026-08-10
+
+`scripts/check-public-snapshot.mjs` asserted `git rev-list --count HEAD === 1` while CI checked out
+at `actions/checkout`'s default `fetch-depth: 1` — a depth at which that count is `1` for *any*
+history, and `git log` sees only the tip commit. The assertion never once verified the property the
+publish-once design was believed to rest on, and it had no test. Demonstrated against a real shallow
+clone of the source repository: `rev-list` reports 1 for a 50-commit history.
+
+#### Changed
+
+- The **sensitive-content scan** and the **public-snapshot history assertions** are now separate
+  concerns. The content scan is the privacy net and runs unconditionally, in every repository
+  holding this tree and on every event. The history assertions describe the public snapshot alone
+  and are scoped to it in CI — running them against a full-history source repository is a category
+  error, not a reason to weaken them.
+- The one-root assertion is replaced by the **append-only release shape**: every commit must be a
+  release commit, authored *and* committed by the `@users.noreply.github.com` identity, linear, with
+  exactly one root. History may now grow one squashed commit per release, so earlier releases stay
+  reachable from `main` and existing clones keep working. What this actually catches is imported
+  development history — those commits read `docs: …`, `specs: …`, and each is reported by name.
+- The workflow sets `fetch-depth: 0`, and the gate treats "asked to verify history, handed a shallow
+  clone" as a failure in its own right, so the defect cannot silently return.
+- The logic moves to `scripts/lib/public-snapshot.mjs` as pure functions, following the consistency
+  and packed gates, with a regression suite covering every failure class (`pnpm test:gate`,
+  23 → 36 assertions). One of those tests scans the test file with its own scanner, because a test
+  that spells out the patterns it exercises trips the scan once it is tracked — as it did.
+- The conformance step no longer pins a corpus count in its name. A step name is not a place for a
+  decaying measurement, and the run prints its own total.
+
+### Release candidate `1.0.0-rc.1` — 2026-08-10
+
+All five `@brushcodex/*` packages bump `0.9.0-draft → 1.0.0-rc.1` in lockstep, through the packed
+release gate (`pnpm verify:packed`, `pnpm test:gate`). This is the candidate the reference
+application validates against before the coordinated v1 freeze; the final `1.0.0` is minted at the
+freeze itself. Packages remain `private` and **unpublished** — packing is local, and npm publication
+is a separate, still-undecided maintainer choice.
+
+> Corrected the same day: this entry originally said the archived origin blocks pushing and
+> publishing. As of 2026-08-10 the source repository has a live private remote, and this candidate
+> is published as a public snapshot. Registry publication remains untouched by either change.
+
+The gate's corpus expectation moves 92 → 95 with the three fixtures added below. Documentation that
+stated the old package version or corpus count is refreshed; historical entries in this changelog
+are left as the dated measurements they were.
+
+### Mixture ingredients: water is a component, not an exception — 2026-08-10
+
+Executes D1 and D2 of [docs/MIXTURE_INGREDIENT_DECISIONS.md](docs/MIXTURE_INGREDIENT_DECISIONS.md).
+No schema shape changes, no new enum values, no migration: every document valid before this entry
+is valid after it. What changes is what the prose *says* about documents the schema already
+accepted — the class of change that is free while v1 is DRAFT and unshippable once it is frozen.
+
+#### Changed
+
+- `paintRef.kind` is defined by **function in the mixture**, not by being a bottled product: it
+  classifies any component referenced the way paints are, bottled or not. A household diluent
+  (water) is an `additive`; `thinner` is for a product sold and identified as a thinner. Recipe §6,
+  Common §5.6, and the `common.schema.json` description now say this in the same words.
+- `kind` is explicitly **not** a purchasability signal: a consumer that aggregates across documents
+  (a shopping list, an inventory) MUST NOT infer that an `additive` is an acquirable product.
+- The `additive`/pigment hole is closed. A colour-bearing component — a dry pigment stirred into a
+  carrier — determines the resulting colour and is referenced with `kind: paint`; `additive` is for
+  what does not determine colour. The old "non-pigment" wording left that component with no correct
+  value in the vocabulary.
+- Recipe §5 `mix` states what a computing consumer does with a non-colour-determining component:
+  skip it when deriving colour, never present the derived colour as authored, and never renormalise
+  its authored `parts` away in what the reader sees. The silence there guaranteed divergence.
+- Recipe §5 `mixNote` no longer names water as its example of an unstructurable component; it is
+  the home for an *undeclared* component or a ratio written as prose.
+- The tools-and-scenic-materials MUST NOT splits in two (Recipe §6a, Common §5.6): a reusable
+  **tool** is a resource unconditionally; a **consumable material** goes by usage — a paintRef when
+  it joins a mixture at an authored ratio, a resource when used in the process. Three worked
+  examples (sand stirred, sand sprinkled, static grass glued) are now normative prose, because the
+  margin is a judgement call and identity is free text no validator can check.
+- Palette §6 documents `kind` and `chemistry`, which the shared `paintRef` has always carried —
+  a prose↔schema gap independent of this decision.
+- The `paintRef.kind` description no longer asserts that a renderer "does not draw a swatch" for a
+  non-paint kind — a claim the reference renderer falsified. It is now a **SHOULD NOT** aimed at
+  renderers, in Common §5.6 and the schema alike.
+- The reference renderers implement it: no colour swatch for a non-`paint` kind, even when `color`
+  is present. Before this, an `additive` carrying a hex value rendered as an ordinary paint chip —
+  swatch suppression was an accident of producers omitting `color`, not a behaviour anyone
+  implemented. Recipe, palette, and inventory renderers now share one `renderPaintSwatch` helper;
+  a test pins it.
+
+#### Added
+
+- **Version negotiation** (VERSIONING §8.5), which was normative prose nothing implemented. The
+  reference validator read `specVersion` nowhere: a document declaring `1.1.0` — or `2.0.0` —
+  validated silently against the `1.0` schema, and any member it carried from a later version was
+  reported as an ordinary error indistinguishable from a real one. Every spec validator now checks
+  the declared version first and reports a mismatch as a single distinct issue
+  (`spec-version-unsupported`, semantic layer) instead of validating further. A patch difference
+  (`1.0.1`) is accepted; Common §8 states the rule and two conformance fixtures pin it. This is
+  what makes shipping a `1.x` minor safe after the freeze.
+- [docs/VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md) — the §8.4 "deliberately settled" record,
+  walking all **27** closed vocabularies measured across the seven schemas (VERSIONING §8.1 names
+  eleven as examples; the freeze locks every one). All 27 settled. Two observations recorded as
+  open items, neither freeze-blocking: `alternative.type` and `substitution.type` are the same five
+  values defined twice, and `stage.status` lacks the `blocked` that `subject.status` has. The
+  first is the only item on that page that gets *harder* after the freeze, and it needs an owner
+  decision.
+- `examples/recipe/v1/water-thinned-mixture.valid.json` — the blessed pattern as a conformance
+  fixture: tap water declared `kind: additive`, anchored from `mix[]` at a ratio, beside a `medium`
+  in a second mixture. The corpus is what implementers test against, so it now teaches the pattern
+  rather than only the escape hatch. Conformance: 95/95.
+
 ### Public draft preparation — 2026-08-03
 
 #### Changed

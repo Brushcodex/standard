@@ -21,6 +21,7 @@ import { schemas } from '@brushcodex/schema';
 import {
   ajvErrorToIssue,
   envelopeSemanticIssues,
+  specVersionIssues,
   loadCommonSchema,
   type ValidationIssue,
   type ValidationResult,
@@ -83,6 +84,12 @@ function projectSemanticIssues(doc: ProjectDocument): ValidationIssue[] {
 
 /** Full reference validation: JSON Schema, then prose + anchor-integrity rules. */
 export function validateProjectDocument(input: unknown): ValidationResult {
+  // Version negotiation first (VERSIONING §8.5): an unrecognised spec version is
+  // reported alone, so no misleading 1.0 schema errors are produced beside it.
+  const versionIssues = specVersionIssues(input);
+  if (versionIssues.length > 0) {
+    return { valid: false, issues: versionIssues };
+  }
   const schemaIssues = validateProjectAgainstSchema(input);
   if (schemaIssues.length > 0) {
     return { valid: false, issues: schemaIssues };

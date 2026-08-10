@@ -14,6 +14,7 @@ import { schemas } from '@brushcodex/schema';
 import {
   ajvErrorToIssue,
   loadCommonSchema,
+  specVersionIssues,
   validateCommonDocument,
   type ValidationIssue,
   type ValidationResult,
@@ -52,6 +53,12 @@ export function validateBundleManifestAgainstSchema(input: unknown): ValidationI
 
 /** Full manifest validation (schema only — safety semantics are enforced by the reader). */
 export function validateBundleManifest(input: unknown): ValidationResult {
+  // Version negotiation first (VERSIONING §8.5): an unrecognised spec version is
+  // reported alone, so no misleading 1.0 schema errors are produced beside it.
+  const versionIssues = specVersionIssues(input);
+  if (versionIssues.length > 0) {
+    return { valid: false, issues: versionIssues };
+  }
   const issues = validateBundleManifestAgainstSchema(input);
   return { valid: issues.length === 0, issues };
 }

@@ -1,0 +1,79 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:7e5f1a20-9c3b-4d61-8a52-0f1c2d3e4b5a",
+  "revision": "rev-1",
+  "title": "Drybrushed stone, thinned with tap water",
+  "summary": "Teaches the blessed pattern for a household diluent: water is declared in paints[] with kind 'additive' and joins the mixture from mix[] at an authored ratio. The additive does not determine the resulting colour, so a colour engine skips it — but its parts are authored data recording the dilution and are never renormalised away.",
+  "difficulty": "beginner",
+  "target": {
+    "kind": "terrain",
+    "description": "Ruined stone wall section",
+    "substrate": "resin"
+  },
+  "paints": [
+    {
+      "ref": "stone",
+      "manufacturer": "Some Brand",
+      "range": "Model Color",
+      "name": "Stone Grey",
+      "kind": "paint",
+      "chemistry": "acrylic"
+    },
+    {
+      "ref": "water",
+      "name": "Tap water",
+      "kind": "additive",
+      "note": "A household diluent, not a purchasable product: an aggregating consumer must not put this on a shopping list."
+    },
+    {
+      "ref": "flow-aid",
+      "manufacturer": "Some Brand",
+      "name": "Flow Improver",
+      "kind": "medium",
+      "chemistry": "acrylic"
+    }
+  ],
+  "resources": [
+    { "name": "Drybrush", "kind": "tool", "specification": "Size 4 flat" },
+    { "name": "Wet palette", "kind": "tool", "optional": true }
+  ],
+  "steps": [
+    {
+      "id": "wash",
+      "instruction": "Flood the recesses with Stone Grey thinned heavily with tap water.",
+      "role": "wash",
+      "targetArea": "mortar lines and recesses",
+      "mix": [
+        { "paint": "stone", "parts": 1 },
+        { "paint": "water", "parts": 4 }
+      ],
+      "mixNote": "One part Stone Grey to four parts water.",
+      "method": "brush",
+      "coats": 1,
+      "dryingNotes": "Let it dry fully before drybrushing; a damp surface lifts the wash."
+    },
+    {
+      "id": "flow-thinned-glaze",
+      "instruction": "Glaze the flat faces with Stone Grey cut with water and a drop of flow improver.",
+      "role": "glaze",
+      "mix": [
+        { "paint": "stone", "parts": 2 },
+        { "paint": "water", "parts": 2 },
+        { "paint": "flow-aid", "parts": 1 }
+      ],
+      "mixNote": "Two parts paint, two parts water, one part flow improver.",
+      "method": "brush",
+      "coats": 2,
+      "expectedResult": "An even, slightly translucent grey with no tide marks."
+    },
+    {
+      "id": "drybrush",
+      "instruction": "Drybrush the raised edges with undiluted Stone Grey.",
+      "role": "drybrush",
+      "paintRefs": ["stone"],
+      "method": "brush",
+      "warnings": ["Wipe the brush almost dry; a loaded brush fills the mortar lines back in."]
+    }
+  ]
+}

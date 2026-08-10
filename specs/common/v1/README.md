@@ -145,7 +145,12 @@ references, so they are defined **once** and cannot drift:
   `manufacturer`/`name`; optional `ref`, `range`, `code`, `catalogueId`, `color`, `provenance`,
   `note`, and the classifiers `kind` (`paint` | `medium` | `thinner` | `additive` | `varnish`;
   absence means `paint`) and `chemistry` (`acrylic` | `enamel` | `oil` | `lacquer` | `other` — the
-  binder-family subset of Technique's paintClass). `color` is a `colorValue` `{ hex }` whose meaning
+  binder-family subset of Technique's paintClass). `kind` classifies **any component referenced the
+  way paints are**, bottled or not, by its **function in the mixture**: a household diluent (water)
+  is an `additive`, `thinner` is for a product sold as a thinner, a colour-bearing component (a dry
+  pigment) stays a `paint` because it determines the resulting colour, and an `additive` is **not**
+  implied to be an acquirable product. A renderer **SHOULD NOT** draw a colour swatch for a
+  non-`paint` kind even when `color` is present. `color` is a `colorValue` `{ hex }` whose meaning
   is set by provenance. `color` is OPTIONAL: a paint reference carrying **no** colour at all is
   valid, and a conforming implementation **MUST** accept it. `catalogueId` is an OPTIONAL, opaque,
   **external** identifier; see §5.7. Internal database primary keys **MUST NOT** appear in
@@ -153,7 +158,10 @@ references, so they are defined **once** and cannot drift:
 - **`resource`** — a tool or non-paint material (Recipe `resources`, Technique `tools`, Project
   `toolsUsed`). `name` REQUIRED and the **only** required member (no manufacturer/catalogue
   identity); optional `kind` (`tool` | `material`), `optional`, `specification`, `quantity`, `note`.
-  Ordinary tools and scenic materials are resources, **never** paintRefs.
+  A reusable **tool** is a resource unconditionally and **MUST NOT** be modelled as a paintRef. A
+  **consumable material** goes by usage: referenced in `paints[]`/`mix[]` (it joins a mixture at an
+  authored ratio) it is a paintRef classified by `kind`; used in the process — sprinkled, glued,
+  applied dry — it is a resource. Recipe §6a carries the worked examples.
 - **`documentRef`** — a soft reference to another document by stable id URI (Recipe `techniqueRefs`,
   Project `recipeRefs`/`paletteRefs`): `{ id (uri, REQUIRED), title? }`. An unresolved reference is
   **not** an error.
@@ -237,6 +245,15 @@ express, which the reference validator enforces:
 
 1. If both `createdAt` and `updatedAt` are present, `updatedAt >= createdAt`.
 2. `license`, when present, carries at least one of `spdxId`/`name` (also enforced by schema).
+
+**Version negotiation.** A consumer validates a document against the schema matching its declared
+`specVersion` ([VERSIONING.md](../../../VERSIONING.md) §8.5). A consumer that ships only the `1.0`
+schema — the reference validator does — **MUST NOT** silently validate a document declaring a
+higher minor or a different major against it: a `1.1` document may legitimately carry members and
+enum values `1.0` never had, and reporting those as ordinary schema errors tells the reader the
+document is malformed when it is merely newer. The reference validator reports the mismatch as a
+single distinct issue (`spec-version-unsupported`) and validates no further, so no misleading `1.0`
+errors appear beside it. A patch difference (`1.0.1`) is not a surface change and is accepted.
 
 ## 9. Security & privacy considerations
 

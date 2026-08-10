@@ -1,22 +1,36 @@
+/**
+ * Public-snapshot gate: orchestrator.
+ *
+ * Reads the tracked tree and (when asked) the git history, and delegates every judgement to the
+ * pure functions in scripts/lib/public-snapshot.mjs, which the regression suite drives directly.
+ *
+ * Usage:
+ *   node scripts/check-public-snapshot.mjs              # sensitive-content scan of the tracked tree
+ *   node scripts/check-public-snapshot.mjs --history    # ... plus the public-snapshot history assertions
+ *   node scripts/check-public-snapshot.mjs --tree-only  # deprecated alias for the default
+ *
+ * The content scan runs in EVERY repository holding this tree. `--history` is only correct in the
+ * public release repository (Brushcodex/standard), whose history is a squashed release-per-commit
+ * mirror; the private source repository's history is real development work and would rightly fail.
+ * It requires a full clone and says so rather than silently verifying nothing — see the module
+ * comment in scripts/lib/public-snapshot.mjs for why that mattered.
+ */
+
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const treeOnly = process.argv.includes('--tree-only');
-const tracked = execFileSync('git', ['ls-files', '-z'])
-  .toString('utf8')
-  .split('\0')
-  .filter(Boolean);
-const findings = [];
-const rules = [
-  ['retired schema-domain identifier', /brushcodex[.]org/i],
-  ['private workstation path', /(?:E:[\\/]+GitHub[\\/]+BrushCodex|\/home\/[^/\s]+\/[^\r\n]*BrushCodex)/i],
-  ['SSN-shaped value', /\b\d{3}-\d{2}-\d{4}\b/],
-  ['private key material', /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
-  ['GitHub token shape', /\b(?:gh[opusr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/],
-  ['AWS access-key shape', /\bAKIA[0-9A-Z]{16}\b/],
-];
-const emailPattern = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+import { historyDiscrepancies, parseCommitLog, scanTrackedFile } from './lib/public-snapshot.mjs';
 
+const git = (args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+
+const withHistory = process.argv.includes('--history');
+if (process.argv.includes('--tree-only')) {
+  console.warn('note: --tree-only is the default; the flag is retained only for compatibility.');
+}
+
+const findings = [];
+
+const tracked = git(['ls-files', '-z']).split('\0').filter(Boolean);
 for (const file of tracked) {
   let text;
   try {
@@ -24,26 +38,16 @@ for (const file of tracked) {
   } catch {
     continue;
   }
-  if (text.includes('\0')) continue;
-  for (const [label, pattern] of rules) {
-    if (pattern.test(text)) findings.push(`${file}: ${label}`);
-  }
-  for (const email of text.match(emailPattern) ?? []) {
-    if (!/@example\.(?:com|net|org)$/i.test(email) && !/@users\.noreply\.github\.com$/i.test(email)) {
-      findings.push(`${file}: non-example email address`);
-    }
-  }
+  if (text.includes('\0')) continue; // binary
+  findings.push(...scanTrackedFile(file, text));
 }
 
-if (!treeOnly) {
-  const commits = Number(execFileSync('git', ['rev-list', '--count', 'HEAD'], { encoding: 'utf8' }).trim());
-  if (commits !== 1) findings.push(`history: expected one public root commit, found ${commits}`);
-  const emails = execFileSync('git', ['log', '--format=%ae%n%ce'], { encoding: 'utf8' })
-    .split(/\r?\n/)
-    .filter(Boolean);
-  for (const email of emails) {
-    if (!/@users\.noreply\.github\.com$/i.test(email)) findings.push('history: non-noreply commit email');
-  }
+if (withHistory) {
+  const shallow = git(['rev-parse', '--is-shallow-repository']).trim() === 'true';
+  const commits = shallow
+    ? []
+    : parseCommitLog(git(['log', '--format=%H%x1f%P%x1f%ae%x1f%ce%x1f%s']));
+  findings.push(...historyDiscrepancies({ shallow, commits }));
 }
 
 if (findings.length) {
@@ -51,4 +55,5 @@ if (findings.length) {
   process.exit(1);
 }
 
-console.log(`Public snapshot scan passed (${tracked.length} tracked files${treeOnly ? ', tree only' : ', one clean root commit'}).`);
+const scope = withHistory ? ', history verified against a full clone' : ', tree only';
+console.log(`Public snapshot scan passed (${tracked.length} tracked files${scope}).`);

@@ -99,12 +99,17 @@ these uses over its lifetime. Producers SHOULD state important context in `summa
   `role` enum, so the vocabulary stays small and stable.
 - `targetArea` — where on the subject the step applies.
 - `paintRefs` — anchors into `paints[].ref` used in this step.
-- `mix` — a mixture of **two or more** paints, each `{ paint (anchor), parts (> 0) }`. `parts`
+- `mix` — a mixture of **two or more** components, each `{ paint (anchor), parts (> 0) }`. `parts`
   are author-provided ratios, relative within the one mixture. Ratios are **authored**, never
-  computed and presented as authored.
+  computed and presented as authored. A component that is not a paint — water, a medium, a thinner —
+  joins a mixture the same way, declared in `paints[]` and classified by `kind` (§6). A consumer
+  deriving a colour from a mixture **MUST** skip components whose `kind` marks them as not
+  colour-determining, and **MUST NOT** present the derived colour as authored. The `parts` of a
+  skipped component remain authored data (they record dilution and opacity) and **MUST NOT** be
+  renormalised away in what is shown to the reader.
 - `mixNote` — the mixture as the author wrote it (e.g. `"1:1 Caliban + Moot"`), for a mixture `mix`
-  cannot express: a component that is not a declared paint (water, an undeclared medium) or a ratio
-  written as prose. Non-empty when present. When `mix` is also present, **`mix` is authoritative for
+  cannot express: an undeclared component, or a ratio written as prose. Non-empty when present.
+  When `mix` is also present, **`mix` is authoritative for
   computation** and `mixNote` is the human wording; a consumer **MUST NOT** parse `mixNote` into
   ratios, and **MUST NOT** drop it when structuring the mixture. This is the same free-text escape
   hatch as `technique` beside `role`: prose the format keeps rather than a structure it fakes.
@@ -124,10 +129,24 @@ everything else is optional:
 - `manufacturer`, `range`, `name` — literal identity.
 - `code` — the manufacturer's printed product code / item number on the bottle (e.g. a Vallejo item
   number like `70.950`). Distinct from `catalogueId` and from any internal database id (forbidden).
-- `kind` — OPTIONAL classifier for a paint-like bottled product: `paint` (the default when absent),
-  `medium`, `thinner`, `additive`, `varnish`. Non-pigment products referenced the way paints are
-  (in `paints[]`/`mix[]`) are marked so the color engine skips them. Ordinary tools and scenic
-  materials are `resources` (§6a), never paintRefs.
+- `kind` — OPTIONAL classifier for **any component referenced the way paints are** (in
+  `paints[]`/`mix[]`), bottled or not: `paint` (the default when absent), `medium`, `thinner`,
+  `additive`, `varnish`. A component that does not determine the resulting colour is marked so the
+  color engine skips it (§5). Three rules keep the vocabulary from drifting between implementers:
+  - **A household diluent — water above all — is an `additive`.** `thinner` is for a product sold
+    and identified as a thinner (a branded airbrush thinner, white spirit). Without this line two
+    implementers legally classify "water" differently and the same substance forks inside a
+    five-value enum.
+  - **`kind` classifies function in the mixture, not purchasability.** A consumer that aggregates
+    across documents (a shopping list, an inventory) **MUST NOT** infer that an `additive` is an
+    acquirable product; tap water is not a line item.
+  - **A colour-bearing component is a `paint` whatever its form.** A dry pigment stirred into a
+    carrier determines the resulting colour, so it is referenced with `kind: paint` and the color
+    engine **MUST NOT** skip it. `additive` is for what does not determine colour.
+
+  Ordinary tools are `resources` (§6a), never paintRefs; for consumable materials §6a draws the
+  line by usage.
+
 - `chemistry` — OPTIONAL binder/solvent family: `acrylic`, `enamel`, `oil`, `lacquer`, `other`. The
   substitution-safety axis (an enamel MUST NOT be silently substituted for an acrylic). These are
   the binder-family subset of Technique's paintClass vocabulary; `chemistry` is distinct from
@@ -145,10 +164,12 @@ on a giant paint database to be valid.
 ## 6a. Resources — tools and non-paint materials
 
 `recipe.resources[]` lists everything needed to reproduce the workflow beyond paints: reusable tools
-(brush, airbrush, wet palette, hobby knife, UV lamp) and consumable non-paint materials (PVA glue,
-masking putty, static grass, pigments, IPA, sandpaper, resin, gloves; and mediums/varnish where
-**not** represented as a paint). Each Resource is the shared Common `resource` type (also used by
-`technique.tools` and `project.toolsUsed`):
+(brush, airbrush, wet palette, hobby knife, UV lamp) and consumable non-paint materials **when used
+in the process** (PVA glue, masking putty, static grass, pigments, IPA, sandpaper, resin, gloves;
+and mediums/varnish where **not** represented as a paint). A consumable that joins a mixture at an
+authored ratio is referenced as a paintRef for that recipe instead — see the line below. Each
+Resource is the shared Common `resource` type (also used by `technique.tools` and
+`project.toolsUsed`):
 
 - `name` — REQUIRED, and the **only** required member; a resource carries **no** manufacturer or
   catalogue identity.
@@ -160,9 +181,30 @@ masking putty, static grass, pigments, IPA, sandpaper, resin, gloves; and medium
   invented measurement.
 - `note` — optional free text.
 
-**paintRef vs resource.** A bottled product referenced the way paints are (in `paints[]`/`mix[]`),
-including non-pigment ones, is a `paintRef` classified by `kind` (§6). A tool or scenic material is a
-`resource`. Ordinary tools and scenic materials **MUST NOT** be modelled as a paintRef.
+**paintRef vs resource.** Membership follows how the item is used, and the rule splits in two:
+
+- **Tools — unconditional.** A reusable tool (brush, airbrush, wet palette, hobby knife, sandpaper,
+  UV lamp, gloves) is a `resource` and **MUST NOT** be modelled as a paintRef, in any recipe, under
+  any usage. A tool is never a mixture component.
+- **Consumable materials — by usage.** If it is referenced in `paints[]`/`mix[]`, it is a `paintRef`
+  classified by `kind` (§6); otherwise it is a `resource`. A consumable that joins a mixture at an
+  authored ratio is a paintRef **for that recipe**; the same substance used in the process —
+  sprinkled, glued, applied dry — is a `resource`. The same substance may therefore be a paintRef
+  in one document and a resource in another; that is the usage speaking, not a contradiction.
+
+Worked examples, because the margin is a judgement call:
+
+- **Sand stirred into a basecoat at 2:1** — a mixture component at an authored ratio, so it is a
+  declared paintRef with `kind: additive`, anchored from `mix[]`. (It does not determine the
+  colour; the basecoat does.)
+- **Sand sprinkled onto wet basecoat** — used in the process, not mixed, so it is a `resource` with
+  `kind: material`. The step's `instruction` says how it is applied.
+- **Static grass glued on** — a `resource`, *even when the glue mixture's ratio is written down*.
+  The ratio belongs to the glue-and-water mixture in that step, not to the grass; the grass never
+  enters `mix[]`.
+
+Identity is free text, so no validator can check any of this — it is guidance a producer follows,
+not a constraint a consumer may enforce by rejecting documents.
 
 ## 6b. Technique references
 

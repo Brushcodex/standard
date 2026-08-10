@@ -26,6 +26,11 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          # Required by the history assertions below. At the default depth of 1,
+          # `git rev-list --count HEAD` returns 1 for ANY history and `git log` sees only the tip,
+          # so those assertions silently verify nothing. The gate now refuses a shallow clone
+          # outright, which turns that mistake into a loud failure instead of a false pass.
+          fetch-depth: 0
 
       - name: Install pnpm
         uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa
@@ -41,13 +46,18 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Public snapshot, history, and sensitive-content scan
-        if: github.event_name == 'push'
+      # The content scan is the privacy net: it runs in every repository holding this tree
+      # (private source, public snapshot) and on every event. Never make it conditional.
+      - name: Sensitive-content scan (tracked tree)
         run: pnpm check:public-snapshot
 
-      - name: Proposed-tree sensitive-content scan
-        if: github.event_name == 'pull_request'
-        run: pnpm check:public-snapshot -- --tree-only
+      # The history assertions describe the PUBLIC snapshot's shape — one squashed release commit
+      # per release, noreply identity, linear, single root. The private source repository's history
+      # is real development work by a real author and would rightly fail them, so they are scoped
+      # to the public repository rather than skipped by weakening the rules.
+      - name: Public snapshot history assertions
+        if: github.event_name == 'push' && github.repository == 'Brushcodex/standard'
+        run: pnpm check:public-snapshot -- --history
 
       - name: Local link validation
         run: pnpm check:links
@@ -64,7 +74,7 @@ jobs:
       - name: Unit and integration tests
         run: pnpm -r test
 
-      - name: Conformance (92/92)
+      - name: Conformance
         run: pnpm conformance
 
       - name: Gate helper regression tests

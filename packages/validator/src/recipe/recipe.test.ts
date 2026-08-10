@@ -33,6 +33,7 @@ const VALID_FILES = [
   'minimal.valid.json',
   'comprehensive.valid.json',
   'literal-paints-no-catalogue.valid.json',
+  'water-thinned-mixture.valid.json',
 ] as const;
 
 interface ExpectationCase {
@@ -88,6 +89,26 @@ describe('Recipe — literal paint references without a catalogue (strategy hone
 
   it('round-trips a literal-only recipe without material loss', () => {
     const input = readExample('literal-paints-no-catalogue.valid.json');
+    const first = parseRecipeDocument(input);
+    const reparsed = parseRecipeDocument(JSON.parse(serializeRecipeDocument(first)));
+    expect(reparsed).toEqual(first);
+  });
+});
+
+describe('Recipe — a non-paint component in a structured mixture (spec §5, §6)', () => {
+  it('accepts a household diluent declared as an additive and anchored from mix[]', () => {
+    const doc = parseRecipeDocument(readExample('water-thinned-mixture.valid.json'));
+    const water = (doc.paints ?? []).find((paint) => paint.ref === 'water');
+    expect(water?.kind).toBe('additive');
+    // The additive is a first-class mixture component: the anchor resolves and its
+    // authored parts survive, because they record the dilution the author chose.
+    const wash = doc.steps.find((step) => step.id === 'wash');
+    const entry = wash?.mix?.find((row) => row.paint === 'water');
+    expect(entry?.parts).toBe(4);
+  });
+
+  it('round-trips the additive mixture without dropping the non-paint row', () => {
+    const input = readExample('water-thinned-mixture.valid.json');
     const first = parseRecipeDocument(input);
     const reparsed = parseRecipeDocument(JSON.parse(serializeRecipeDocument(first)));
     expect(reparsed).toEqual(first);

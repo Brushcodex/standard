@@ -138,6 +138,9 @@ rejected by a strict `1.0` validator that does not know it. Removing or renaming
 narrowing an enum, is a **breaking (major)** change. This is why closed vocabularies must be
 deliberately settled at freeze (§8.1) and why consumers select their schema by version (§8.5).
 
+That deliberate settlement is recorded, one vocabulary at a time, in
+[docs/VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md).
+
 ### 8.5 Schema version negotiation
 
 A document declares the spec version it targets in its `specVersion` member. A consumer validates a

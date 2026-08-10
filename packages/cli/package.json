@@ -1,6 +1,6 @@
 {
   "name": "@brushcodex/cli",
-  "version": "0.9.0-draft",
+  "version": "1.0.0-rc.1",
   "private": true,
   "type": "module",
   "description": "Command-line tools for the BrushCodex open standard: validate documents/bundles and run conformance.",

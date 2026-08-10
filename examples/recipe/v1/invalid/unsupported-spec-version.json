@@ -1,0 +1,9 @@
+{
+  "spec": "recipe",
+  "specVersion": "2.0.0",
+  "id": "urn:uuid:5d8e0f21-3a4b-4c6d-8e70-1f2a3b4c5d6e",
+  "revision": "rev-1",
+  "title": "Targets spec version 2.0.0; this validator implements 1.0.0",
+  "summary": "Every member here is valid 1.0, so the 1.0 schema would accept it. A different major version is a different format, and the 1.0 schema says nothing about it (VERSIONING §8.5).",
+  "steps": [{ "instruction": "Basecoat the model." }]
+}

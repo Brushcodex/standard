@@ -13,8 +13,13 @@ import type { ErrorObject } from 'ajv/dist/2020.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { ajvErrorToIssue, validateAgainstSchema } from './validate';
-import { validateBySpec } from '../registry';
+import {
+  ajvErrorToIssue,
+  IMPLEMENTED_SPEC_VERSION,
+  specVersionIssues,
+  validateAgainstSchema,
+} from './validate';
+import { SPEC_NAMES, validateBySpec } from '../registry';
 
 /** Build a minimal Ajv ErrorObject; only the fields the mapper reads matter. */
 function ajvError(partial: Partial<ErrorObject> & Pick<ErrorObject, 'keyword'>): ErrorObject {
@@ -162,4 +167,73 @@ describe('validateBySpec — const enrichment end to end', () => {
     expect(constIssue, JSON.stringify(issues)).toBeDefined();
     expect(constIssue?.message).toContain('(expected: "recipe")');
   });
+});
+
+describe('specVersion negotiation (VERSIONING §8.5)', () => {
+  /**
+   * The canonical minimal example of a spec, re-declared at a chosen version. Taken
+   * from the corpus rather than hand-written, so the probe cannot drift out of
+   * conformance when a spec's required members change.
+   */
+  function minimalAtVersion(spec: string, specVersion: string): unknown {
+    const doc = JSON.parse(
+      readFileSync(
+        fileURLToPath(new URL(`../../../../examples/${spec}/v1/minimal.valid.json`, import.meta.url)),
+        'utf8',
+      ),
+    ) as Record<string, unknown>;
+    return { ...doc, specVersion };
+  }
+
+  it('accepts the version this validator implements, and a patch of it', () => {
+    expect(specVersionIssues({ specVersion: IMPLEMENTED_SPEC_VERSION })).toEqual([]);
+    expect(specVersionIssues({ specVersion: '1.0.7' })).toEqual([]);
+  });
+
+  it('reports a higher minor as its own issue, naming both versions', () => {
+    const issues = specVersionIssues({ specVersion: '1.1.0' });
+    expect(issues).toHaveLength(1);
+    const issue = issues[0]!;
+    expect(issue.code).toBe('spec-version-unsupported');
+    expect(issue.path).toBe('/specVersion');
+    expect(issue.layer).toBe('semantic');
+    expect(issue.message).toContain('document targets 1.1.0');
+    expect(issue.message).toContain(`this validator implements ${IMPLEMENTED_SPEC_VERSION}`);
+    // The reader is told what to do instead, not merely that it failed.
+    expect(issue.message).toMatch(/downgrade-with-loss/);
+  });
+
+  it('reports a different major as an incompatible format', () => {
+    const issues = specVersionIssues({ specVersion: '2.0.0' });
+    expect(issues).toHaveLength(1);
+    const issue = issues[0]!;
+    expect(issue.code).toBe('spec-version-unsupported');
+    expect(issue.message).toContain('document targets 2.0.0');
+    expect(issue.message).toMatch(/incompatible/);
+  });
+
+  it('leaves a missing or non-SemVer specVersion to the schema layer', () => {
+    // The schema owns "required" and the SemVer "pattern"; reporting them here too
+    // would double-report and, for '1.0', guess at a version the document never made.
+    expect(specVersionIssues({ title: 'no version' })).toEqual([]);
+    expect(specVersionIssues({ specVersion: '1.0' })).toEqual([]);
+    expect(specVersionIssues({ specVersion: 11 })).toEqual([]);
+    expect(specVersionIssues(null)).toEqual([]);
+    expect(specVersionIssues('not a document')).toEqual([]);
+  });
+
+  it.each(SPEC_NAMES)(
+    '%s rejects a 1.1.0 document with the version issue ALONE, not misleading 1.0 errors',
+    (spec) => {
+      const accepted = validateBySpec(spec, minimalAtVersion(spec, IMPLEMENTED_SPEC_VERSION));
+      expect(accepted, JSON.stringify(accepted.issues)).toEqual({ valid: true, issues: [] });
+
+      const { valid, issues } = validateBySpec(spec, minimalAtVersion(spec, '1.1.0'));
+      expect(valid).toBe(false);
+      // Exactly one issue: silence about the 1.0 surface is the point — a 1.1 document
+      // may legitimately carry members 1.0 never had.
+      expect(issues).toHaveLength(1);
+      expect(issues[0]!.code).toBe('spec-version-unsupported');
+    },
+  );
 });

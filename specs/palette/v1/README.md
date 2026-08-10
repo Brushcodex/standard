@@ -68,6 +68,17 @@ entry and **no** color value. A PaintRef MUST include at least one of `manufactu
 database id), `color` (`{ hex }`), `provenance`, and `note` are optional. A hex value **MUST NOT**
 be presented as a physical measurement unless a provenance entry says so.
 
+The shared `paintRef` also carries the two classifiers, and a palette uses them with exactly the
+Common semantics — there is no palette-local meaning:
+
+- `kind` — `paint` (the default when absent), `medium`, `thinner`, `additive`, `varnish`. It
+  classifies any component referenced the way paints are, by its function in the mixture, so a
+  palette mixture can name water (`additive`) at a ratio just as a recipe can. A component that
+  does not determine the resulting colour is skipped by a colour engine; the `parts` are still
+  authored data. See Common §5.6 and Recipe §6.
+- `chemistry` — `acrylic`, `enamel`, `oil`, `lacquer`, `other`: the substitution-safety axis (an
+  enamel MUST NOT be silently substituted for an acrylic).
+
 ## 7. Anchor integrity (semantic)
 
 Every anchor used by `entries[].mix[].paint` and `relationships[].sequence[]` **MUST** resolve to

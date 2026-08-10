@@ -85,7 +85,7 @@ $ python validate.py examples/recipe/v1/invalid/missing-steps.json
 invalid at /: 'steps' is a required property [required]
 ```
 
-The accept/reject outcome matches the reference validator: the whole corpus (92 cases) is what
+The accept/reject outcome matches the reference validator: the whole corpus (95 cases) is what
 `pnpm --filter @brushcodex/cli conformance` checks. This page's commands were executed against the
 corpus with Python 3.12 and `jsonschema` 4.25.
 

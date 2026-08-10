@@ -124,6 +124,19 @@ export function renderSwatch(
   );
 }
 
+/**
+ * The swatch for a **paint reference**, honouring `kind`: a component that does not
+ * determine the resulting colour (`medium`, `thinner`, `additive`, `varnish`) draws
+ * no colour swatch even when it carries `color` — Common §5.6 and the `paintRef.kind`
+ * schema description. Without this a declared `additive` with a hex value renders as
+ * an ordinary paint chip, telling a reader the opposite of what the classifier means.
+ * The reference is still named and still badged with its kind; only the swatch goes.
+ */
+export function renderPaintSwatch(paint: PaintRef): string {
+  if (paint.kind !== undefined && paint.kind !== 'paint') return '';
+  return renderSwatch(paint.color, paint.provenance);
+}
+
 /** The self-contained stylesheet shared by every static renderer. No external requests. */
 export const STYLE = `
   :root { color-scheme: light dark; }

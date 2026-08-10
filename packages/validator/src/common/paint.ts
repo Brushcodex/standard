@@ -17,9 +17,11 @@ import { provenanceEntrySchema } from './envelope';
 export const colorValueSchema = z.object({ hex: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).strict();
 
 /**
- * Classifies a paint-like bottled product. Absence means an ordinary pigment
- * paint. Non-pigment products (mediums, thinners, varnishes) referenced the way
- * paints are (in paints[]/mix[]) are marked so the color engine skips them.
+ * Classifies any component referenced the way paints are (in paints[]/mix[]),
+ * bottled or not, by its function in the mixture. Absence means an ordinary
+ * pigment paint. A component that does not determine the resulting colour (a
+ * medium, thinner, varnish, or additive) is marked so the color engine skips it —
+ * water is an `additive`, a dry pigment stirred into a carrier stays a `paint`.
  */
 export const PAINT_KINDS = ['paint', 'medium', 'thinner', 'additive', 'varnish'] as const;
 
