@@ -6,6 +6,44 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### The Standard is now developed in the open — 2026-08-10
+
+Development moves into this repository. Branches and pull requests happen here, `main` accumulates
+ordinary development commits, and releases become ordinary tags rather than a snapshot exported from
+a private source repository. The earlier history stays private because it is authored with a
+personal email address, which this repository could never take back once published; nothing about
+the Standard itself is withheld — the published tree was verified byte-identical to the private one
+(291 files, same tree hash) before the switch.
+
+#### Changed
+
+- **The public-snapshot gate becomes the publication-safety gate.** `check:public-snapshot` →
+  `check:publication-safety`; `scripts/check-public-snapshot*.mjs` and `scripts/lib/public-snapshot.mjs`
+  renamed to match. The old name describes a design that no longer exists, and a gate whose name
+  encodes a retired model teaches every future reader the wrong thing.
+- **Retired: the snapshot-shape assertions** — every commit must be a squashed release commit,
+  history must be linear, there must be exactly one root. Those described a mirror, not a
+  repository people work in. Measured before removal: they reject an ordinary commit by name
+  (`is not a release commit`), so the first honest commit pushed here would have turned `main` red.
+  Linearity is still enforced, by branch protection, which is where it belongs.
+- **Kept, and strengthened: the commit-identity assertion.** Author *and* committer must be a
+  `@users.noreply.github.com` address. This is deliberately not folded into the content scan,
+  because **the content scan reads file contents and cannot see a commit author** — an address in no
+  file at all still becomes permanent the moment it is committed, on a branch that forbids the
+  force-push that would remove it. On 2026-08-10 GitHub's merge machinery was measured rewriting the
+  author (squash) and the committer (rebase) to a personal address.
+- **Identity is now checked on the commits a pull request proposes** (`--range=<base>..HEAD`), not
+  only after a push. `main` requires a pull request and forbids force-pushes, so catching a personal
+  address after the merge would be too late to act on. Merges are excluded from the range, since a
+  `pull_request` checkout is a synthetic merge commit committed by GitHub's own bot address.
+- The gate now refuses an **empty commit range** as well as a shallow clone. "Nothing to check" must
+  never read as "checked and clean" — that is the same class of silent-pass defect that made the
+  previous gate vacuous for its entire first life.
+- `pnpm test:gate` 36 → **37**, including a case pinning each retired assertion as retired, so
+  reinstating one is a deliberate act rather than a quiet regression.
+- `docs/RELEASING.md`, `PROVENANCE.md` and `README.md` corrected: they described a private-source
+  workflow that no longer exists.
+
 ### The adoption on-ramp did not work from a clean clone — 2026-08-10
 
 The newcomer path was walked for the first time, as a stranger would walk it: clone only the

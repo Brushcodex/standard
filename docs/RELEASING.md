@@ -69,37 +69,52 @@ The gate's own assertion logic is unit-tested (`pnpm test:gate`, Node's built-in
 proving it detects a missing packed dependency, a repo-relative import in packed output, a missing
 fixture corpus, a broken CLI bin, and a version/manifest mismatch.
 
-## The public-snapshot gate
+## The publication-safety gate
 
-`scripts/check-public-snapshot.mjs` covers two separate concerns, and the separation is load-bearing:
+This repository is **developed in the open** (since 2026-08-10). `main` is public, requires a pull
+request, and forbids force-pushes and deletions. Nothing that lands can be taken back, so
+`scripts/check-publication-safety.mjs` guards the two things that are permanent:
 
 ```bash
-pnpm check:public-snapshot              # sensitive-content scan of the tracked tree
-pnpm check:public-snapshot -- --history  # ... plus the public-snapshot history assertions
+pnpm check:publication-safety                              # sensitive-content scan of the tree
+pnpm check:publication-safety -- --identity                # ... plus commit identity, all history
+pnpm check:publication-safety -- --identity --range=<base>..HEAD   # ... over one range
 ```
 
-**The content scan runs everywhere** — private source repository, public snapshot repository, every
-pull request. It is the privacy net (retired domain, workstation paths, key/token/SSN shapes,
-non-example email addresses) and must never be made conditional.
+**The content scan runs on every event**, unconditionally. It is the privacy net (retired domain,
+workstation paths, key/token/SSN shapes, non-example email addresses) and must never be made
+conditional.
 
-**The history assertions describe the public repository only.** The public snapshot is an
-*append-only squashed release mirror*: one clean commit per release, so history grows, `v0.9.0-draft`
-stays reachable, and existing clones keep working. Every commit must therefore be a release commit
-(`Release BrushCodex Standard v…`), authored *and* committed by the `@users.noreply.github.com`
-identity, with a linear history and exactly one root. Those rules are what stop the private
-development history being imported — its commits read `docs: …`, `specs: …`, `release: pack …`,
-and each would be reported by name.
+**The commit-identity assertion** requires a `@users.noreply.github.com` address in **both** the
+author and committer fields of every commit under examination. The two checks are separate because
+**the content scan cannot see a commit author**: an address appearing in no file at all still
+becomes permanent the moment it is committed.
 
-Running them against the private source repository is a category error: its history is real
-development work by a real author, which is what it should be. CI scopes them with
-`if: github.repository == 'Brushcodex/standard'`.
+That is not a theoretical concern. Measured on 2026-08-10, GitHub's own merge machinery rewrote the
+**author** on squash-merge and the **committer** on rebase-merge to a personal address — either
+would have published it irreversibly. Rebase-merge is the supported method and squash must not be
+used; the gate is what stops that discipline being a thing someone has to remember.
 
-> **They require a full clone, and say so.** From this gate's introduction until 2026-08-10 it
+CI checks the range a pull request proposes (`base.sha..HEAD`) so a bad identity is caught *before*
+merge, and re-checks the full history on push so the property holds for the repository as a whole.
+Merges are excluded from the range: a `pull_request` checkout is a synthetic merge commit committed
+by GitHub's own bot address rather than a *user* noreply identity, and failing a contributor for an
+artefact of the checkout would be wrong. Real merges cannot reach `main` — branch protection
+requires linear history.
+
+> **It requires a full clone, and says so.** From this gate's introduction until 2026-08-10 it
 > asserted `git rev-list --count HEAD === 1` while CI checked out at `actions/checkout`'s default
 > `fetch-depth: 1` — a depth at which that count is 1 for *any* history. The assertion never once
 > verified the property the publish-once design was believed to rest on, and its passing was read as
-> evidence. The workflow now sets `fetch-depth: 0`, and the gate refuses to pass judgement on a
-> shallow clone rather than silently approving it. `pnpm test:gate` pins that refusal.
+> evidence. The workflow sets `fetch-depth: 0`, and the gate refuses to pass judgement on a shallow
+> clone — or on an empty commit range — rather than silently approving. `pnpm test:gate` pins both
+> refusals.
+
+> **Retired 2026-08-10 with the snapshot model.** The gate no longer asserts that every commit is a
+> squashed release commit, that history is linear, or that there is exactly one root. Those
+> described a mirror exported from a private source repository. Ordinary development commits are now
+> the normal case, and keeping those rules would have turned `main` red on the first honest commit.
+> Linearity is still enforced, by branch protection, which is where it belongs.
 
 ## Local pack workflow (manual, if needed)
 

@@ -22,14 +22,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - name: Check out the clean snapshot
+      - name: Check out
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          # Required by the history assertions below. At the default depth of 1,
-          # `git rev-list --count HEAD` returns 1 for ANY history and `git log` sees only the tip,
-          # so those assertions silently verify nothing. The gate now refuses a shallow clone
-          # outright, which turns that mistake into a loud failure instead of a false pass.
+          # Required by the commit-identity assertion below. At the default depth of 1, `git log`
+          # sees only the tip commit, so the assertion silently verifies almost nothing. The gate
+          # refuses a shallow clone outright, which turns that mistake into a loud failure instead
+          # of a false pass — it was a false pass here for the whole of this gate's first life.
           fetch-depth: 0
 
       - name: Install pnpm
@@ -46,18 +46,23 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      # The content scan is the privacy net: it runs in every repository holding this tree
-      # (private source, public snapshot) and on every event. Never make it conditional.
+      # The content scan is the privacy net. This repository is public and `main` forbids
+      # force-pushes, so anything that lands is permanent. Runs on every event, unconditionally.
       - name: Sensitive-content scan (tracked tree)
-        run: pnpm check:public-snapshot
+        run: pnpm check:publication-safety
 
-      # The history assertions describe the PUBLIC snapshot's shape — one squashed release commit
-      # per release, noreply identity, linear, single root. The private source repository's history
-      # is real development work by a real author and would rightly fail them, so they are scoped
-      # to the public repository rather than skipped by weakening the rules.
-      - name: Public snapshot history assertions
-        if: github.event_name == 'push' && github.repository == 'Brushcodex/standard'
-        run: pnpm check:public-snapshot -- --history
+      # Commit identity, checked on the commits a pull request PROPOSES — before they are
+      # permanent. `main` requires a pull request and forbids force-pushes, so catching a personal
+      # address after the merge would be too late to do anything about.
+      - name: Commit identity (proposed commits)
+        if: github.event_name == 'pull_request'
+        run: pnpm check:publication-safety -- --identity --range=${{ github.event.pull_request.base.sha }}..HEAD
+
+      # And again over the whole history on push, so the property holds for the repository as a
+      # whole rather than only for whatever most recently passed review.
+      - name: Commit identity (full history)
+        if: github.event_name == 'push'
+        run: pnpm check:publication-safety -- --identity
 
       - name: Local link validation
         run: pnpm check:links
