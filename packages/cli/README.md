@@ -40,7 +40,7 @@ pnpm --filter @brushcodex/cli conformance -- --json
 runtime dependency — not the repository. The CLI bundles `@brushcodex/validator` (and
 `@brushcodex/schema`) at build time and keeps `@brushcodex/fixtures` external, so the installed
 package resolves the corpus from `node_modules/@brushcodex/fixtures/corpus/**`. The packed CLI runs
-`92/92` from any working directory, with **no repo-relative path** and even with the source repo
+`95/95` from any working directory, with **no repo-relative path** and even with the source repo
 absent. (Historically `conformance` read the repo-root `examples/` via `../../../examples`, which
 broke once packed; that is fixed.)
 
@@ -62,4 +62,4 @@ pnpm -r build
 # CLI's transitive @brushcodex/fixtures to the fixtures tarball — see the workspace docs).
 ```
 
-**Status:** `0.9.0-draft`, `private` — **not published** to any registry. License: Apache-2.0.
+**Status:** `1.0.0-rc.1`, `private` — **not published** to any registry. License: Apache-2.0.

@@ -114,7 +114,7 @@ fixtures.
 
 ### `packages/` — the toolkit (the "SDK")
 
-Five packages, versioned in lockstep at `0.9.0-draft`, all **private — none is published to any
+Five packages, versioned in lockstep at `1.0.0-rc.1`, all **private — none is published to any
 registry**.
 
 | Package | Role |
@@ -179,7 +179,7 @@ pnpm install
 pnpm -r build       # topological: schema -> validator -> {types, fixtures} -> cli
 pnpm -r typecheck
 pnpm -r test
-pnpm conformance    # validate the whole corpus (92/92); exit 1 on any mismatch
+pnpm conformance    # validate the whole corpus (95/95); exit 1 on any mismatch
 pnpm check:consistency   # assert every schema enum value + property is documented in the prose
 pnpm --filter @brushcodex/cli validate <absolute-file>   # one document or .brushcodex.zip
 ```

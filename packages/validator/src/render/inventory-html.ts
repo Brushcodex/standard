@@ -26,7 +26,7 @@ import {
   paintLabel,
   renderHtmlDocument,
   renderMetaList,
-  renderSwatch,
+  renderPaintSwatch,
   renderTags,
 } from './shared';
 
@@ -97,7 +97,7 @@ function renderItem(item: InventoryItem): string {
     `<div class="entry-head">` +
     `<span class="entry-paint">${escapeHtml(paintLabel(item.paint))}</span> ${badges}` +
     `</div>` +
-    renderSwatch(item.paint.color, item.paint.provenance) +
+    renderPaintSwatch(item.paint) +
     (quantity ? `<div class="entry-note">${escapeHtml(quantity)}</div>` : '') +
     aliases +
     renderPrivate(item) +

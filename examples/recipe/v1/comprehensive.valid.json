@@ -123,7 +123,7 @@
       "instruction": "Apply Rust Wash into recesses and let it pool.",
       "role": "wash",
       "paintRefs": ["rust"],
-      "mixNote": "About one part Rust Wash to four parts water — water is not a declared paint, so this mixture has no structured form.",
+      "mixNote": "About one part Rust Wash to four parts water — the author wrote the ratio as prose and chose not to structure it, so it stays here rather than in mix[].",
       "warnings": ["Do not flood flat plates; keep it in recesses."],
       "alternatives": [
         {

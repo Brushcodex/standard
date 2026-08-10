@@ -135,7 +135,7 @@ You have authored and validated a document. The rest of the on-ramp:
   published schemas alone. Worked example in Python:
   [VALIDATE_WITH_JSONSCHEMA.md](VALIDATE_WITH_JSONSCHEMA.md).
 - **Check a whole implementation** — run the full corpus with
-  `pnpm --filter @brushcodex/cli conformance` (92/92), or point your own validator at the
+  `pnpm --filter @brushcodex/cli conformance` (95/95), or point your own validator at the
   fixtures: [conformance/README.md](../conformance/README.md).
 - **Extend a document** — carry data the core does not model in namespaced `extensions`:
   [EXTENSIONS.md](EXTENSIONS.md).

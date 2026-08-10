@@ -3,7 +3,7 @@
 The [Quickstart](QUICKSTART.md) starts from the *minimal* document; this page points at the
 *comprehensive* one for each type — a realistic document that exercises the full vocabulary of its
 specification. Every file here is part of the conformance corpus, so each one **must validate**
-(they are among the 92 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
+(they are among the 95 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
 [CC0-1.0](../examples/LICENSE) — copy and adapt them freely.
 
 Each type ships two or three files under `examples/<spec>/v1/`:
@@ -34,6 +34,9 @@ Each type ships two or three files under `examples/<spec>/v1/`:
   treats a tutorial as optional source provenance rather than as the document's defining purpose.
 - **Catalogue-free recipe** — [recipe/v1/literal-paints-no-catalogue.valid.json](../examples/recipe/v1/literal-paints-no-catalogue.valid.json)
   names paints inline instead of referencing a catalogue, so a recipe is self-contained.
+- **Water-thinned mixture** — [recipe/v1/water-thinned-mixture.valid.json](../examples/recipe/v1/water-thinned-mixture.valid.json)
+  declares tap water as an `additive` paintRef and mixes it at an authored ratio: the blessed
+  pattern for a household diluent, beside a `medium` in the same mixture.
 - **Literal-only palette** — [palette/v1/literal-only.valid.json](../examples/palette/v1/literal-only.valid.json)
   does the same for a palette, with `relationships` still linking the literal entries.
 
@@ -63,7 +66,7 @@ OK    recipe  …/examples/recipe/v1/comprehensive.valid.json
 python validate.py examples/recipe/v1/comprehensive.valid.json   # -> valid
 ```
 
-To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (92/92).
+To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (95/95).
 
 ## Next steps
 

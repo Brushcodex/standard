@@ -125,6 +125,65 @@ export function validateAgainstSchema(input: unknown): ValidationIssue[] {
 }
 
 /**
+ * The specification version these validators implement. Every schema in
+ * `schemas/**​/v1` is the `1.0` surface; this validator ships no other.
+ */
+export const IMPLEMENTED_SPEC_VERSION = '1.0.0';
+
+/** The `1.0` of {@link IMPLEMENTED_SPEC_VERSION}, as the numbers the check compares. */
+const IMPLEMENTED = { major: 1, minor: 0 } as const;
+
+/**
+ * Schema version negotiation (VERSIONING §8.5).
+ *
+ * A document declares the spec version it targets. A consumer validates it against
+ * the schema matching that version, and one that ships only `1.0` MUST NOT silently
+ * treat a higher minor as `1.0` — a `1.1` document may legitimately use members and
+ * enum values `1.0` never had, and reporting those as ordinary schema errors tells
+ * the reader the document is malformed when it is merely newer.
+ *
+ * This validator implements exactly one version, so negotiation here is a single
+ * clear refusal rather than multi-schema selection: an unrecognised version is
+ * reported as its own issue and validation stops, so no misleading `1.0` errors are
+ * produced beside it. A patch difference (`1.0.1`) is not a surface change and
+ * passes; a lower minor cannot exist within major 1 (`1.0` is the first).
+ *
+ * Returns `[]` when the value is not shaped like a document at all — the schema
+ * layer owns "specVersion is missing / not a SemVer string".
+ */
+export function specVersionIssues(input: unknown): ValidationIssue[] {
+  if (input === null || typeof input !== 'object' || !('specVersion' in input)) return [];
+  const declared = (input as { specVersion: unknown }).specVersion;
+  if (typeof declared !== 'string') return [];
+  const parts = /^(\d+)\.(\d+)\./.exec(declared);
+  if (parts === null) return [];
+
+  const major = Number(parts[1]);
+  const minor = Number(parts[2]);
+  if (major === IMPLEMENTED.major && minor <= IMPLEMENTED.minor) return [];
+
+  const targetsLaterMinor = major === IMPLEMENTED.major;
+  return [
+    {
+      path: '/specVersion',
+      code: 'spec-version-unsupported',
+      message:
+        `document targets ${declared}; this validator implements ` +
+        `${IMPLEMENTED_SPEC_VERSION}. ` +
+        (targetsLaterMinor
+          ? `A ${major}.${minor} document may use members or enum values added after ` +
+            `${IMPLEMENTED_SPEC_VERSION}, so validating it against the ` +
+            `${IMPLEMENTED_SPEC_VERSION} schema would report them as errors it cannot ` +
+            `distinguish from real ones. Validate against the ${major}.${minor} schema, or ` +
+            `accept the document as a downgrade-with-loss.`
+          : `Major version ${major} is a different, incompatible format; the ` +
+            `${IMPLEMENTED_SPEC_VERSION} schema says nothing about it.`),
+      layer: 'semantic',
+    },
+  ];
+}
+
+/**
  * Envelope prose rules the JSON Schema cannot express. Shared by every spec that
  * embeds the Common envelope. Assumes the input is already schema-valid.
  */
@@ -151,6 +210,12 @@ export function envelopeSemanticIssues(input: {
  * conformant only when both layers pass.
  */
 export function validateCommonDocument(input: unknown): ValidationResult {
+  // Version negotiation first (VERSIONING §8.5): an unrecognised spec version is
+  // reported alone, so no misleading 1.0 schema errors are produced beside it.
+  const versionIssues = specVersionIssues(input);
+  if (versionIssues.length > 0) {
+    return { valid: false, issues: versionIssues };
+  }
   const schemaIssues = validateAgainstSchema(input);
   if (schemaIssues.length > 0) {
     return { valid: false, issues: schemaIssues };

@@ -44,6 +44,12 @@
       "expect": { "keyword": "unevaluatedProperties", "instancePath": "" }
     },
     {
+      "file": "unsupported-spec-version.json",
+      "layer": "semantic",
+      "reason": "Schema-valid 1.0 shape, but it declares specVersion 2.0.0 — a different major format this validator does not implement (VERSIONING §8.5).",
+      "expect": { "rule": "spec-version-unsupported" }
+    },
+    {
       "file": "dangling-paint-anchor.json",
       "layer": "semantic",
       "reason": "Schema-valid, but a step references a paint anchor no paints[] entry defines.",

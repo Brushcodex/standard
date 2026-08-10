@@ -344,7 +344,7 @@ export const common = {
             "additive",
             "varnish"
           ],
-          "description": "Classifies a paint-like bottled product. Absence means an ordinary pigment paint. Non-pigment products (mediums, thinners, varnishes) that are referenced the way paints are (in paints[]/mix[]) are marked here so the color engine skips them in matching and a renderer does not draw a swatch. Ordinary tools and scenic materials are resources, never paintRefs."
+          "description": "Classifies any component referenced the way paints are (in paints[]/mix[]), bottled or not, by its function in the mixture. Absence means an ordinary pigment paint. A component that does not determine the resulting colour (a medium, thinner, varnish, or additive) is marked here so the color engine skips it in matching, and a renderer SHOULD NOT draw a colour swatch for a non-'paint' kind even when color is present. A household diluent such as water is 'additive'; 'thinner' is for a product sold and identified as a thinner. A colour-bearing component such as a dry pigment stirred into a carrier is 'paint', because it determines the resulting colour. This is function, not purchasability: a consumer MUST NOT infer that an 'additive' is an acquirable product. Ordinary tools are resources, never paintRefs; a consumable material is a paintRef when it joins a mixture at an authored ratio and a resource when used in the process."
         },
         "chemistry": {
           "type": "string",
@@ -434,7 +434,7 @@ export const common = {
       "required": [
         "name"
       ],
-      "description": "A tool or non-paint material needed to reproduce a workflow (brush, airbrush, wet palette, sponge, hobby knife, UV lamp, gloves, PVA glue, masking putty, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where NOT represented as a paint). Shared by Recipe.resources, Technique.tools, and Project.toolsUsed. Carries no manufacturer or catalogue identity. Ordinary tools and scenic materials MUST NOT be modelled as a paintRef.",
+      "description": "A tool or non-paint material needed to reproduce a workflow (brush, airbrush, wet palette, sponge, hobby knife, UV lamp, gloves, PVA glue, masking putty, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where NOT represented as a paint), consumable materials being resources when used in the process. Shared by Recipe.resources, Technique.tools, and Project.toolsUsed. Carries no manufacturer or catalogue identity. A reusable tool MUST NOT be modelled as a paintRef under any usage; a consumable material that joins a mixture at an authored ratio is referenced as a paintRef for that recipe instead (Recipe section 6a carries the worked examples).",
       "properties": {
         "name": {
           "type": "string",
@@ -704,7 +704,7 @@ export const recipe = {
           "items": {
             "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
           },
-          "description": "Tools and non-paint materials needed to reproduce the workflow (brushes, airbrush, wet palette, sponge, UV lamp, gloves, PVA, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where not represented as paints). Ordinary tools and scenic materials are never paintRefs."
+          "description": "Tools and non-paint materials needed to reproduce the workflow (brushes, airbrush, wet palette, sponge, UV lamp, gloves, PVA, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where not represented as paints). Tools are never paintRefs, unconditionally; a consumable material is a resource when used in the process and a paintRef when it joins a mixture at an authored ratio."
         },
         "techniqueRefs": {
           "type": "array",
@@ -849,12 +849,12 @@ export const recipe = {
           "items": {
             "$ref": "#/$defs/mixEntry"
           },
-          "description": "A mixture of two or more paints with author-provided ratios."
+          "description": "A mixture of two or more components with author-provided ratios. A component that is not a paint (water, a medium, a thinner) joins the mixture the same way: declared in paints[] and classified by paintRef.kind. A consumer deriving a colour MUST skip components whose kind marks them as not colour-determining and MUST NOT present the derived colour as authored; a skipped component's parts remain authored data and MUST NOT be renormalised away in what is shown to the reader."
         },
         "mixNote": {
           "type": "string",
           "minLength": 1,
-          "description": "The mixture as the author wrote it (e.g. '1:1 Caliban + Moot'), for a mixture the structured 'mix' cannot express — because a component is not a declared paint, or the ratio was written as prose. When 'mix' is also present it is authoritative for computation and this is the human wording; a consumer MUST NOT parse this member into ratios."
+          "description": "The mixture as the author wrote it (e.g. '1:1 Caliban + Moot'), for a mixture the structured 'mix' cannot express — because a component is undeclared, or the ratio was written as prose. When 'mix' is also present it is authoritative for computation and this is the human wording; a consumer MUST NOT parse this member into ratios."
         },
         "method": {
           "type": "string",

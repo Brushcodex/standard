@@ -156,6 +156,29 @@ describe('renderRecipeHtml', () => {
     expect(html).toContain('approximate'); // never presented as a measurement
   });
 
+  it('draws no colour swatch for a non-paint kind, even when color is present', () => {
+    // Common §5.6 / paintRef.kind: a renderer SHOULD NOT draw a colour swatch for a
+    // component that does not determine the resulting colour. Before this rule was
+    // implemented an `additive` carrying color.hex rendered a full swatch chip, so a
+    // household diluent (or orange juice) read as a paint the colour engine would use.
+    const html = renderRecipeHtml(
+      makeRecipe({
+        paints: [
+          { ref: 'water', name: 'Tap water', kind: 'additive', color: { hex: '#FFA500' } },
+          { ref: 'steel', name: 'Steel', kind: 'paint', color: { hex: '#8A8D90' } },
+        ],
+        steps: [{ instruction: 'Thin and apply.', paintRefs: ['water', 'steel'] }],
+      }),
+    );
+    // The additive is still named and still badged — only its swatch is suppressed.
+    expect(html).toContain('Tap water');
+    expect(html).toContain('>additive<');
+    expect(html).not.toContain('background:#ffa500');
+    expect(html).not.toContain('>#ffa500<');
+    // The paint beside it is unaffected.
+    expect(html).toContain('background:#8a8d90');
+  });
+
   it('resolves step paint anchors and mixtures to their declared paint labels', () => {
     const html = renderRecipeHtml(
       makeRecipe({

@@ -23,6 +23,7 @@ import { schemas } from '@brushcodex/schema';
 import {
   ajvErrorToIssue,
   envelopeSemanticIssues,
+  specVersionIssues,
   loadCommonSchema,
   type ValidationIssue,
   type ValidationResult,
@@ -176,6 +177,12 @@ function mediaCitationIssues(doc: RecipeDocument): ValidationIssue[] {
 
 /** Full reference validation: JSON Schema, then prose + anchor-integrity rules. */
 export function validateRecipeDocument(input: unknown): ValidationResult {
+  // Version negotiation first (VERSIONING §8.5): an unrecognised spec version is
+  // reported alone, so no misleading 1.0 schema errors are produced beside it.
+  const versionIssues = specVersionIssues(input);
+  if (versionIssues.length > 0) {
+    return { valid: false, issues: versionIssues };
+  }
   const schemaIssues = validateRecipeAgainstSchema(input);
   if (schemaIssues.length > 0) {
     return { valid: false, issues: schemaIssues };

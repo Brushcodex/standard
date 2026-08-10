@@ -16,6 +16,7 @@ import {
   paintLabel,
   renderHtmlDocument,
   renderMetaList,
+  renderPaintSwatch,
   renderSwatch,
   renderTags,
   ROLE_LABELS,
@@ -35,7 +36,7 @@ const RELATIONSHIP_TYPE_LABELS: Record<PaletteRelationship['type'], string> = {
 /** The swatch for an entry: a direct literal color, else the entry paint's color. */
 function entrySwatch(entry: PaletteEntry): string {
   if (entry.color) return renderSwatch(entry.color, entry.provenance);
-  if (entry.paint?.color) return renderSwatch(entry.paint.color, entry.paint.provenance);
+  if (entry.paint) return renderPaintSwatch(entry.paint);
   return '';
 }
 

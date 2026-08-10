@@ -51,7 +51,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PACKAGES_DIR = join(REPO_ROOT, 'packages');
 const ARTIFACTS_DIR = join(REPO_ROOT, 'artifacts', 'local-packages');
 const EXAMPLES_DIR = join(REPO_ROOT, 'examples');
-const FIXTURE_COUNT = 92;
+const FIXTURE_COUNT = 95;
 const KEEP = process.argv.includes('--keep') || process.env.BCX_KEEP_CONSUMER === '1';
 
 // package name -> its directory under packages/

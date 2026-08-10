@@ -53,7 +53,7 @@
         { "paint": "orange", "parts": 1 },
         { "paint": "glaze-medium", "parts": 5 }
       ],
-      "mixNote": "4 drops crimson, 1 drop orange, 5 drops glaze medium; add one wet brush-tip of water.",
+      "mixNote": "4 drops crimson, 1 drop orange, 5 drops glaze medium; add one wet brush-tip of water. The water carries no ratio, so it stays prose here instead of joining mix[] — the escape hatch working as intended, not a rule against declaring water.",
       "method": "brush",
       "coats": 3,
       "dryingNotes": "Let each glaze lose its surface sheen before applying the next."

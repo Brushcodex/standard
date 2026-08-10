@@ -73,4 +73,4 @@ Package code is Apache-2.0 (see `LICENSE`). The shipped corpus is public-domain 
 notice travels at `corpus/examples/LICENSE`. All corpus documents are synthetic — no scraped or
 proprietary data (see `PROVENANCE.md`).
 
-**Status:** `0.9.0-draft`, `private` — **not published**. Consumed locally via a packed tarball.
+**Status:** `1.0.0-rc.1`, `private` — **not published**. Consumed locally via a packed tarball.

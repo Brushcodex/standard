@@ -21,7 +21,7 @@ import {
   paintLabel,
   renderHtmlDocument,
   renderMetaList,
-  renderSwatch,
+  renderPaintSwatch,
   renderTags,
   ROLE_LABELS,
   safeHref,
@@ -51,7 +51,7 @@ function renderPaintEntry(paint: PaintRef): string {
     `<li class="paint">` +
     `<span class="paint-name">${escapeHtml(paintLabel(paint))}</span>` +
     (classifiers ? ` ${classifiers}` : '') +
-    renderSwatch(paint.color, paint.provenance) +
+    renderPaintSwatch(paint) +
     (paint.note ? `<span class="paint-note">${escapeHtml(paint.note)}</span>` : '') +
     `</li>`
   );

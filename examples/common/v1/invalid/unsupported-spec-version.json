@@ -1,0 +1,8 @@
+{
+  "spec": "common",
+  "specVersion": "1.1.0",
+  "id": "urn:uuid:3b7c9d10-2e4f-4a58-9c61-8d0e1f2a3b4c",
+  "revision": "rev-1",
+  "title": "Targets spec version 1.1.0; this validator implements 1.0.0",
+  "description": "Well-formed 1.0 shape, so the 1.0 schema would accept it silently. VERSIONING §8.5 forbids that: a consumer that ships only the 1.0 schema must not treat a higher minor as 1.0, because a 1.1 document may carry members and enum values 1.0 never had."
+}
