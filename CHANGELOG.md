@@ -6,6 +6,38 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### The adoption on-ramp did not work from a clean clone — 2026-08-10
+
+The newcomer path was walked for the first time, as a stranger would walk it: clone only the
+**public** repository into an empty directory, follow the documents, use nothing else. It fails at
+the Quickstart's second step, roughly three minutes in.
+
+`pnpm install` alone leaves `packages/*/dist` empty, and the toolkit resolves through each package's
+`exports` map to built output. Every documented toolkit command therefore died with a Node
+`ERR_MODULE_NOT_FOUND` stack trace naming an internal path — which reads as "this repository is
+broken", not as "a step is missing". Measured cold at public `28ecc72a` on Node v22.14.0 / pnpm
+8.15.0: `cli validate` (Quickstart Step 2), `cli conformance`, `pnpm -r test`, and the authoring
+cookbook all failed; `pnpm -r build` fixes all four.
+
+`pnpm -r build` was documented in `AGENTS.md`, `CONTRIBUTING.md`, `LAYOUT.md`, `packages/README.md`
+and the pull-request template — every *contributor* document — and in none of the three *adoption*
+documents. The repository was navigable by the person who wrote it and by nobody else.
+
+#### Fixed
+
+- `docs/AUTHORING.md` claimed "no build step beyond `pnpm install` is needed". That was false: the
+  self-reference resolves by package name, but through `exports` to `dist/`. Corrected, and the
+  build added to the snippet.
+- `docs/QUICKSTART.md` prerequisites and `README.md` "Validating documents" now list `pnpm -r build`
+  as required, and each states the failure it prevents so the stack trace is recognisable.
+- All three now point to [`docs/VALIDATE_WITH_JSONSCHEMA.md`](docs/VALIDATE_WITH_JSONSCHEMA.md) as
+  the genuinely build-free route. That path was re-verified cold and needs only `schemas/`: all
+  three of its documented outputs reproduced verbatim under Python 3.12 with `jsonschema` 4.25.
+
+Verified by re-cloning the public repository into a third clean directory and following the
+corrected instructions only: validate `OK`, conformance **95/95**, `pnpm -r test` **459 passed**
+(validator 430 / fixtures 16 / cli 13), cookbook **8/8 validate**.
+
 ### The public snapshot gate now verifies what it claimed to — 2026-08-10
 
 `scripts/check-public-snapshot.mjs` asserted `git rev-list --count HEAD === 1` while CI checked out
