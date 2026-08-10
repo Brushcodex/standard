@@ -24,10 +24,12 @@ The helpers ship in `@brushcodex/validator`, which is **not yet published to a r
 a maintainer release step — see [RELEASING.md](RELEASING.md)). Until then you consume them from a
 checkout of this repository. The companion script lives *inside* the package, so Node resolves
 `@brushcodex/validator` by [self-reference](https://nodejs.org/api/packages.html#self-referencing-a-package-using-its-name)
-and no build step beyond `pnpm install` is needed:
+rather than by a published registry entry. That self-reference resolves through the package's
+`exports` map to its **built** entry point, so the workspace must be built once first:
 
 ```bash
 pnpm install                                          # once, from the repo root
+pnpm -r build                                         # required — the helpers ship from dist/
 node packages/validator/examples/authoring-cookbook.mjs
 ```
 

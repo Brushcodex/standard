@@ -32,7 +32,15 @@ prose) and [`../schemas`](../schemas) (the matching JSON Schemas); everything be
 
 ```bash
 pnpm install     # from the repo root — installs the reference toolkit
+pnpm -r build    # required — the toolkit runs from built output, not from source
 ```
+
+> **Both commands are required.** `pnpm install` alone leaves `packages/*/dist` empty, and every
+> toolkit command below then fails with `ERR_MODULE_NOT_FOUND` naming a missing `dist/index.js`.
+> The build takes a few seconds and is needed once per checkout.
+>
+> Want no build step at all? [Validating from another language](VALIDATE_WITH_JSONSCHEMA.md) needs
+> only [`../schemas`](../schemas) and any Draft 2020-12 JSON Schema library.
 
 ## Step 1 — Author a minimal document
 

@@ -71,10 +71,15 @@ application:
 
 ```bash
 pnpm install
+pnpm -r build                                             # required before any command below
 pnpm --filter @brushcodex/cli conformance                 # validate the whole corpus (95/95)
 pnpm --filter @brushcodex/cli validate /abs/path/doc.json # validate one document / .brushcodex.zip
 pnpm -r test                                              # schema, validator, fixtures, and CLI suites
 ```
+
+> **`pnpm -r build` is not optional.** The packages resolve to built output; without it every
+> command above fails with `ERR_MODULE_NOT_FOUND` for a missing `dist/index.js`. To validate with
+> no build step, use [any Draft 2020-12 library against `schemas/`](docs/VALIDATE_WITH_JSONSCHEMA.md).
 
 > `validate` runs with `packages/cli` as its working directory — **pass an absolute path**.
 > A path relative to the repo root is not found, and the document is reported invalid.
