@@ -12,9 +12,19 @@ history is retained privately by the maintainers for preservation and audit purp
 not part of this repository's public history. The public repository intentionally starts with
 one root commit containing only the reviewed release candidate.
 
+**Since 2026-08-10 the Standard is developed here, in the open.** The two commits before that
+date are squashed release snapshots exported from the private repository; everything after is
+ordinary development, and the private repository is no longer the source. The boundary is
+therefore historical: it marks where the public record becomes complete, not a continuing split.
+
+The earlier history stays private for one reason — it is authored with a personal email address,
+and publishing it would expose that address permanently in a history this repository does not
+permit rewriting. Nothing about the Standard itself is withheld: the published tree has been
+verified byte-identical to the private one.
+
 No source-control history is required to use, validate, or implement the Standard. The files
 in this repository, their per-path licenses, conformance expectations, and changelog are the
-public record for this snapshot.
+public record.
 
 ## Canonical ownership
 

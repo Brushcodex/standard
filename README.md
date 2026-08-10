@@ -143,8 +143,11 @@ state the applicable license for that subtree. "BrushCodex" and logos are tradem
 ## Provenance
 
 This public repository starts from a reviewed `0.9.0-draft` snapshot and is the canonical source
-for the Standard going forward. Earlier development history remains preserved privately and is
-not required to use or implement the formats. See [PROVENANCE.md](PROVENANCE.md).
+for the Standard going forward. **Since 2026-08-10 the Standard is developed here, in the open** —
+branches and pull requests happen in this repository, and releases are ordinary tags on `main`.
+Earlier development history remains preserved privately, because it carries a personal email
+address; it is not required to use or implement the formats, and the published tree has been
+verified byte-identical to it. See [PROVENANCE.md](PROVENANCE.md).
 
 ## Contributing
 

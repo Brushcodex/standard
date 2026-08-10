@@ -16,12 +16,12 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "test:gate": "node --test scripts/check-consistency.test.mjs scripts/check-public-snapshot.test.mjs scripts/verify-packed.test.mjs",
+    "test:gate": "node --test scripts/check-consistency.test.mjs scripts/check-publication-safety.test.mjs scripts/verify-packed.test.mjs",
     "typecheck": "pnpm -r typecheck",
     "conformance": "pnpm --filter @brushcodex/cli run conformance",
     "check:consistency": "node scripts/check-consistency.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:public-snapshot": "node scripts/check-public-snapshot.mjs",
+    "check:publication-safety": "node scripts/check-publication-safety.mjs",
     "verify:packed": "node scripts/verify-packed.mjs"
   }
 }
