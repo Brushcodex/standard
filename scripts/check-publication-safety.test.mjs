@@ -26,6 +26,14 @@ import {
 const NOREPLY = '1633263+Artzp@users.noreply.github.com';
 
 /**
+ * The two identities an API-pushed commit carries. The signer is assembled from fragments under
+ * the same discipline as the samples below — it is NOT a `@users.noreply.github.com` identity, so
+ * `allowedInContent` does not permit it, and spelling it out would trip the scan this file drives.
+ */
+const GITHUB_SIGNER = `noreply${'@'}github.com`;
+const DEPENDABOT = '49699333+dependabot[bot]@users.noreply.github.com';
+
+/**
  * The sensitive strings below are assembled from fragments on purpose.
  *
  * This file is tracked, so `pnpm check:publication-safety` scans it like any other — and a test
@@ -92,6 +100,16 @@ test('scanTrackedFile passes clean prose', () => {
   assert.deepEqual(scanTrackedFile('specs/recipe.md', 'A recipe declares `paints[]`.'), []);
 });
 
+test('the gate library does not itself trip the scan it implements', () => {
+  // The committer exemption names an address the content scan does NOT permit, so writing it as a
+  // string literal in the library would make the gate fail on its own tracked source — a failure
+  // that could only surface in CI, on a public repository, after the change was already pushed.
+  // The library had no such guard until the exemption made one necessary; the sibling test above
+  // has covered this file since 2026-08-10, for the same reason.
+  const lib = readFileSync(new URL('./lib/publication-safety.mjs', import.meta.url), 'utf8');
+  assert.deepEqual(scanTrackedFile('scripts/lib/publication-safety.mjs', lib), []);
+});
+
 // --- the commit-identity assertion --------------------------------------------------------------
 
 test('commitIdentityDiscrepancies REFUSES a shallow clone instead of silently passing', () => {
@@ -149,6 +167,51 @@ test('commitIdentityDiscrepancies reports both fields at once when both are wron
   });
   assert.equal(findings.length, 1);
   assert.match(findings[0], /non-noreply author and committer/);
+});
+
+test("commitIdentityDiscrepancies accepts GitHub's signer as the COMMITTER of an API-pushed commit", () => {
+  // Dependabot pushes through GitHub's API, which signs the commit and stamps GitHub's own generic
+  // address in the committer field while the author stays a user-noreply identity. Ten dependency
+  // pull requests were measured failing on exactly this on 2026-08-17 — at the identity step, so
+  // not one of them had ever been built, typechecked or tested. `--no-merges` already exempts this
+  // address on a synthetic merge commit; these are ordinary commits, so it never reached them.
+  const findings = commitIdentityDiscrepancies({
+    shallow: false,
+    commits: [commit({ authorEmail: DEPENDABOT, committerEmail: GITHUB_SIGNER })],
+  });
+  assert.deepEqual(findings, []);
+});
+
+test('the signer exemption does NOT rescue a commit whose author was rewritten', () => {
+  // Why the exemption is conditional on the author rather than standing alone. GitHub's squash
+  // machinery was measured rewriting the author to a personal address on 2026-08-10; a generic
+  // committer must never launder that, and must not start doing so if the author assertion is
+  // ever relaxed.
+  const findings = commitIdentityDiscrepancies({
+    shallow: false,
+    commits: [commit({ authorEmail: REAL_EMAIL, committerEmail: GITHUB_SIGNER })],
+  });
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /non-noreply author/);
+});
+
+test('the signer exemption applies to the committer field only, never the author', () => {
+  const findings = commitIdentityDiscrepancies({
+    shallow: false,
+    commits: [commit({ authorEmail: GITHUB_SIGNER, committerEmail: NOREPLY })],
+  });
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /non-noreply author/);
+});
+
+test('the signer exemption does not widen to any other github.com address', () => {
+  // It is one exact address, anchored at both ends — not a domain allowance.
+  const findings = commitIdentityDiscrepancies({
+    shallow: false,
+    commits: [commit({ committerEmail: `someone${'@'}github.com` })],
+  });
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /non-noreply committer/);
 });
 
 test('commitIdentityDiscrepancies reports every offending commit, not just the first', () => {
