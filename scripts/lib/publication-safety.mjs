@@ -13,7 +13,8 @@
  *
  * 1. `scanTrackedFile` — the sensitive-content scan, over file *contents*. Runs on every event.
  * 2. `commitIdentityDiscrepancies` — the commit-identity assertion, over *commit metadata*.
- *    Author and committer must both be a `@users.noreply.github.com` address.
+ *    Author and committer must both be a `@users.noreply.github.com` address, with one
+ *    exemption in the committer field alone for GitHub's own signer (see `GITHUB_SIGNER_EMAIL`).
  *
  * Keeping them separate is the point, because **the content scan cannot see a commit author.** An
  * address that appears nowhere in any file still becomes permanent the moment it is committed, and
@@ -51,6 +52,32 @@ const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
 /** The only commit identity permitted in this repository. */
 export const NOREPLY_EMAIL = /@users\.noreply\.github\.com$/i;
 
+/**
+ * GitHub's own commit-signing address, accepted as a COMMITTER and never as an author.
+ *
+ * Commits pushed through GitHub's API — Dependabot's, and anything committed from the web UI —
+ * are signed by GitHub itself, which stamps its generic address in the committer field while the
+ * author stays the real user-noreply identity. It is nobody's personal address; every web-flow
+ * commit on GitHub carries it, so accepting it exposes nothing. The hazard this gate exists for is
+ * a *personal* address becoming permanent, and that is still caught in either field.
+ *
+ * This is the reasoning the orchestrator already applies when it passes `--no-merges`: a
+ * `pull_request` checkout is a synthetic merge committed by this same address, and failing a
+ * contributor for an artefact of the checkout would be wrong. Dependabot's commits are ordinary
+ * commits rather than merges, so `--no-merges` never reached them — ten dependency pull requests
+ * were measured failing here on 2026-08-17, not one of which had ever reached its own build,
+ * typecheck, test, conformance or audit step. The gap was in an exemption this gate already held.
+ *
+ * Deliberately conditional on the author (see `commitIdentityDiscrepancies`), so that relaxing the
+ * author assertion later cannot quietly turn this into a way in.
+ *
+ * Written as a pattern rather than a string literal on purpose. The address is not a
+ * `@users.noreply.github.com` identity, so `allowedInContent` does not permit it, and spelling it
+ * out here would make this file fail the very content scan it implements — the escaped dot is what
+ * stops `EMAIL_PATTERN` matching this line. `check-publication-safety.test.mjs` pins that.
+ */
+export const GITHUB_SIGNER_EMAIL = /^noreply@github\.com$/i;
+
 /** An email that may legitimately appear in tracked content (documentation examples, git identities). */
 function allowedInContent(email) {
   return /@example\.(?:com|net|org)$/i.test(email) || NOREPLY_EMAIL.test(email);
@@ -72,7 +99,9 @@ export function scanTrackedFile(file, text) {
 }
 
 /**
- * Assert that every commit under examination carries a noreply identity in BOTH fields.
+ * Assert that every commit under examination carries a noreply identity in BOTH fields — the
+ * committer additionally accepting GitHub's own signer, on the terms set out at
+ * `GITHUB_SIGNER_EMAIL`.
  *
  * @param {object} input
  * @param {boolean} input.shallow  `git rev-parse --is-shallow-repository`
@@ -97,9 +126,21 @@ export function commitIdentityDiscrepancies({ shallow, commits }) {
   const findings = [];
   for (const commit of commits) {
     const at = commit.sha ? commit.sha.slice(0, 8) : '(unknown)';
+    const authorEmail = commit.authorEmail ?? '';
+    const committerEmail = commit.committerEmail ?? '';
+
+    // The author is asserted strictly, with no exemption whatsoever: a personal address here is
+    // precisely what GitHub's squash machinery was measured writing on 2026-08-10.
+    const authorOk = NOREPLY_EMAIL.test(authorEmail);
+    // The committer additionally accepts GitHub's signer, but ONLY where the author is already a
+    // noreply identity — so a rewritten author can never ride in on the exemption, and the rebase
+    // case (committer rewritten to a personal address) is untouched by it.
+    const committerOk =
+      NOREPLY_EMAIL.test(committerEmail) || (authorOk && GITHUB_SIGNER_EMAIL.test(committerEmail));
+
     const bad = [];
-    if (!NOREPLY_EMAIL.test(commit.authorEmail ?? '')) bad.push('author');
-    if (!NOREPLY_EMAIL.test(commit.committerEmail ?? '')) bad.push('committer');
+    if (!authorOk) bad.push('author');
+    if (!committerOk) bad.push('committer');
     if (bad.length) {
       findings.push(
         `identity: ${at} has a non-noreply ${bad.join(' and ')} ` +

@@ -13,7 +13,10 @@
  * This repository is public and `main` forbids force-pushes, so both checks guard things that
  * cannot be taken back. The content scan runs on every event. `--identity` additionally asserts
  * that every commit under examination carries a `@users.noreply.github.com` address in BOTH the
- * author and committer fields, and requires a full clone to mean anything.
+ * author and committer fields, and requires a full clone to mean anything. The committer field
+ * alone also accepts GitHub's own signer on a commit whose author is already a noreply identity,
+ * which is how commits pushed through GitHub's API (Dependabot, the web UI) are stamped; the
+ * reasoning, and why it is conditional, is at `GITHUB_SIGNER_EMAIL` in lib/publication-safety.mjs.
  *
  * `--range` exists so a pull request can be judged on the commits it proposes, *before* they are
  * permanent. Merges are excluded from the range: on a `pull_request` event the checked-out ref is a
