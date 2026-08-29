@@ -72,7 +72,7 @@ application:
 ```bash
 pnpm install
 pnpm -r build                                             # required before any command below
-pnpm --filter @brushcodex/cli conformance                 # validate the whole corpus (95/95)
+pnpm --filter @brushcodex/cli conformance                 # validate the whole corpus (99/99)
 pnpm --filter @brushcodex/cli validate /abs/path/doc.json # validate one document / .brushcodex.zip
 pnpm -r test                                              # schema, validator, fixtures, and CLI suites
 ```

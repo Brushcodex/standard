@@ -1,0 +1,53 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/vanguard-line-trooper-batch",
+  "revision": "rev-1",
+  "title": "Batch scheme for ordinary Vanguard troopers",
+  "summary": "A reusable batch workflow for the ordinary squad members. It is not written for any one sculpt and no exact subject is claimed.",
+  "authors": [{ "name": "C. Batchpainter" }],
+  "tags": ["workflow", "batch", "reusable"],
+  "target": {
+    "kind": "miniature",
+    "description": "Any ordinary infantry member of an Example Miniatures Vanguard squad - 32mm plastic",
+    "scale": { "system": "nominal_mm", "value": "32" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "navy", "manufacturer": "Example Paints", "name": "Deep Navy" },
+    { "ref": "grey", "manufacturer": "Example Paints", "name": "Gun Grey" }
+  ],
+  "steps": [
+    {
+      "id": "batch-base",
+      "title": "Batch basecoat",
+      "instruction": "Spray all ten bodies Deep Navy on the sprue and let them cure overnight.",
+      "role": "basecoat",
+      "targetArea": "whole model",
+      "paintRefs": ["navy"],
+      "method": "airbrush"
+    },
+    {
+      "id": "batch-weapons",
+      "title": "Weapons",
+      "instruction": "Block every weapon casing in Gun Grey; do not vary it between models.",
+      "role": "basecoat",
+      "targetArea": "weapons",
+      "paintRefs": ["grey"],
+      "method": "brush"
+    }
+  ],
+  "extensions": {
+    "org.brushcodex.subject:identity": {
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Squad trooper (ordinary member)",
+      "qualifier": "any of the nine ordinary bodies; the workflow does not depend on which"
+    },
+    "org.brushcodex.product:sourceContext": {
+      "productName": "Vanguard Squad (10 models)",
+      "sku": "EM-2105",
+      "note": "The SAME SKU as the sergeant workflow, and a different painted subject. This is the pair that falsifies SKU-as-subject-key."
+    }
+  }
+}

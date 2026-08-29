@@ -1,0 +1,51 @@
+{
+  "$schema": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
+  "spec": "palette",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/palettes/vanguard-sergeant-rank-markings",
+  "revision": "rev-1",
+  "title": "Vanguard sergeant — rank markings",
+  "summary": "A palette authored for one exact sculpt. It carries the same Painted Subject identity the rusted-armour workflow does, so both are discoverable from one identifier without any registry.",
+  "intent": "Warm rank markings that read as the squad leader across the table.",
+  "authors": [{ "name": "B. Brushhand" }],
+  "target": {
+    "kind": "miniature",
+    "description": "Rank markings and power fist of the squad leader in a 28mm heavy infantry unit",
+    "scale": { "system": "nominal_mm", "value": "28" },
+    "substrate": "plastic",
+    "identity": {
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Squad Sergeant",
+      "qualifier": "sergeant variant — bare head and power fist; not an ordinary squad body",
+      "authorityId": "VG-SGT-01",
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/squad-sergeant"
+    }
+  },
+  "entries": [
+    {
+      "ref": "rank",
+      "name": "Rank red",
+      "role": "basecoat",
+      "paint": { "manufacturer": "Example Paints", "name": "Signal Red" }
+    },
+    {
+      "ref": "fist",
+      "name": "Power fist steel",
+      "role": "metallic",
+      "paint": { "manufacturer": "Example Paints", "name": "Cold Steel" }
+    },
+    {
+      "ref": "edge",
+      "name": "Fist edge",
+      "role": "edge_highlight",
+      "paint": { "manufacturer": "Example Paints", "name": "Old Gold" }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "shadow_to_highlight",
+      "sequence": ["fist", "edge"],
+      "note": "Read the power fist from the shaded plate outwards to the lit edge."
+    }
+  ]
+}

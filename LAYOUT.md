@@ -35,6 +35,7 @@ consumers the work — not to define anything.
 | [`packages/`](packages/) | The app-independent toolkit: `schema`, `validator`, `types`, `cli`, `fixtures` | No | **Yes** — this is the shipping surface | Partly |
 | [`scripts/`](scripts/) | Repo tooling: the packed release gate `verify-packed.mjs` and the prose↔schema consistency check `check-consistency.mjs` | No | No | No |
 | [`docs/`](docs/) | Policy: extensions, licensing, data policy, releasing | No | No | No |
+| [`experiments/`](experiments/) | Time-boxed spikes testing a proposal before it is proposed. Informative and disposable; outside the conformance corpus | No | No | No |
 | [`LICENSES/`](LICENSES/) | Canonical license texts referenced by the per-path `LICENSE` files | No | Yes (vendored) | No |
 | `artifacts/` | Locally packed tarballs from `verify:packed`. **Empty and git-ignored by design** | No | No | **Yes** |
 | `node_modules/`, `packages/*/dist/`, `packages/fixtures/corpus/`, `packages/schema/generated/` | Build output and installs | No | `dist/` ships inside tarballs | **Yes** |
@@ -83,13 +84,13 @@ it at build time; never hand-edit the copy.
   *directory*, so a fixture that deliberately declares the wrong `spec` still counts as invalid.
 - `invalid/EXPECTATIONS.json` — the exact constraint each invalid fixture violates.
 
-Current corpus: **89 cases — 16 valid, 73 invalid**, across 7 specs.
+Current corpus: **99 cases — 22 valid, 77 invalid**, across 7 specs (measured 2026-08-28).
 
 | Spec | valid | invalid |
 |---|---:|---:|
-| `common` | 2 | 9 |
-| `recipe` | 3 | 20 |
-| `palette` | 3 | 9 |
+| `common` | 2 | 10 |
+| `recipe` | 8 | 23 |
+| `palette` | 4 | 9 |
 | `inventory` | 2 | 9 |
 | `project` | 2 | 10 |
 | `technique` | 2 | 8 |
@@ -111,6 +112,19 @@ fixtures.
 
 > Note: `@brushcodex/validator/migrate` is **not** this. It graduates stranded `extensions` data
 > into core members it later became — an in-version helper, not a major-version migration.
+
+### `experiments/` — spikes, before anything is proposed
+
+A capability that might one day earn a core field is prototyped here first, as a namespaced
+extension plus a handful of documents and an executable proof. Nothing in `experiments/` is
+normative, none of it is referenced by `specs/`/`schemas/`, none of it is in the conformance corpus
+or `@brushcodex/fixtures`, and all of it can be deleted in one commit — which matters, because a
+spike may honestly conclude *reject*, and a rejected idea must not have grown the corpus that third
+parties validate against in the meantime.
+
+An experiment may be exercised by a `*.experiment.test.ts` in `packages/validator/src/**`; test
+files are excluded from the build, so an experiment ships nothing. Details and the current list:
+[`experiments/README.md`](experiments/README.md).
 
 ### `packages/` — the toolkit (the "SDK")
 
@@ -179,7 +193,7 @@ pnpm install
 pnpm -r build       # topological: schema -> validator -> {types, fixtures} -> cli
 pnpm -r typecheck
 pnpm -r test
-pnpm conformance    # validate the whole corpus (95/95); exit 1 on any mismatch
+pnpm conformance    # validate the whole corpus (99/99); exit 1 on any mismatch
 pnpm check:consistency   # assert every schema enum value + property is documented in the prose
 pnpm --filter @brushcodex/cli validate <absolute-file>   # one document or .brushcodex.zip
 ```

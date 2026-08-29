@@ -51,7 +51,10 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PACKAGES_DIR = join(REPO_ROOT, 'packages');
 const ARTIFACTS_DIR = join(REPO_ROOT, 'artifacts', 'local-packages');
 const EXAMPLES_DIR = join(REPO_ROOT, 'examples');
-const FIXTURE_COUNT = 95;
+// Measured against examples/ — `countCorpusFixtures` re-counts the source tree and the packed
+// corpus must agree with it. Bump this when the corpus changes; a stale value fails the gate
+// loudly (that is the point: a silently shrinking corpus would otherwise pass).
+const FIXTURE_COUNT = 99;
 const KEEP = process.argv.includes('--keep') || process.env.BCX_KEEP_CONSUMER === '1';
 
 // package name -> its directory under packages/

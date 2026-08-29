@@ -160,6 +160,44 @@ describe('renderPaletteHtml', () => {
     expect(html).toContain('Complementary'); // relationship label
     expect(html).not.toMatch(/<script\b/);
   });
+
+  // The comprehensive palette deliberately targets a class and carries no
+  // identity, so renderer coverage never walks these leaves. Without this the
+  // Painted Subject could reach the page as an opaque id and nothing else.
+  it('prints the Painted Subject literals, and not the opaque identifier', () => {
+    const html = renderPaletteHtml(
+      makePalette({
+        target: {
+          kind: 'miniature',
+          description: 'The banner and heraldry of the Vanguard standard bearer, 32mm plastic',
+          identity: {
+            authority: 'Example Miniatures',
+            designation: 'Vanguard Standard Bearer',
+            qualifier: 'original sculpt; banner cast integral to the left arm',
+            authorityId: 'VG-SB-01',
+            subjectId: 'brushcodex:subject:example-miniatures/vanguard/standard-bearer',
+          },
+        },
+      }),
+    );
+    expect(html).toContain('Subject');
+    expect(html).toContain('Example Miniatures');
+    expect(html).toContain('Vanguard Standard Bearer');
+    expect(html).toContain('original sculpt; banner cast integral to the left arm');
+    expect(html).toContain('VG-SB-01');
+    // The stable id is a machine equality key, exempt exactly as catalogueId is.
+    expect(html).not.toContain('brushcodex:subject:');
+    // Applicability is not displaced by identity.
+    expect(html).toContain('The banner and heraldry of the Vanguard standard bearer');
+  });
+
+  it('renders a target with no identity unchanged', () => {
+    const html = renderPaletteHtml(
+      makePalette({ target: { kind: 'miniature', description: '28mm heavy infantry' } }),
+    );
+    expect(html).toContain('28mm heavy infantry');
+    expect(html).not.toContain('Subject');
+  });
 });
 
 describe('renderDocumentHtml dispatcher', () => {

@@ -57,8 +57,8 @@ distributable package candidates must also pass the packed release gate.
 5. Runs, under **plain Node ESM** and via the installed **`.bin` shims** from a foreign working
    directory: schema loads the 7 schemas; `@brushcodex/types` type-checks (consumer `tsc`) all 7
    document types; the validator accepts a valid Recipe and rejects an invalid one (root + per-spec
-   subpath); fixtures enumerate the manifest and load the corpus (exactly **95**); the CLI reports
-   **95/95** conformance and correct validate exit codes.
+   subpath); fixtures enumerate the manifest and load the corpus (exactly **99**); the CLI reports
+   **99/99** conformance and correct validate exit codes.
 6. **Source-checkout absence proof:** renames `examples/`, `packages/*/dist`, and the local tarball
    dir away, re-runs the essential checks **without reinstalling**, then restores every rename
    (guaranteed via `finally` + signal handlers).

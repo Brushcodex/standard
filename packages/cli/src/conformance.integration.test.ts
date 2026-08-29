@@ -74,7 +74,7 @@ describe('static: the built conformance bin has no repo-root escape', () => {
 });
 
 describe('behavioral: conformance runs from any working directory (plain Node)', () => {
-  it('reports 76/76 and exits 0 when run from a foreign cwd (os.tmpdir())', () => {
+  it('reports 99/99 and exits 0 when run from a foreign cwd (os.tmpdir())', () => {
     const { status, stdout } = runNode(CONFORMANCE_BIN, [], tmpdir());
     expect(status).toBe(0);
     expect(stdout).toContain(`${fixtures.length}/${fixtures.length}`);
@@ -103,7 +103,7 @@ describe('behavioral: conformance runs from any working directory (plain Node)',
 });
 
 describe('packed-layout simulation: install tree, source repo irrelevant', () => {
-  it('runs 76/76 from a copied node_modules where ../../../examples would NOT resolve', () => {
+  it('runs 99/99 from a copied node_modules where ../../../examples would NOT resolve', () => {
     // Recreate the installed layout: <root>/node_modules/@brushcodex/{cli,fixtures} + the CLI's
     // external npm deps. From <root>/node_modules/@brushcodex/cli/dist/conformance.js the old
     // `../../../examples` would resolve to <root>/node_modules/examples (absent) — so a regression

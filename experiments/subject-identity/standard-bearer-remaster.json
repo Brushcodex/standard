@@ -1,0 +1,67 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/vanguard-standard-bearer-mk2",
+  "revision": "rev-1",
+  "title": "Parade scheme - Vanguard standard bearer (Mk2)",
+  "summary": "The same scheme retargeted to the remastered sculpt, whose separate banner is painted off the model.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["workflow", "character", "display"],
+  "target": {
+    "kind": "miniature",
+    "description": "Example Miniatures Vanguard standard bearer, Mk2 remaster - 32mm plastic, banner supplied as a separate component",
+    "scale": { "system": "nominal_mm", "value": "32" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "navy", "manufacturer": "Example Paints", "name": "Deep Navy" },
+    { "ref": "bone", "manufacturer": "Example Paints", "name": "Warm Bone" },
+    { "ref": "gold", "manufacturer": "Example Paints", "name": "Old Gold" }
+  ],
+  "steps": [
+    {
+      "id": "banner-off-model",
+      "title": "Banner, off the model",
+      "instruction": "Paint the separate banner flat on the sprue in Warm Bone before assembly - the folds are unreachable once it is glued.",
+      "role": "basecoat",
+      "targetArea": "banner component",
+      "paintRefs": ["bone"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "armour",
+      "title": "Armour plates",
+      "instruction": "Basecoat the recut armour plates with two thin coats of Deep Navy.",
+      "role": "basecoat",
+      "targetArea": "armour plates",
+      "paintRefs": ["navy"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "trim",
+      "title": "Trim",
+      "instruction": "Edge the deeper Mk2 trim with Old Gold; the original sculpt's shallower bevel does not need the second pass.",
+      "role": "edge_highlight",
+      "targetArea": "armour trim",
+      "paintRefs": ["gold"],
+      "method": "brush"
+    }
+  ],
+  "extensions": {
+    "org.brushcodex.subject:identity": {
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/standard-bearer-mk2",
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Standard Bearer",
+      "qualifier": "Mk2 remaster; the banner is a separate component and the armour trim is recut deeper, so both the painting order and the edge pass change",
+      "authorityId": "VG-SB-02"
+    },
+    "org.brushcodex.product:sourceContext": {
+      "productName": "Vanguard Standard Bearer (Mk2)",
+      "sku": "EM-2402",
+      "note": "Same designation as the original sculpt, different geometry, and therefore a different subject identity."
+    }
+  }
+}

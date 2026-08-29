@@ -93,3 +93,8 @@ Implementations that cannot preserve extensions MUST say so and MUST NOT claim p
 - `x-` short prefixes are **discouraged** (not globally unique).
 - BrushCodex-authored experimental extensions use the `org.brushcodex.*` namespace before any
   core graduation.
+- A spike that uses that namespace to *test* a proposal — rather than to carry data a shipping tool
+  already writes — lives in [`experiments/`](../experiments/README.md), which is informative,
+  outside the conformance corpus, and disposable. Current: the portable Painted Subject identity
+  prototype, [`experiments/subject-identity/`](../experiments/subject-identity/README.md)
+  (`org.brushcodex.subject:identity`).

@@ -6,6 +6,108 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Painted Subject identity graduates into Common `target` — 2026-08-28
+
+A Painting Workflow said what it was for in one free-text string, and string matching is wrong in
+both directions: independent authors describe one sculpt differently, and a remaster keeps the
+manufacturer's name while the geometry — and the workflow — changes. `target.identity` makes the
+operation *given this exact miniature, which workflows and palettes apply?* deterministic, offline,
+with no registry.
+
+Approved by the maintainer against
+[docs/PAINTED_SUBJECT_IDENTITY_PROPOSAL.md](docs/PAINTED_SUBJECT_IDENTITY_PROPOSAL.md).
+
+#### Added
+
+- **Common `$defs.subjectIdentity`** — `{ authority (REQUIRED), designation (REQUIRED), qualifier?,
+  authorityId?, subjectId? }`. One reusable definition; **zero new closed vocabularies**, so nothing
+  new must be settled in [docs/VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md) before a freeze.
+- **Common `target.identity`** — one optional member referencing it. Recipe and Palette inherit the
+  capability through the `target` they already share; **neither declares an identity member of its
+  own**, so the two cannot drift. Project is unchanged.
+- **The literal floor, and it is enforceable.** `authority` and `designation` are REQUIRED whenever
+  the identity object exists — unconditionally, so an opaque `subjectId` never travels without
+  something a human can read. This is the one thing the extension experiment structurally could not
+  do (`extensions` is open JSON and optional for baseline conformance), and it is the reason the
+  capability graduated at all. Two new invalid fixtures hold the line.
+- Four fixtures: `recipe/v1/literal-subject-no-registry.valid.json` (identity with no `subjectId`),
+  `palette/v1/exact-subject.valid.json`, and the two `invalid/subject-identity-without-*.json` cases
+  with their `EXPECTATIONS.json` entries. The recipe comprehensive fixture now carries a full
+  identity, so renderer coverage walks every literal leaf.
+- 23 focused tests in `packages/validator/src/common/subject-identity.test.ts`.
+
+#### Changed
+
+- **The renderers print the subject.** `subjectLabel()` puts `authority`, `designation`,
+  `authorityId` and `qualifier` on the recipe and palette pages. The opaque `subjectId` is exempt
+  from rendering **with its reason recorded** in the coverage test, exactly as `catalogueId` is — an
+  identifier is a machine equality key, and the literals are what a reader without a registry has.
+- `examples/recipe/v1/comprehensive.valid.json` — its target now denotes an exact subject.
+- Corpus: 95 → **99** (22 valid, 77 invalid). Every stated total was re-measured, not re-cited: the
+  **fourteen** prose places across ten files that quoted a corpus figure disagreed with one another
+  (`89`, `92`, `95`) and with the corpus, and now agree. Two CLI test titles still claimed `76/76`;
+  corrected. The `92/92` in `docs/MIXTURE_INGREDIENT_DECISIONS.md` was deliberately **left alone**
+  — it is a dated measurement from 2026-08-10, not a claim about today.
+
+#### Compatibility
+
+**Minor** ([VERSIONING.md](VERSIONING.md) §2): two new optional members, no new required member, no
+change to any existing member's meaning. A document valid before this change is still valid, and no
+migration is needed. `target.description` is untouched and remains REQUIRED whenever `target` is
+present. `target` and `identity` both stay **singular** — a workflow spanning several distinct exact
+subjects already exceeds what one `target` can state, so plural targets remain a separate question.
+
+#### Not changed
+
+No Product ID, SKU, GTIN, product containment, bundle membership, release history, availability,
+retailer data, price, stock, or affiliate link entered the core; Painted Subject and Source Product
+remain distinct domains. Project `subjects[]` stay document-local execution records. The reference
+URLs the extension experiment carried were deliberately **not** graduated — `mediaRef` already owns
+linked-work rights.
+
+### Spike: portable Painted Subject identity — 2026-08-28
+
+A Painting Workflow says what it is for in one free-text string, `target.description`, which
+supports exactly one operation: string matching. That is not enough for the consumer "exact
+miniature → applicable Painting Workflows", because two painters describe the same sculpt
+differently, and a remaster keeps the name while the geometry — and the workflow — changes.
+
+Prototyped as a namespaced extension and measured, rather than proposed from argument.
+
+#### Added
+
+- **`experiments/`** — a new, explicitly informative and disposable surface for time-boxed spikes.
+  Nothing in it is normative, referenced by `specs/`/`schemas/`, or part of the conformance corpus,
+  so a spike that honestly concludes *reject* has not meanwhile grown the corpus third parties
+  validate against. Documented in [LAYOUT.md](LAYOUT.md) and
+  [experiments/README.md](experiments/README.md).
+- **`experiments/subject-identity/`** — five Recipe documents carrying an
+  `org.brushcodex.subject:identity` extension (opaque Subject ID + a literal `authority`/
+  `designation` floor), and a source-product context under a deliberately *separate* key so that
+  "subject identity never reads product" is structural rather than promised.
+- **26 proof tests** (`packages/validator/src/recipe/subject-identity.experiment.test.ts`) covering
+  exact subject, multi-model box, rebox/reissue, resculpt, broad/unknown subject, and an
+  unreachable registry. Each comparison is written twice — once as the baseline available today
+  (description, designation, SKU) and once over the Subject ID — so the tests record where the
+  baselines are wrong, and where the ID declines to answer rather than guessing.
+
+#### Measured
+
+- All five documents validate against the **unchanged** Recipe v1 schema and semantic rules; the
+  conformance corpus stays at 95/95 because no fixture was added to it. The extension needed no
+  core change at all — which is the finding, not a convenience.
+- Deleting every source-product extension leaves every subject verdict unchanged. No BrushCodex
+  Product ID was defined and none was required.
+- Two workflows sharing one box SKU are *not* the same painted subject; the comparator returns
+  `undetermined`, never a false match.
+
+#### Not changed
+
+No core field, no schema byte, no `target` redesign, no registry, and no graduation. The written
+assessment — **NEEDS ONE MORE IMPLEMENTATION ITERATION**, because the shape is proven on one spec
+with the literal-floor rule unenforceable — is in
+[experiments/subject-identity/README.md](experiments/subject-identity/README.md) §10.
+
 ### The Standard is now developed in the open — 2026-08-10
 
 Development moves into this repository. Branches and pull requests happen here, `main` accumulates

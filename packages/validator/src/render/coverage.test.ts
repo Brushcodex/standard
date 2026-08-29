@@ -57,6 +57,10 @@ const EXEMPT: Array<{ match: RegExp; why: string }> = [
   { match: /^\/extensions\//, why: 'unknown extension payloads are preserved, never rendered' },
   { match: /^\/links\//, why: 'lineage URIs are identifiers; the media section carries the human link' },
   { match: /\/catalogueId$/, why: 'an external database id is not reader-facing' },
+  {
+    match: /\/identity\/subjectId$/,
+    why: 'the Painted Subject id is an opaque machine equality key, exactly like catalogueId; its literal floor (authority, designation, qualifier, authorityId) IS rendered, which is what the member exists to guarantee',
+  },
   { match: /\/ref$/, why: 'document-local anchors are resolved to labels' },
   { match: /\/paintRefs\/\d+$/, why: 'anchors are resolved to the paint label' },
   { match: /\/mix\/\d+\/paint$/, why: 'anchors are resolved to the paint label' },

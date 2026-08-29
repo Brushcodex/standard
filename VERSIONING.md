@@ -89,7 +89,11 @@ a known baseline.
   `$defs` and every spec `$ref`s them: `paintRef` and `colorValue` (Recipe/Palette/Inventory/
   Project), `resource` (Recipe `resources` / Technique `tools` / Project `toolsUsed`), `documentRef`
   (Recipe `techniqueRefs` / Project `recipeRefs`/`paletteRefs`), the `role` vocabulary (Recipe steps
-  / Palette entries), and `target` (Recipe / Palette). The one deliberately un-shared piece is
+  / Palette entries), and `target` (Recipe / Palette) with its optional `subjectIdentity`
+  (`target.identity`, Common §5.8 — reached only through `target`, so Recipe and Palette inherit one
+  definition and neither declares an identity member of its own). Adding `subjectIdentity` was a
+  **minor**: two new optional members, no new closed vocabulary, and no change to any existing
+  member's meaning. The one deliberately un-shared piece is
   `mixEntry`: a recipe mixture anchors into `paints` and a palette mixture into `entries` — the same
   shape, different anchor semantics — so it stays spec-local. (This consolidation, anticipated by
   earlier drafts of this note, is complete as of the pre-freeze cleanup.)

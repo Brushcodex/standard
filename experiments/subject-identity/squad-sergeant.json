@@ -1,0 +1,56 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/vanguard-sergeant-red-helm",
+  "revision": "rev-1",
+  "title": "Red-helm sergeant",
+  "summary": "The squad-leader treatment: the sergeant only, not the nine troopers that share his box.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["workflow", "character"],
+  "target": {
+    "kind": "miniature",
+    "description": "Example Miniatures Vanguard squad sergeant - bare head, power fist, 32mm plastic",
+    "scale": { "system": "nominal_mm", "value": "32" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "red", "manufacturer": "Example Paints", "name": "Signal Red" },
+    { "ref": "steel", "manufacturer": "Example Paints", "name": "Cold Steel" }
+  ],
+  "steps": [
+    {
+      "id": "helm",
+      "title": "Rank markings",
+      "instruction": "Basecoat the rank markings on the bare head in Signal Red so the model reads as the leader across the table.",
+      "role": "basecoat",
+      "targetArea": "head and rank markings",
+      "paintRefs": ["red"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "fist",
+      "title": "Power fist",
+      "instruction": "Metallic the power fist with Cold Steel, then wash the recesses.",
+      "role": "metallic",
+      "targetArea": "power fist",
+      "paintRefs": ["steel"],
+      "method": "brush"
+    }
+  ],
+  "extensions": {
+    "org.brushcodex.subject:identity": {
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/squad-sergeant",
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Squad Sergeant",
+      "qualifier": "sergeant variant only - bare head and power fist; not an ordinary squad body",
+      "authorityId": "VG-SGT-01"
+    },
+    "org.brushcodex.product:sourceContext": {
+      "productName": "Vanguard Squad (10 models)",
+      "sku": "EM-2105",
+      "note": "Nine ordinary troopers and one sergeant ship under this single SKU."
+    }
+  }
+}

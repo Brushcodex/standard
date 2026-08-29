@@ -169,8 +169,14 @@ references, so they are defined **once** and cannot drift:
   (18 values, `primer` … `other`, including `spot_highlight`). Named specific techniques use a
   free-text field, never this enum.
 - **`target`** — the subject a Recipe or Palette is for: `{ kind?, description (REQUIRED), scale?,
-  substrate? }`, where `scale` is `{ system: nominal_mm | ratio, value }` and `substrate` is
-  `resin` | `plastic` | `metal` | `mdf` | `foam` | `pla` | `other`.
+  substrate?, identity? }`, where `scale` is `{ system: nominal_mm | ratio, value }` and `substrate`
+  is `resin` | `plastic` | `metal` | `mdf` | `foam` | `pla` | `other`. `kind`, `description`,
+  `scale` and `substrate` state **applicability** — what the document applies to. The OPTIONAL
+  `identity` states **which exact Painted Subject** that applicability denotes, when one is known;
+  see §5.8.
+- **`subjectIdentity`** — the identity of the Painted Subject a `target` denotes:
+  `{ authority (REQUIRED), designation (REQUIRED), qualifier?, authorityId?, subjectId? }`. Reached
+  only through `target.identity`; see §5.8.
 - **`mediaRef`** — a linked media item with its **own** rights metadata (Recipe `media` and step
   `media`, Project `results`). `url` (absolute URI) REQUIRED; optional `id` (a document-local
   anchor, unique within the array, so a `mediaCitation` can target it), `kind`
@@ -218,6 +224,88 @@ for example `brushcodex:paint:citadel/base/mephiston-red`. This form is a **conv
 constraint** — the schema types `catalogueId` as an opaque non-empty string so other namespaces
 (`vendor:…`, a URI, an opaque token) remain valid. Resolvers **MUST** treat an identifier they do
 not recognise as simply unresolvable.
+
+## 5.8 Painted Subject identity
+
+A **Painted Subject** is the discrete, authority-named thing a Painting Workflow or Palette is
+actually applied to: a sculpt, a model, a named build, or a unit/set the authority itself names as
+one thing. `target.identity` states which Painted Subject a `target` denotes.
+
+`target` and `identity` answer different questions and both are needed:
+
+| | Question | Members |
+|---|---|---|
+| Applicability | What does this document apply to? | `kind`, `description`, `scale`, `substrate` |
+| Identity | Which exact Painted Subject does that denote, if known? | `identity` |
+
+`identity` is a **refinement**, never a replacement. `description` remains REQUIRED whenever
+`target` is present, and a consumer **MUST NOT** drop, regenerate, or treat it as decoration
+because an `identity` is present. The identity carries no description, kind, scale, or substrate,
+so it cannot become a second applicability statement.
+
+### 5.8.1 The literal floor
+
+When `identity` is present, `authority` and `designation` are both **REQUIRED**. The rule is
+**unconditional** — it does not depend on whether `subjectId` is present, and a `subjectId`
+**MUST NOT** be treated as licence to omit either literal.
+
+- `authority` — the party whose designation the identity is anchored to: the manufacturer, studio,
+  or sculptor. Never a retailer or storefront.
+- `designation` — the subject's name as that authority gives it.
+- `qualifier` (OPTIONAL) — only the paint-relevant distinction needed to remove ambiguity between
+  subjects an authority names alike, such as an original sculpt versus a remaster whose geometry
+  changes the painting order.
+- `authorityId` (OPTIONAL) — an identifier the authority itself assigns, such as a sculpt or part
+  code. It is reader-facing, like `paintRef.code`, and is **not** a SKU, GTIN, or product number.
+
+This is the same discipline as §5.7: the literals are the guaranteed floor, so an implementation
+can read and present a Painted Subject with no registry, no network, and no BrushCodex service.
+
+### 5.8.2 The stable subject identifier
+
+`subjectId` is an OPTIONAL progressive enhancement, and behaves exactly as `catalogueId` does for a
+paint (§5.7):
+
+- It denotes the **Painted Subject** — never the Recipe or Palette document, never a Source
+  Product, commercial box, bundle, SKU, GTIN, retailer listing, storefront URL, or internal
+  database row.
+- It is **opaque**. Equality is **whole-string equality**, and a consumer **MUST NOT** parse
+  meaning out of its segments.
+- Resolution is **best-effort**. An unresolved `subjectId` is **NOT** an error, an implementation
+  **MUST NOT** require resolution in order to consider a document valid, and a consumer that
+  cannot resolve one **MUST** fall back to the literal floor.
+- The RECOMMENDED form is `brushcodex:subject:<authority>/<line>/<subject>`, e.g.
+  `brushcodex:subject:example-miniatures/vanguard/standard-bearer`. As with `catalogueId` this is a
+  **convention, not a constraint**: the schema types it as an opaque non-empty string, no
+  BrushCodex namespace is required, and a resolver **MUST** treat an identifier it does not
+  recognise as simply unresolvable.
+
+Allocation is registry policy, not a validation rule: which subjects share an identifier across a
+rebox, and when a remaster earns a new one, is decided by whoever mints identifiers, never by this
+schema.
+
+### 5.8.3 What identity is not, and when to omit it
+
+`identity` is OPTIONAL and, like every unknown value (§4), **MUST NOT** be fabricated. A `target`
+with only a `description` is fully valid, and so is a Recipe or Palette with no `target` at all.
+A broad or class-level target — ordinary infantry of a squad, generic terrain, a reusable army
+scheme — simply carries no `identity`, and a consumer comparing two such documents concludes
+nothing rather than guessing.
+
+Source Product identity is deliberately **outside** this capability and outside the Common
+envelope: no product identifier, SKU, GTIN, containment, bundle membership, release history,
+availability, retailer data, price, stock, or affiliate link belongs in `identity` or anywhere in
+`target`. A commercial rebox or SKU change does not by itself create a new Painted Subject.
+
+`identity` is also distinct from Project `subjects[]`, which are **document-local execution
+records**: one Painted Subject may correspond to many tracking records (ten squad members built
+from one sculpt), so the two are never interchangeable.
+
+`target` is **singular**, and `identity` is singular with it — one target, one denoted subject.
+That is deliberate for this version: a workflow spanning several distinct exact subjects (paired
+models, a multi-subject diorama) already exceeds what a single `target` can state through
+`description`, `scale`, and `substrate`, so plural targets are a separate question and not one this
+member answers.
 
 ## 6. Extensions
 
