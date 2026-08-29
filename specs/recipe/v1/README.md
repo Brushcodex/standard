@@ -84,6 +84,18 @@ these uses over its lifetime. Producers SHOULD state important context in `summa
 - `substrate` — optional physical composition: `resin`, `plastic`, `metal`, `mdf`, `foam`, `pla`,
   `other`. Drives priming and solvent safety (e.g. a solvent primer melts bare foam). Distinct from
   `kind` (a category) and from the `kind` value `material`.
+- `identity` — optional Painted Subject identity, defined once in Common (`subjectIdentity`,
+  §5.8 there) and inherited here through the shared `target`. It says **which exact subject** the
+  workflow's applicability statement denotes: `authority` and `designation` are REQUIRED whenever
+  it is present, `qualifier`, `authorityId` and the opaque `subjectId` are optional. It does not
+  replace `description`, which stays REQUIRED.
+
+  This is what makes reverse discovery deterministic: two workflows carrying the same `subjectId`
+  identify the same Painted Subject without any network resolution, where matching the two
+  `description` strings cannot. A workflow written for a class of models — a reusable army scheme,
+  ordinary infantry of a squad — carries **no** `identity`, and one **MUST NOT** be invented for
+  it. The Recipe spec adds nothing to the Common definition and defines no identity member of its
+  own.
 
 ## 5. Step
 

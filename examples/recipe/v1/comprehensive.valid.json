@@ -22,9 +22,16 @@
   "dryingNotes": "Allow washes to cure fully before edge highlighting.",
   "target": {
     "kind": "miniature",
-    "description": "28mm heavy infantry",
+    "description": "28mm heavy infantry — the Vanguard squad sergeant",
     "scale": { "system": "nominal_mm", "value": "28" },
-    "substrate": "plastic"
+    "substrate": "plastic",
+    "identity": {
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Squad Sergeant",
+      "qualifier": "sergeant variant — bare head and power fist; not an ordinary squad body",
+      "authorityId": "VG-SGT-01",
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/squad-sergeant"
+    }
   },
   "paints": [
     {

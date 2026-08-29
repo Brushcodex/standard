@@ -1,0 +1,72 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/vanguard-standard-bearer-parade",
+  "revision": "rev-1",
+  "title": "Parade scheme — Vanguard standard bearer",
+  "summary": "A display-level scheme for the single-pose Vanguard standard bearer, painted from the individual blister.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["workflow", "character", "display"],
+  "target": {
+    "kind": "miniature",
+    "description": "Example Miniatures Vanguard standard bearer — 32mm plastic, single-pose, banner cast with the arm",
+    "scale": { "system": "nominal_mm", "value": "32" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "navy", "manufacturer": "Example Paints", "name": "Deep Navy" },
+    { "ref": "bone", "manufacturer": "Example Paints", "name": "Warm Bone" },
+    { "ref": "gold", "manufacturer": "Example Paints", "name": "Old Gold" }
+  ],
+  "steps": [
+    {
+      "id": "armour",
+      "title": "Armour plates",
+      "instruction": "Basecoat every armour plate with two thin coats of Deep Navy.",
+      "role": "basecoat",
+      "targetArea": "armour plates",
+      "paintRefs": ["navy"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "banner",
+      "title": "Banner field",
+      "instruction": "Block the banner field in Warm Bone, keeping the weave texture visible.",
+      "role": "basecoat",
+      "targetArea": "banner",
+      "paintRefs": ["bone"],
+      "method": "brush"
+    },
+    {
+      "id": "trim",
+      "title": "Trim and finial",
+      "instruction": "Edge the armour trim and the banner finial with Old Gold.",
+      "role": "edge_highlight",
+      "targetArea": "trim and finial",
+      "paintRefs": ["gold"],
+      "method": "brush"
+    }
+  ],
+  "extensions": {
+    "org.brushcodex.subject:identity": {
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/standard-bearer",
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Standard Bearer",
+      "qualifier": "original sculpt; banner cast integral to the left arm",
+      "authorityId": "VG-SB-01",
+      "references": [
+        {
+          "url": "https://example.org/example-miniatures/vanguard/standard-bearer",
+          "note": "Manufacturer page as it stood when this workflow was written. Secondary to the identity above, and expected to die before the subject does."
+        }
+      ]
+    },
+    "org.brushcodex.product:sourceContext": {
+      "productName": "Vanguard Standard Bearer (single blister)",
+      "sku": "EM-2201",
+      "note": "Deliberately a SEPARATE extension key. No consumer in this experiment reads it to decide subject equality."
+    }
+  }
+}

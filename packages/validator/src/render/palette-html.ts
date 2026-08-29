@@ -20,6 +20,7 @@ import {
   renderSwatch,
   renderTags,
   ROLE_LABELS,
+  subjectLabel,
 } from './shared';
 
 export { escapeHtml } from './shared';
@@ -107,6 +108,9 @@ function paletteMeta(doc: PaletteDocument): string {
   if (doc.target) {
     const kind = doc.target.kind ? `${doc.target.kind}: ` : '';
     rows.push(['Target', `${kind}${doc.target.description}`]);
+    // Same rule as the recipe page: the identity's literals are what a reader
+    // with no registry has, so they are printed rather than kept for resolvers.
+    if (doc.target.identity) rows.push(['Subject', subjectLabel(doc.target.identity)]);
   }
   if (doc.authors && doc.authors.length > 0) {
     rows.push(['Authors', doc.authors.map((author) => author.name).join(', ')]);

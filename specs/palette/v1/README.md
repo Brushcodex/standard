@@ -35,7 +35,7 @@ members below and rejects unknown top-level members.
 | `entries` | array of Entry (§4) | **REQUIRED**, at least one entry. |
 | `summary` | string | Optional short description. |
 | `intent` | string | Optional free-text aesthetic/material intent. |
-| `target` | Target | Optional subject (the shared Common `target`: `kind?` + required `description` + optional `scale`/`substrate`). |
+| `target` | Target | Optional subject (the shared Common `target`: `kind?` + required `description` + optional `scale`/`substrate`/`identity`). |
 | `relationships` | array of Relationship (§5) | Optional relationships between entries. |
 
 ## 4. Entry
@@ -103,8 +103,15 @@ preserves every member and unknown namespaced extensions.
 
 ## 10. Note on shared definitions
 
-`paintRef`, `colorValue`, the `role` vocabulary, and `target` are shared with the Recipe spec and
-defined once in the Common `$defs`; Palette `$ref`s them. Only `mixEntry` stays palette-local,
+A palette authored for one exact model carries the same Painted Subject identity a workflow does:
+`target.identity` is the Common `subjectIdentity` (Common §5.8), inherited through the shared
+`target`, with `authority` and `designation` REQUIRED whenever it is present and `qualifier`,
+`authorityId` and the opaque `subjectId` optional. Palette defines **no** identity member of its
+own, so the two specs cannot drift. A palette for a class — "28mm heavy infantry" — simply carries
+no `identity`, and one **MUST NOT** be invented; `description` remains REQUIRED either way.
+
+`paintRef`, `colorValue`, the `role` vocabulary, and `target` (with its `identity`) are shared with
+the Recipe spec and defined once in the Common `$defs`; Palette `$ref`s them. Only `mixEntry` stays palette-local,
 because a palette mixture anchors into `entries[]` while a recipe mixture anchors into `paints[]` —
 the same shape but different anchor semantics. See [VERSIONING.md §8](../../../VERSIONING.md) for the
 shared-building-blocks policy.

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/banner-bearer-tabletop",
+  "revision": "rev-1",
+  "title": "Tabletop banner bearer in six steps",
+  "summary": "A fast tabletop scheme for the banner-carrying trooper that comes in the Strike Force box.",
+  "authors": [{ "name": "B. Brushhand" }],
+  "tags": ["workflow", "tabletop", "speed"],
+  "target": {
+    "kind": "miniature",
+    "description": "The banner carrier from the Vanguard Strike Force box - 32mm plastic, one piece, banner moulded to the arm",
+    "scale": { "system": "nominal_mm", "value": "32" },
+    "substrate": "plastic"
+  },
+  "paints": [
+    { "ref": "blue", "manufacturer": "Example Paints", "name": "Field Blue" },
+    { "ref": "ivory", "manufacturer": "Example Paints", "name": "Warm Ivory" }
+  ],
+  "steps": [
+    {
+      "id": "block",
+      "title": "Block in",
+      "instruction": "Spray the model Field Blue and leave it to cure fully.",
+      "role": "basecoat",
+      "targetArea": "whole model",
+      "paintRefs": ["blue"],
+      "method": "airbrush"
+    },
+    {
+      "id": "banner-field",
+      "title": "Banner",
+      "instruction": "Brush the banner field Warm Ivory over two coats; ignore the weave.",
+      "role": "basecoat",
+      "targetArea": "banner",
+      "paintRefs": ["ivory"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "drybrush",
+      "title": "One pass drybrush",
+      "instruction": "Drybrush the whole model with Warm Ivory, hard enough to catch the armour edges only.",
+      "role": "drybrush",
+      "targetArea": "whole model",
+      "paintRefs": ["ivory"],
+      "method": "brush"
+    }
+  ],
+  "extensions": {
+    "org.brushcodex.subject:identity": {
+      "subjectId": "brushcodex:subject:example-miniatures/vanguard/standard-bearer",
+      "authority": "Example Miniatures",
+      "designation": "Vanguard Standard Bearer",
+      "qualifier": "the one-piece banner body, not the Mk2 with the separate pole"
+    },
+    "org.brushcodex.product:sourceContext": {
+      "productName": "Vanguard Strike Force (reissue box)",
+      "sku": "EM-2310",
+      "note": "A different box and a different SKU from the blister. The subject identity does not move."
+    }
+  }
+}

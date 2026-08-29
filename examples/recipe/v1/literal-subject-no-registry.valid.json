@@ -1,0 +1,46 @@
+{
+  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/workflows/chapel-ruin-stonework",
+  "revision": "rev-1",
+  "title": "Chapel ruin stonework",
+  "summary": "The subject is known exactly and named by its maker, but no stable subject identifier exists for it. The literal identity alone carries the subject, offline and with no registry.",
+  "authors": [{ "name": "A. Painter" }],
+  "tags": ["terrain", "stonework"],
+  "target": {
+    "kind": "terrain",
+    "description": "Ruined chapel wall section, MDF kit assembled with the buttress on",
+    "substrate": "mdf",
+    "identity": {
+      "authority": "Example Terrain Works",
+      "designation": "Ruined Chapel Wall",
+      "qualifier": "assembled with the optional buttress, which changes which faces are reachable"
+    }
+  },
+  "paints": [
+    { "ref": "stone", "manufacturer": "Example Paints", "name": "Cold Stone" },
+    { "ref": "moss", "manufacturer": "Example Paints", "name": "Damp Moss" }
+  ],
+  "steps": [
+    {
+      "id": "stone-base",
+      "title": "Stone base",
+      "instruction": "Basecoat every stone face with Cold Stone, working the brush into the mortar lines.",
+      "role": "basecoat",
+      "targetArea": "stonework",
+      "paintRefs": ["stone"],
+      "method": "brush",
+      "coats": 2
+    },
+    {
+      "id": "moss",
+      "title": "Moss in the shelter",
+      "instruction": "Stipple Damp Moss only where the buttress shelters the wall; leave the exposed faces bare.",
+      "role": "weathering",
+      "targetArea": "sheltered stone faces",
+      "paintRefs": ["moss"],
+      "method": "stipple"
+    }
+  ]
+}

@@ -126,6 +126,18 @@
       "layer": "schema",
       "reason": "A step mixNote is present but empty, which states no mixture; the member must be omitted instead.",
       "expect": { "keyword": "minLength", "instancePath": "/steps/0/mixNote" }
+    },
+    {
+      "file": "subject-identity-without-authority.json",
+      "layer": "schema",
+      "reason": "A Painted Subject identity carries a subjectId but no authority. The literal floor is unconditional: an opaque identifier must never travel without the literals that make the subject readable offline.",
+      "expect": { "keyword": "required", "instancePath": "/target/identity" }
+    },
+    {
+      "file": "subject-identity-without-designation.json",
+      "layer": "schema",
+      "reason": "A Painted Subject identity carries a subjectId but no designation. The literal floor is unconditional; a stable identifier does not license omitting the name the authority gives the subject.",
+      "expect": { "keyword": "required", "instancePath": "/target/identity" }
     }
   ]
 }

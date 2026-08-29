@@ -356,6 +356,43 @@
           "type": "string",
           "enum": ["resin", "plastic", "metal", "mdf", "foam", "pla", "other"],
           "description": "Physical composition of the subject (drives priming and solvent safety, e.g. a solvent primer will melt bare foam). Distinct from kind (a category) and from the kind value 'material'."
+        },
+        "identity": {
+          "$ref": "#/$defs/subjectIdentity",
+          "description": "OPTIONAL identity of the discrete Painted Subject this target denotes, when one is known. A refinement of the applicability statement, never a replacement for description: kind/description/scale/substrate keep saying what the document applies to. Absent for a broad or class-level target, and MUST NOT be fabricated."
+        }
+      }
+    },
+    "subjectIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "designation"],
+      "description": "The identity of the discrete, authority-named Painted Subject a target denotes — a sculpt, model, build, or an authority-named unit/set. Literal-first, exactly like paintRef: authority and designation are the guaranteed offline floor and are REQUIRED whenever this object is present, so an identifier never travels without something a human can read. This is NOT Source Product identity: it is never a commercial box, bundle, SKU, GTIN, retailer listing, storefront URL, or internal database row, and never the document itself. It is also distinct from Project subjects[], which are document-local execution records.",
+      "properties": {
+        "authority": {
+          "type": "string",
+          "minLength": 1,
+          "description": "REQUIRED. The party whose designation this identity is anchored to — the manufacturer, studio, or sculptor. Never a retailer or a storefront."
+        },
+        "designation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "REQUIRED. The subject's name as that authority gives it. Not a description of what is painted — target.description keeps that job."
+        },
+        "qualifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL. Only the paint-relevant distinction needed to remove ambiguity between subjects an authority names alike (e.g. an original sculpt versus a remaster whose geometry changes the painting order). Not a second description."
+        },
+        "authorityId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL identifier the authority itself assigns to the subject, such as a sculpt or part code. Reader-facing, like paintRef.code. NOT a SKU, GTIN, or product number."
+        },
+        "subjectId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL stable, opaque, EXTERNAL identifier for the Painted Subject — a progressive enhancement over the literal floor, exactly as paintRef.catalogueId is for a paint. Compared by whole-string equality; a consumer MUST NOT parse meaning out of its segments. Resolution is best-effort and an unresolved value is NOT an error: validity never depends on a registry or a network. RECOMMENDED form 'brushcodex:subject:<authority>/<line>/<subject>' — a convention, not a constraint. MUST NOT be fabricated."
         }
       }
     },

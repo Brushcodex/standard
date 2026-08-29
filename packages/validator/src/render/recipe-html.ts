@@ -25,6 +25,7 @@ import {
   renderTags,
   ROLE_LABELS,
   safeHref,
+  subjectLabel,
 } from './shared';
 
 export { escapeHtml } from './shared';
@@ -310,6 +311,10 @@ function recipeMeta(doc: RecipeDocument): string {
     );
     const suffix = detail.length > 0 ? ` — ${detail.join(', ')}` : '';
     rows.push(['Target', `${kind}${doc.target.description}${suffix}`]);
+    // The identity's literals are its whole purpose: a reader with no registry
+    // must still learn which exact subject this is. Printing them is what stops
+    // the member becoming machinery only a resolver can see.
+    if (doc.target.identity) rows.push(['Subject', subjectLabel(doc.target.identity)]);
   }
   if (doc.authors && doc.authors.length > 0) {
     rows.push(['Authors', doc.authors.map((author) => author.name).join(', ')]);

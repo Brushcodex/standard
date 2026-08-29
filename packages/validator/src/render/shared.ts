@@ -11,6 +11,7 @@
 
 import type { ColorValue, PaintRef } from '../common/paint';
 import type { ProvenanceEntry, SourceType } from '../common/envelope';
+import type { SubjectIdentity } from '../common/structures';
 
 /** Escape a string for safe interpolation into HTML text or a double-quoted attribute. */
 export function escapeHtml(value: string): string {
@@ -87,6 +88,23 @@ export function paintLabel(paint: PaintRef): string {
   );
   const base = parts.join(' - ') || 'Unnamed paint';
   return paint.code ? `${base} (${paint.code})` : base;
+}
+
+/**
+ * The Painted Subject a target denotes, as a line a human can read.
+ *
+ * The literal floor is the point of the member (Common §5.8): a reader offline,
+ * or holding an identifier nothing can resolve, must still learn what the
+ * subject is. So `authority`, `designation`, the reader-facing `authorityId`
+ * (like `paintRef.code`) and the disambiguating `qualifier` are all printed.
+ * The opaque `subjectId` deliberately is not — it is a machine equality key,
+ * exactly as `catalogueId` is for a paint, and the renderer-coverage test
+ * records that exemption with its reason.
+ */
+export function subjectLabel(identity: SubjectIdentity): string {
+  const named = `${identity.authority} - ${identity.designation}`;
+  const coded = identity.authorityId ? `${named} (${identity.authorityId})` : named;
+  return identity.qualifier ? `${coded} — ${identity.qualifier}` : coded;
 }
 
 /** The most informative provenance label for a color, if any. */

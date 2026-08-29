@@ -90,8 +90,32 @@ const scaleSchema = z
   .strict();
 
 /**
+ * The identity of the discrete Painted Subject a target denotes (Common §5.8).
+ *
+ * Literal-first, exactly like `paintRef`: `authority` and `designation` are the
+ * offline floor and are required whenever the object exists — unconditionally,
+ * so an opaque `subjectId` can never travel without something a human can read.
+ * `subjectId` is an optional external identifier compared by whole-string
+ * equality; it is never parsed, never resolved to decide validity, and never a
+ * Source Product, SKU, or database row.
+ */
+export const subjectIdentitySchema = z
+  .object({
+    authority: z.string().min(1),
+    designation: z.string().min(1),
+    qualifier: z.string().min(1).optional(),
+    authorityId: z.string().min(1).optional(),
+    subjectId: z.string().min(1).optional(),
+  })
+  .strict();
+
+/**
  * The subject a Recipe or Palette targets. Physical height and subject form
  * (e.g. bust) are intentionally NOT collapsed into `scale`.
+ *
+ * `kind`/`description`/`scale`/`substrate` state applicability; the optional
+ * `identity` states which exact Painted Subject that applicability denotes.
+ * It refines the target and never replaces `description`.
  */
 export const targetSchema = z
   .object({
@@ -99,6 +123,7 @@ export const targetSchema = z
     description: z.string().min(1),
     scale: scaleSchema.optional(),
     substrate: z.enum(SUBSTRATES).optional(),
+    identity: subjectIdentitySchema.optional(),
   })
   .strict();
 
@@ -152,6 +177,7 @@ export type MediaCitation = z.infer<typeof mediaCitationSchema>;
 export type MediaRelation = (typeof MEDIA_RELATIONS)[number];
 export type MediaKind = (typeof MEDIA_KINDS)[number];
 export type Target = z.infer<typeof targetSchema>;
+export type SubjectIdentity = z.infer<typeof subjectIdentitySchema>;
 export type Role = (typeof ROLES)[number];
 export type TargetKind = (typeof TARGET_KINDS)[number];
 export type ScaleSystem = (typeof SCALE_SYSTEMS)[number];
