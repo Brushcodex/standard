@@ -35,6 +35,6 @@
     "@brushcodex/validator": "workspace:*",
     "@types/node": "20.14.13",
     "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "vitest": "4.1.11"
   }
 }
