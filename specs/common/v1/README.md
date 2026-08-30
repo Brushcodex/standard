@@ -216,7 +216,7 @@ consider a document valid.
 The CANONICAL form of a BrushCodex-namespaced identifier is an **assigned, opaque** token:
 
 ```text
-brushcodex:paint:p00001
+brushcodex:paint:p0000001
 ```
 
 It is assigned once and never reused, and it carries no manufacturer, range, name or code. A
@@ -225,6 +225,15 @@ equality. Its stability is the reason it exists: renaming a paint, moving it bet
 rebranding its manufacturer **does not change** the identifier, because none of those facts is
 part of it. Every identifier a product has previously been published under is retained as an
 alias, so an older document keeps resolving.
+
+**The seven-digit zero padding is an issuance convention, not a promise about the number.**
+Identifiers are currently issued at a minimum width of seven digits; that width MAY grow, and a
+consumer **MUST NOT** treat it as a parsing ceiling, a fixed length, or a validity rule. Nothing
+may be derived from the numeric part — not manufacturer, not range, not chronology, not catalogue
+order, not how many paints exist. A consumer that needs to recognise the form at all **SHOULD**
+accept `brushcodex:paint:p` followed by one or more digits and otherwise treat the value whole; it
+**MUST NOT** compare two identifiers by stripping or adding padding, and **MUST NOT** reject an
+identifier merely for being wider than the examples here.
 
 A second, LEGACY form is still valid and still widely held by documents already exported — a
 URN-style, lowercase, slugged triple:
@@ -237,6 +246,21 @@ for example `brushcodex:paint:citadel-colour/base/mephiston-red`. It is derived 
 that can each change, so it names a paint only as long as all three hold. It is now published as
 an **alias** of the assigned identifier rather than as the identity itself, and a resolver that
 knows the assigned form **SHOULD** treat both as naming the same product.
+
+Assigned identifiers issued before 2026-08-30 were written five digits wide
+(`brushcodex:paint:p00001`). Those are the SAME identities, not different ones: they remain valid,
+and BrushCodex publishes each of them as an alias of its canonical form. A document holding one
+**MUST** still resolve to the paint it always named.
+
+BrushCodex publishes an open, unauthenticated identity registry mapping canonical identifiers,
+legacy slugged identifiers, pre-widening identifiers and superseded identifiers to the minimum
+identity record — manufacturer, range, name and code — at
+[`registry/paint-identity.v1.json`](../../../registry/paint-identity.v1.json)
+([how to use it](../../../registry/README.md)). It carries identity only: no colour, no
+measurement, no provenance, no matching data. **Its coverage is deliberately partial** — a paint
+appears only where an explicit decision permits publishing its identity openly — so an identifier
+that does not resolve there may still be perfectly valid, which is the case §5.7 already covers:
+fall back to the literal members.
 
 Both forms are a **convention, not a constraint** — the schema types `catalogueId` as an opaque
 non-empty string so other namespaces (`vendor:…`, a URI, an opaque token) remain valid. Resolvers
