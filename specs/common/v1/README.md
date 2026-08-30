@@ -201,6 +201,13 @@ A `paintRef` is **self-sufficient**. Its literal members (`manufacturer`, `range
 `color`) are the guaranteed floor: a conforming implementation **MUST** be able to read and present
 a paint reference using those alone, with no catalogue, no network, and no BrushCodex service.
 
+**That is a durability guarantee rather than a convenience.** A conforming document stays fully
+readable and fully usable if BrushCodex, its catalogue and every BrushCodex service cease to
+exist. Nothing in this specification may be read as making a document's meaning, its validity or
+its usefulness contingent on any BrushCodex artifact, endpoint or dataset being reachable — now or
+at any point in the future. An implementation that needs one to read a document has misread this
+section.
+
 `catalogueId` is an OPTIONAL progressive enhancement. When present, an implementation MAY resolve
 it against any of:
 
@@ -212,6 +219,13 @@ it against any of:
 Resolution is **best-effort**. An unresolved `catalogueId` is **NOT** an error: the implementation
 falls back to the literal members. Implementations **MUST NOT** require resolution in order to
 consider a document valid.
+
+An implementation that reads a document and writes it out again **SHOULD** preserve a
+`catalogueId` it does not recognise — verbatim, unparsed — rather than dropping it. An identifier
+this implementation cannot resolve may be one another implementation can, or one this
+implementation will resolve after its next catalogue update; discarding it destroys something the
+author put there deliberately, and does so silently. This is the rule §6 already states for
+unknown extensions, applied here for the same reason.
 
 The CANONICAL form of a BrushCodex-namespaced identifier is an **assigned, opaque** token:
 
@@ -225,6 +239,11 @@ equality. Its stability is the reason it exists: renaming a paint, moving it bet
 rebranding its manufacturer **does not change** the identifier, because none of those facts is
 part of it. Every identifier a product has previously been published under is retained as an
 alias, so an older document keeps resolving.
+
+It is a **precision aid and never a dependency.** What it buys is that two implementations can
+agree they mean the same paint without comparing spellings, and it buys that precisely by carrying
+nothing. A document that omits it is not a lesser document; a consumer that cannot resolve one has
+lost precision, not meaning, and §5.7's opening rule still tells it exactly what to do.
 
 **The seven-digit zero padding is an issuance convention, not a promise about the number.**
 Identifiers are currently issued at a minimum width of seven digits; that width MAY grow, and a
@@ -243,24 +262,20 @@ brushcodex:paint:<manufacturer>/<range>/<paint>
 ```
 
 for example `brushcodex:paint:citadel-colour/base/mephiston-red`. It is derived from three facts
-that can each change, so it names a paint only as long as all three hold. It is now published as
-an **alias** of the assigned identifier rather than as the identity itself, and a resolver that
-knows the assigned form **SHOULD** treat both as naming the same product.
+that can each change, so it names a paint only as long as all three hold. It is now treated as an
+**alias** of the assigned identifier rather than as the identity itself, and a resolver that knows
+the assigned form **SHOULD** treat both as naming the same product.
 
 Assigned identifiers issued before 2026-08-30 were written five digits wide
 (`brushcodex:paint:p00001`). Those are the SAME identities, not different ones: they remain valid,
-and BrushCodex publishes each of them as an alias of its canonical form. A document holding one
-**MUST** still resolve to the paint it always named.
+and BrushCodex retains each of them as an alias of its canonical form. A resolver that knows the
+canonical form **SHOULD** resolve the older one to the same paint.
 
-BrushCodex publishes an open, unauthenticated identity registry mapping canonical identifiers,
-legacy slugged identifiers, pre-widening identifiers and superseded identifiers to the minimum
-identity record — manufacturer, range, name and code — at
-[`registry/paint-identity.v1.json`](../../../registry/paint-identity.v1.json)
-([how to use it](../../../registry/README.md)). It carries identity only: no colour, no
-measurement, no provenance, no matching data. **Its coverage is deliberately partial** — a paint
-appears only where an explicit decision permits publishing its identity openly — so an identifier
-that does not resolve there may still be perfectly valid, which is the case §5.7 already covers:
-fall back to the literal members.
+**This specification does not require that any resolver exist.** Whether BrushCodex — or anyone
+else — offers a way to turn an identifier into a paint record is an integration concern outside
+this specification, and a conforming implementation is never obliged to have one. Resolution is a
+capability an implementation MAY have; portability is a property every conforming document has
+already.
 
 Both forms are a **convention, not a constraint** — the schema types `catalogueId` as an opaque
 non-empty string so other namespaces (`vendor:…`, a URI, an opaque token) remain valid. Resolvers

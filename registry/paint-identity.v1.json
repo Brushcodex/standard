@@ -1,9 +1,0 @@
-{
- "publicFormatVersion": "1.0.0",
- "generator": "brushcodex-public-identity@1.0.0",
- "identifierNamespace": "brushcodex:paint:",
- "coverage": {
-  "published": 0
- },
- "paints": []
-}

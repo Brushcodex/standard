@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "BrushCodex open standard — specs, schemas, conformance corpus, and toolkit packages.",
+  "description": "BrushCodex open standard \u2014 specs, schemas, conformance corpus, and toolkit packages.",
   "packageManager": "pnpm@8.15.0",
   "engines": {
     "node": ">=20.11.0"
@@ -16,13 +16,12 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "test:gate": "node --test scripts/check-consistency.test.mjs scripts/check-publication-safety.test.mjs scripts/check-public-registry.test.mjs scripts/verify-packed.test.mjs",
+    "test:gate": "node --test scripts/check-consistency.test.mjs scripts/check-publication-safety.test.mjs scripts/verify-packed.test.mjs",
     "typecheck": "pnpm -r typecheck",
     "conformance": "pnpm --filter @brushcodex/cli run conformance",
     "check:consistency": "node scripts/check-consistency.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:publication-safety": "node scripts/check-publication-safety.mjs",
-    "verify:packed": "node scripts/verify-packed.mjs",
-    "check:public-registry": "node scripts/check-public-registry.mjs"
+    "verify:packed": "node scripts/verify-packed.mjs"
   }
 }
