@@ -32,4 +32,4 @@ time, use this package.
 @brushcodex/schema ─► @brushcodex/validator ─► @brushcodex/types   (type-only re-export)
 ```
 
-**Status:** `1.0.0-rc.1`, `private` — **not published** to any registry. License: Apache-2.0.
+**Status:** `1.0.0-rc.2`, `private` — **not published** to any registry. License: Apache-2.0.

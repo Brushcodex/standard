@@ -1,6 +1,6 @@
 {
   "name": "@brushcodex/schema",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
   "description": "The BrushCodex open-standard JSON Schemas, as data (zero dependencies).",

@@ -6,6 +6,39 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Release candidate `1.0.0-rc.2` — 2026-08-30
+
+All five `@brushcodex/*` packages bump `1.0.0-rc.1 → 1.0.0-rc.2` in lockstep, through the packed
+release gate (`pnpm verify:packed`, `pnpm test:gate`). Packages remain `private` and
+**unpublished**.
+
+**The bump exists because two materially different artifacts were presenting the same identity.**
+`1.0.0-rc.1` was minted on 2026-08-10. Since then `target.identity` graduated into the Common
+envelope — a new `$defs.subjectIdentity`, a new optional `target` member, four fixtures, and a
+validator model that parses all of it — and the reference application still vendors an
+`@brushcodex/validator@1.0.0-rc.1` tarball from *before* that. Both tarballs answer
+`"1.0.0-rc.1"`, and a consumer holding one of them cannot tell from the version whether the
+validator it installed knows what `target.identity` is. A version that does not distinguish two
+artifacts is not doing the one job a version has.
+
+**Why `rc.2` and not `1.0.0`.** The final `1.0.0` is minted at the coordinated v1 freeze
+([VERSIONING.md](VERSIONING.md) §8.2), which is the maintainer's explicit act and has not
+happened; §7 still records the freeze as *precondition met*, not performed. The candidate line is
+therefore the only line available, and every prior bump in this file moved all five packages
+together — `verify:packed` asserts that lockstep rather than trusting it.
+
+**No specification version moves.** `specVersion` stays `1.0.0`, and the schema files are
+untouched by this entry. Everything under `specs/**` is still DRAFT, where a clarification lands
+in place (§3); the §5.8 change below alters no accept/reject behaviour, adds no member and closes
+no vocabulary. The package version and the spec version are different axes and VERSIONING.md §1
+requires they never be conflated — this bump is the artifact axis only.
+
+Documentation stating the old package version is refreshed. Two occurrences are deliberately left
+alone because they are dated measurements rather than statements about now: the `1.0.0-rc.1`
+release entry below, and the version table in
+[docs/PAINTED_SUBJECT_IDENTITY_PROPOSAL.md](docs/PAINTED_SUBJECT_IDENTITY_PROPOSAL.md), which says
+in its own words that it was read from the installed tree on 2026-08-28.
+
 ### Subject identifiers: portable without BrushCodex, and preserved when unrecognised — 2026-08-30
 
 §5.8 gave `subjectId` the opacity and best-effort resolution that §5.7 gives `catalogueId`, and

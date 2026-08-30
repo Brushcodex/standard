@@ -62,4 +62,4 @@ pnpm -r build
 # CLI's transitive @brushcodex/fixtures to the fixtures tarball — see the workspace docs).
 ```
 
-**Status:** `1.0.0-rc.1`, `private` — **not published** to any registry. License: Apache-2.0.
+**Status:** `1.0.0-rc.2`, `private` — **not published** to any registry. License: Apache-2.0.
