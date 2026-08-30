@@ -33,7 +33,7 @@
     "ajv": "^8",
     "ajv-formats": "^3",
     "fflate": "^0.8",
-    "zod": "3.23.8"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@brushcodex/validator": "workspace:*",
