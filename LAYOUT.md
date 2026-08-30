@@ -31,9 +31,10 @@ consumers the work — not to define anything.
 | [`schemas/`](schemas/) | Versioned JSON Schemas (draft 2020-12), one per spec version | **Yes** | via `@brushcodex/schema` | No |
 | [`examples/`](examples/) | The corpus: `*.valid.json`, `invalid/*.json`, `invalid/EXPECTATIONS.json` | No | via `@brushcodex/fixtures` | No |
 | [`conformance/`](conformance/) | How to check an implementation against the corpus | No | Docs only | No |
+| [`registry/`](registry/) | The open paint-identity registry: a versioned, unauthenticated projection mapping BrushCodex paint identifiers to the minimum identity record. Identity only — no colour, provenance or catalogue data. **Generated in a private repository and committed here**, which is why its gate runs here too | No | Yes — fetched directly over HTTP | **Yes** |
 | [`migrations/`](migrations/) | Deterministic major-version migrations — **placeholder, none exist yet** | No | Not yet | No |
 | [`packages/`](packages/) | The app-independent toolkit: `schema`, `validator`, `types`, `cli`, `fixtures` | No | **Yes** — this is the shipping surface | Partly |
-| [`scripts/`](scripts/) | Repo tooling: the packed release gate `verify-packed.mjs` and the prose↔schema consistency check `check-consistency.mjs` | No | No | No |
+| [`scripts/`](scripts/) | Repo tooling: the packed release gate `verify-packed.mjs`, the prose↔schema consistency check `check-consistency.mjs`, and the published-registry gate `check-public-registry.mjs` | No | No | No |
 | [`docs/`](docs/) | Policy: extensions, licensing, data policy, releasing | No | No | No |
 | [`experiments/`](experiments/) | Time-boxed spikes testing a proposal before it is proposed. Informative and disposable; outside the conformance corpus | No | No | No |
 | [`LICENSES/`](LICENSES/) | Canonical license texts referenced by the per-path `LICENSE` files | No | Yes (vendored) | No |

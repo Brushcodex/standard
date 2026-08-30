@@ -29,6 +29,7 @@ One license does not fit both code/specifications and example data:
 | Reference toolkit — validators, SDK, CLI, fixtures loaders | `packages/**` | Apache License 2.0 | `Apache-2.0` |
 | Repository tooling | `scripts/**` | Apache License 2.0 | `Apache-2.0` |
 | Examples / conformance corpus | `examples/**`, `conformance/**` | CC0 1.0 Universal | `CC0-1.0` |
+| Published paint-identity registry | `registry/**` | CC0 1.0 Universal | `CC0-1.0` |
 | User-authored recipes / palettes / media | content inside a document | author's choice via the document `license` field | per-item |
 | Trademarks / branding | "BrushCodex", logos | **not granted** by any code/spec license | — |
 
@@ -46,6 +47,11 @@ Full license texts live at
   friction for implementers.
 - **CC0-1.0 for examples/conformance** — a third party proving conformance copies the fixtures;
   CC0 lets them do so with zero obligations (no attribution burden on hundreds of small files).
+- **CC0-1.0 for the published registry** — the same reasoning, harder. It exists to be fetched,
+  cached and mirrored by anyone resolving an identifier, and a licence that put conditions on that
+  would defeat the point of publishing it. CC0 covers BrushCodex's own contribution — the
+  identifiers, the record shape, the compilation — and cannot relicense what a manufacturer holds:
+  product names and printed codes remain theirs, and no trademark right is granted in them.
 
 ## 4. Compatibility notes
 
@@ -76,6 +82,7 @@ this repository claims rights over documents authored in these formats.
 | `packages/*/NOTICE` | Self-contained package attribution and license-scope notice |
 | `examples/LICENSE` | CC0-1.0 |
 | `conformance/LICENSE` | CC0-1.0 |
+| `registry/LICENSE` | CC0-1.0 |
 
 Each `@brushcodex/*` package also declares `"license": "Apache-2.0"` in its `package.json` and
 packs its own complete `LICENSE` and `NOTICE`; the fixtures package additionally carries the

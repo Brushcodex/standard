@@ -6,6 +6,50 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### An open paint-identity registry, and the canonical form of a Paint ID — 2026-08-30
+
+Common §5.7 named the assigned identifier as canonical two days ago, and an implementer reading
+that still had no way to turn one into a paint: the identifiers were issued from a private
+repository with no public resolution path at all. A stable identifier nobody outside the project
+can resolve is a promise with no mechanism behind it.
+
+#### Added
+
+- **[`registry/paint-identity.v1.json`](registry/paint-identity.v1.json)** — an unauthenticated,
+  machine-consumable identity registry, fetchable as a static file with no account and no service.
+  It maps canonical identifiers, pre-widening identifiers, historical slugged identifiers and
+  superseded identifiers to the minimum identity record: manufacturer, ranges, name, codes,
+  lifecycle status, aliases. **Identity only** — no colour, no measurement, no provenance, no
+  matching data, no catalogue annotation. [`registry/README.md`](registry/README.md) is the
+  implementer's guide.
+- **Its own format version, `publicFormatVersion: 1.0.0`**, deliberately separate from any
+  BrushCodex internal versioning. What this file promises changes slowly; the private registry that
+  produces it is a working record and does not. Tying them together would mean freezing one or
+  breaking the other.
+- **`pnpm check:public-registry`**, in `test:gate`. The artifact is generated in a private
+  repository, so it is judged HERE, as published: unknown fields, private-material field names, an
+  identifier resolving to two paints, a redirect onto a live identifier, a duplicate or
+  non-canonical identifier, or a self-inconsistent count all fail before the file can be trusted.
+
+#### Changed
+
+- **Common §5.7** now writes the canonical example as `brushcodex:paint:p0000001` and states
+  plainly that **the seven-digit zero padding is an issuance convention, not a promise about the
+  number**. A consumer MUST NOT treat the width as a parsing ceiling or compare identifiers by
+  adding or stripping padding; identifiers issued before 2026-08-30 at five digits are the same
+  identities and remain resolvable as aliases. §5.7 also now points at the registry above.
+- **NO SCHEMA CHANGE.** `catalogueId` was already an opaque non-empty string, which is why none of
+  this needed one.
+
+#### Not claimed
+
+Coverage is **intentionally partial and currently zero**: a paint is published only where an
+explicit decision permits publishing its identity openly, and no manufacturer carries one yet.
+Some manufacturers' terms are adverse to redistribution; others cleared BrushCodex to read their
+data, which is a different permission from republishing it. The registry is not described as
+universal, and §5.7's rule is unchanged — an unresolved identifier is not an error, and the literal
+members remain the guaranteed floor.
+
 ### Painted Subject identity graduates into Common `target` — 2026-08-28
 
 A Painting Workflow said what it was for in one free-text string, and string matching is wrong in
