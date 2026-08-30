@@ -29,7 +29,7 @@ pnpm verify:packed # PROVE all five work from packed tarballs in an isolated, so
 | [`cli`](cli/) `@brushcodex/cli` | `validate` + `conformance` bins; conformance loads the corpus from `@brushcodex/fixtures` (runs packed, no source checkout) | ✅ conformance 99/99, integration tests and typecheck clean |
 | [`fixtures`](fixtures/) `@brushcodex/fixtures` | The example/conformance corpus + a stable manifest + Node loaders | ✅ 16 tests pass; corpus ships in-package |
 
-All are versioned `1.0.0-rc.1` (lockstep) and **private** (not published to any registry). Each ships a built
+All are versioned `1.0.0-rc.2` (lockstep) and **private** (not published to any registry). Each ships a built
 `dist/` (self-contained: `validator`/`cli` bundle the schema in; `fixtures` ships the corpus).
 
 ## Dependency direction

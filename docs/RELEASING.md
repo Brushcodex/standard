@@ -10,7 +10,7 @@ must pass before any release step.
 
 ## The packages
 
-`brushcodex-standard` owns five package candidates (all `1.0.0-rc.1`, `private`, `type: module`):
+`brushcodex-standard` owns five package candidates (all `1.0.0-rc.2`, `private`, `type: module`):
 
 | Package | Runtime deps (after pack) | Ships |
 |---|---|---|

@@ -128,7 +128,7 @@ files are excluded from the build, so an experiment ships nothing. Details and t
 
 ### `packages/` — the toolkit (the "SDK")
 
-Five packages, versioned in lockstep at `1.0.0-rc.1`, all **private — none is published to any
+Five packages, versioned in lockstep at `1.0.0-rc.2`, all **private — none is published to any
 registry**.
 
 | Package | Role |

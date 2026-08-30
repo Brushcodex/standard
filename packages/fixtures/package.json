@@ -1,6 +1,6 @@
 {
   "name": "@brushcodex/fixtures",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
   "description": "The BrushCodex canonical example & conformance fixture corpus, as a self-contained package: a stable manifest plus a Node loader. Ships the corpus so consumers never read the source repo.",
