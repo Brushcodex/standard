@@ -13,7 +13,12 @@
 import { describe, expect, it } from 'vitest';
 import { SOURCE_TYPES } from './envelope';
 import { colorValueSchema, paintRefSchema } from './paint';
-import { validateRecipeDocument } from '../recipe';
+import {
+  parseRecipeDocument,
+  roundTripRecipeDocument,
+  serializeRecipeDocument,
+  validateRecipeDocument,
+} from '../recipe';
 
 const recipe = (paints: unknown[]) => ({
   spec: 'recipe',
@@ -64,6 +69,35 @@ describe('paint reference — usable with no catalogue and no colour', () => {
 
   it('an empty catalogueId is rejected — absent, never blank', () => {
     expect(paintRefSchema.safeParse({ name: 'X', catalogueId: '' }).success).toBe(false);
+  });
+
+  /**
+   * §5.7: an implementation that reads a document and writes it out again SHOULD
+   * preserve a `catalogueId` it does not recognise, verbatim and unparsed.
+   *
+   * Accepting an identifier and PRESERVING one are different claims, and only the
+   * first was covered here before. This drives the real `parse -> canonical
+   * serialize -> parse` path, so a normalisation, a rewrite or a drop anywhere in
+   * it fails the test rather than passing quietly. Nothing resolves anything:
+   * every identifier below is deliberately foreign or opaque, and the point is
+   * that the round trip neither knows nor cares what it means.
+   */
+  it.each([
+    'vendor:sku:XYZ-1',
+    '123456789012',
+    'opaque-token',
+    'https://example.org/paint/123',
+  ])('preserves the unrecognised catalogueId %o verbatim through a canonical round trip', (id) => {
+    const { document, canonical } = roundTripRecipeDocument(
+      recipe([{ ref: 'p1', name: 'House Grey', catalogueId: id }]),
+    );
+    const reparsed = parseRecipeDocument(JSON.parse(serializeRecipeDocument(document)));
+
+    expect(document.paints?.[0]?.catalogueId).toBe(id);
+    expect(reparsed.paints?.[0]?.catalogueId).toBe(id);
+    // And verbatim in the serialized bytes, so a value that survived as an object
+    // member but was re-encoded on the way out would still fail.
+    expect(canonical).toContain(`"catalogueId":${JSON.stringify(id)}`);
   });
 });
 
