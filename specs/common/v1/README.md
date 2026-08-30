@@ -341,6 +341,27 @@ paint (§5.7):
   BrushCodex namespace is required, and a resolver **MUST** treat an identifier it does not
   recognise as simply unresolvable.
 
+**Portability does not depend on BrushCodex.** A conforming document that denotes a Painted Subject
+stays fully readable and fully usable if BrushCodex, its catalogue, any subject registry and every
+BrushCodex service cease to exist. Nothing in this section may be read as making a document's
+meaning, its validity or its usefulness contingent on a resolver, a registry, a catalogue, a
+dataset or a network being reachable — now or at any point in the future. **This specification does
+not require that any resolver exist**, for subjects any more than for paints: whether BrushCodex or
+anyone else offers a way to turn a `subjectId` into a subject record is an integration concern
+outside this specification. Resolution is a capability an implementation MAY have; portability is a
+property every conforming document has already. This is §5.7's durability guarantee for a paint,
+stated for a subject and for the same reason.
+
+An implementation that reads a document and writes it out again **SHOULD** preserve a `subjectId`
+it does not recognise — verbatim and unparsed — rather than dropping it, normalising it, or
+re-encoding it. An identifier this implementation cannot resolve may be one another implementation
+can, or one this implementation will resolve after its next update; discarding it destroys
+something the author put there deliberately, and does so silently. The opacity rule above is both
+what makes verbatim preservation possible and what makes it necessary: an implementation
+**MUST NOT** derive semantics by parsing the identifier, so it has nothing on which to justify
+rewriting one. This is the rule §6 already states for unknown extensions and §5.7 for an
+unrecognised `catalogueId`, applied here for the same reason.
+
 Allocation is registry policy, not a validation rule: which subjects share an identifier across a
 rebox, and when a remaster earns a new one, is decided by whoever mints identifiers, never by this
 schema.
