@@ -6,6 +6,50 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Subject identifiers: portable without BrushCodex, and preserved when unrecognised — 2026-08-30
+
+§5.8 gave `subjectId` the opacity and best-effort resolution that §5.7 gives `catalogueId`, and
+stopped one clause short of the two rules §5.7 gained on 2026-08-30. A reader could conclude that
+a Painted Subject identity is portable only while somebody is still running a subject registry,
+and that an identifier a consumer does not recognise is theirs to discard. Neither was intended;
+neither was written down.
+
+#### Changed
+
+- **Portability does not depend on BrushCodex.** A conforming document that denotes a Painted
+  Subject stays fully readable and fully usable if BrushCodex, its catalogue, any subject registry
+  and every BrushCodex service cease to exist. Nothing in §5.8 may make a document's meaning,
+  validity or usefulness contingent on a resolver, a registry, a catalogue, a dataset or a network
+  being reachable.
+- **No resolver is required to exist** — for subjects as for paints. Whether anyone offers a way
+  to turn a `subjectId` into a subject record is an integration concern outside this
+  specification. Resolution is a capability an implementation MAY have; portability is a property
+  every conforming document has already.
+- **An unrecognised `subjectId` SHOULD survive a round trip.** An implementation that reads a
+  document and writes it out again should preserve one it does not recognise, verbatim and
+  unparsed, rather than dropping, normalising or re-encoding it — the rule §6 already states for
+  unknown extensions and §5.7 for an unrecognised `catalogueId`. The opacity rule is what makes
+  verbatim preservation both possible and necessary: an implementation **MUST NOT** derive
+  semantics by parsing the identifier, so it has nothing on which to justify rewriting one.
+- **NO SCHEMA CHANGE.** `subjectId` was already an opaque non-empty string with no pattern, which
+  is why none of this needed one.
+
+#### Added
+
+- Four cases in `packages/validator/src/common/subject-identity.test.ts` driving the real
+  `parse → canonical serialize → parse` path over identifiers in namespaces nothing here knows —
+  `vendor:some-studio:0041`, a URN, an http URI and a bare token — asserting the value after each
+  parse and verbatim in the serialized bytes. One case carries an uppercase segment on purpose:
+  equality is whole-string equality, so a normalising consumer is a non-preserving one and the
+  suite has to be able to see the difference. It calls no resolver, touches no network, parses no
+  segment and adds no validation rule.
+
+  **Proved load-bearing rather than vacuous**, by mutating the real model twice and watching it go
+  red both times. `subjectId` lowercased on parse: **1 failed / 26 passed** — and the one failure
+  was a new case, so the round-trip tests that existed before could not see a normalising
+  consumer at all. `subjectId` silently dropped on parse: **6 failed / 21 passed**. Both
+  reverted, and `structures.ts` is byte-identical to `main`.
+
 ### Paint identifiers: opaque, optional, and never a dependency — 2026-08-30
 
 §5.7 named the assigned identifier as canonical two days ago and left three things unsaid that an

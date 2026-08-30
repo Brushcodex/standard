@@ -22,7 +22,12 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { parseRecipeDocument, roundTripRecipeDocument, validateRecipeDocument } from '../recipe';
+import {
+  parseRecipeDocument,
+  roundTripRecipeDocument,
+  serializeRecipeDocument,
+  validateRecipeDocument,
+} from '../recipe';
 import { parsePaletteDocument, roundTripPaletteDocument, validatePaletteDocument } from '../palette';
 import type { SubjectIdentity } from './structures';
 
@@ -235,6 +240,54 @@ describe('Painted Subject identity — round trip', () => {
       designation: 'Ruined Chapel Wall',
       qualifier: 'assembled with the optional buttress, which changes which faces are reachable',
     });
+  });
+
+  /**
+   * §5.8.2: an implementation that reads a document and writes it out again SHOULD
+   * preserve a `subjectId` it does not recognise, verbatim and unparsed.
+   *
+   * Accepting an identifier and PRESERVING one are different claims, and only the
+   * first was covered. The block's other cases round-trip the published corpus,
+   * whose `subjectId` is one this repository wrote itself, so an implementation
+   * that lowercased a foreign identifier, re-encoded it, or dropped it silently
+   * would have passed every one of them.
+   *
+   * This drives the same real `parse -> canonical serialize -> parse` path the
+   * recipe suite uses, over identifiers deliberately in namespaces nothing here
+   * knows. Nothing is resolved: no resolver, no registry, no network, no segment
+   * parsed, and no validation rule added. `vendor:some-studio:0041` is the
+   * primary case; the URI and bare-token forms ride along because §5.8.2 names
+   * them as valid and a preservation rule that held only for colon-separated
+   * triples would be the wrong rule. One case carries an uppercase segment on
+   * purpose: equality is WHOLE-STRING equality, so a normalising consumer is a
+   * non-preserving one and the suite has to be able to see the difference.
+   */
+  it.each([
+    'vendor:some-studio:0041',
+    'urn:example:sculpt:41F2',
+    'https://example.org/subjects/41f2',
+    'an-opaque-token',
+  ])('preserves the unrecognised subjectId %o verbatim through a canonical round trip', (id) => {
+    const source = clone(read(RECIPE_EXACT));
+    const identity = identityOf(source) as unknown as Record<string, unknown>;
+    identity['subjectId'] = id;
+
+    // Accepted on the first parse -- an identifier nothing can resolve is still valid.
+    expect(validateRecipeDocument(source)).toEqual({ valid: true, issues: [] });
+
+    const { document, canonical } = roundTripRecipeDocument(source);
+    const reparsed = parseRecipeDocument(JSON.parse(serializeRecipeDocument(document)));
+
+    expect(document.target?.identity?.subjectId).toBe(id);
+    expect(reparsed.target?.identity?.subjectId).toBe(id);
+    // And verbatim in the serialized bytes, so a value that survived as an object
+    // member but was re-encoded on the way out would still fail.
+    expect(canonical).toContain(`"subjectId":${JSON.stringify(id)}`);
+
+    // The literal floor rides through beside it. Preservation of the opaque key is
+    // not licence to let it displace what a reader with no registry actually has.
+    expect(reparsed.target?.identity?.authority).toBe(identity['authority']);
+    expect(reparsed.target?.identity?.designation).toBe(identity['designation']);
   });
 });
 
