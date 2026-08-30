@@ -213,17 +213,39 @@ Resolution is **best-effort**. An unresolved `catalogueId` is **NOT** an error: 
 falls back to the literal members. Implementations **MUST NOT** require resolution in order to
 consider a document valid.
 
-The RECOMMENDED form of a BrushCodex-namespaced identifier is a URN-style, lowercase, slugged
-triple:
+The CANONICAL form of a BrushCodex-namespaced identifier is an **assigned, opaque** token:
+
+```text
+brushcodex:paint:p00001
+```
+
+It is assigned once and never reused, and it carries no manufacturer, range, name or code. A
+consumer **MUST NOT** parse meaning out of its segments, and **MUST** compare it by whole-string
+equality. Its stability is the reason it exists: renaming a paint, moving it between ranges, or
+rebranding its manufacturer **does not change** the identifier, because none of those facts is
+part of it. Every identifier a product has previously been published under is retained as an
+alias, so an older document keeps resolving.
+
+A second, LEGACY form is still valid and still widely held by documents already exported — a
+URN-style, lowercase, slugged triple:
 
 ```text
 brushcodex:paint:<manufacturer>/<range>/<paint>
 ```
 
-for example `brushcodex:paint:citadel/base/mephiston-red`. This form is a **convention, not a
-constraint** — the schema types `catalogueId` as an opaque non-empty string so other namespaces
-(`vendor:…`, a URI, an opaque token) remain valid. Resolvers **MUST** treat an identifier they do
-not recognise as simply unresolvable.
+for example `brushcodex:paint:citadel-colour/base/mephiston-red`. It is derived from three facts
+that can each change, so it names a paint only as long as all three hold. It is now published as
+an **alias** of the assigned identifier rather than as the identity itself, and a resolver that
+knows the assigned form **SHOULD** treat both as naming the same product.
+
+Both forms are a **convention, not a constraint** — the schema types `catalogueId` as an opaque
+non-empty string so other namespaces (`vendor:…`, a URI, an opaque token) remain valid. Resolvers
+**MUST** treat an identifier they do not recognise as simply unresolvable.
+
+None of this weakens §5.7's opening rule. `manufacturer`, `range`, `name` and `code` remain
+DESCRIPTIVE literals and the guaranteed floor for reading a document; they are evidence about a
+paint, never its permanent identity. An implementation with no catalogue at all still reads every
+document correctly, and an unresolved identifier of either form is still not an error.
 
 ## 5.8 Painted Subject identity
 
