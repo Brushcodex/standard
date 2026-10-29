@@ -1,0 +1,12 @@
+{
+  "spec": "project",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0124",
+  "revision": "rev-1",
+  "title": "Two result media items claim the same document-local anchor",
+  "status": "completed",
+  "results": [
+    { "id": "final", "url": "https://example.org/photos/final-front.jpg", "kind": "image", "relation": "result" },
+    { "id": "final", "url": "https://example.org/photos/final-back.jpg", "kind": "image", "relation": "result" }
+  ]
+}

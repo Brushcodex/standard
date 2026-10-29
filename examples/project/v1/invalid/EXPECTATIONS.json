@@ -66,6 +66,18 @@
       "layer": "semantic",
       "reason": "Schema-valid, but a journal entry references a subject anchor no subject defines.",
       "expect": { "rule": "subject-anchor-resolves" }
+    },
+    {
+      "file": "duplicate-subject-ref.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two subjects claim the same document-local anchor, so a journal entry anchored to it resolves to two subjects.",
+      "expect": { "rule": "subject-ref-unique" }
+    },
+    {
+      "file": "duplicate-result-media-id.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two result media items claim the same document-local anchor; a mediaRef id is unique within its owning array.",
+      "expect": { "rule": "media-id-unique" }
     }
   ]
 }

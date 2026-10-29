@@ -54,6 +54,12 @@
       "layer": "semantic",
       "reason": "Schema-valid, but a relationship references an entry anchor no entry defines.",
       "expect": { "rule": "entry-anchor-resolves" }
+    },
+    {
+      "file": "duplicate-entry-ref.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two entries claim the same document-local anchor, so a mixture anchored to it resolves to two entries.",
+      "expect": { "rule": "entry-ref-unique" }
     }
   ]
 }

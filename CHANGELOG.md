@@ -6,6 +6,61 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Document-local anchors are unique within their array — 2026-10-29
+
+An external implementer reported that paint and project references did not appear to require
+uniqueness within their scopes, which would let an anchor resolve ambiguously. Confirmed: the
+reference validators checked that every anchor **resolves**, but two members sharing one anchor
+passed, so a step, mixture, relationship, or journal entry pointing at it named two targets.
+Recipe `media[].id` was the only anchor with a uniqueness rule (`media-id-unique`); every other
+anchor now follows that precedent. JSON Schema cannot express uniqueness of one property across
+array objects (`uniqueItems` compares whole items), so each is a **semantic** rule.
+
+| Spec | Anchor | Rule | Before |
+|---|---|---|---|
+| Recipe | `paints[].ref` | `paint-ref-unique` (new) | unchecked |
+| Recipe | `steps[].id` | `step-id-unique` (new) | unchecked |
+| Recipe | `media[].id` | `media-id-unique` | already enforced |
+| Recipe | `steps[].media[].id` | `media-id-unique` (now enforced) | Common prose only |
+| Palette | `entries[].ref` | `entry-ref-unique` (new) | unchecked |
+| Inventory | `items[].ref` | `item-ref-unique` (new) | unchecked |
+| Project | `subjects[].ref` | `subject-ref-unique` (new) | unchecked |
+| Project | `results[].id` | `media-id-unique` (now enforced) | Common prose only |
+
+Not anchors, so deliberately unchanged: Project `recipeRefs[]`/`paletteRefs[]` and Recipe
+`techniqueRefs[]` point **outward** at other documents by `id`, and nothing resolves to them —
+listing one document twice is redundant, not ambiguous. Common `agent.id` is a global
+identity URI, not a document-local anchor. Technique and Bundle declare no document-local anchors.
+
+#### Changed
+
+- **Prose:** a **MUST** ("unique within `<array>`") with its rule code in Recipe §9, Palette §4/§7,
+  Inventory §4/§7, Project §4/§11, and Common §5.6 `mediaRef` (which already said "unique within
+  the array" but as unenforced prose). Schema `description`s on the same members say the same.
+- **Inventory §7 reconciled.** `ref` stays a non-destructive duplicate-detection hint; the two
+  rules apply at different scopes. Within one document a `ref` names one item; **across**
+  documents (merge, import) an equal `ref` suggests the same item but is not an identity. Two
+  items describing the same paint remain valid — uniqueness constrains the anchor, not the paint.
+- **Validator:** the Recipe, Palette, Inventory, and Project semantic layers report each later
+  duplicate at its own path (e.g. `/paints/1/ref`); the first occurrence is accepted. Inventory
+  gains a semantic layer beyond the envelope rules. No public export changes.
+- **Compatibility.** This is a **tightened constraint**: a document with a duplicate anchor that
+  validated before is now rejected. It lands in place because every schema and spec is DRAFT
+  (VERSIONING §3); `specVersion` stays `1.0.0`. No valid corpus document carries a duplicate anchor
+  (measured across all 101 pre-existing corpus documents; the only duplicate was the intended one in
+  `recipe/…/duplicate-media-id.json`), so no valid example changes. Migration
+  for an affected document: rename the later duplicate and re-point the references meant for it —
+  which references those are is the author's knowledge, so no tool can do it mechanically.
+
+#### Added
+
+- Seven invalid fixtures, each with an `EXPECTATIONS.json` entry (`layer: "semantic"`):
+  `recipe/…/duplicate-paint-ref.json`, `duplicate-step-id.json`, `duplicate-step-media-id.json`;
+  `palette/…/duplicate-entry-ref.json`; `inventory/…/duplicate-item-ref.json`;
+  `project/…/duplicate-subject-ref.json`, `duplicate-result-media-id.json`. Each verified
+  load-bearing: disabling its check makes `pnpm conformance` and the validator suite fail. Corpus
+  is now 108 cases (22 valid, 86 invalid).
+
 ### Substitution evidence classes defined once, in Common — 2026-10-29
 
 Resolves [VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md) Open item 1, the one pre-freeze item

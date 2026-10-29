@@ -6,9 +6,10 @@
  *                 composes the Common envelope. Ajv (draft 2020-12) with the
  *                 published common schema registered so the cross-schema $ref
  *                 resolves.
- *   2. semantic — envelope prose rules (updatedAt >= createdAt) plus subject-anchor
- *                 integrity: every journal subjectRef must resolve to a declared
- *                 subjects[].ref.
+ *   2. semantic — envelope prose rules (updatedAt >= createdAt) plus anchor
+ *                 integrity: every subjects[].ref and results[].id is unique
+ *                 within its array, and every journal subjectRef must resolve
+ *                 to a declared subjects[].ref.
  *
  * The schemas are imported as bundled modules (not read from disk), so the
  * validator runs identically under Node/Vitest, tooling, and a bundled Next.js
@@ -27,6 +28,7 @@ import {
   type ValidationResult,
 } from '../common/validate';
 import { toCanonicalJson } from '../common/canonical';
+import { duplicateAnchorIssues } from '../common/anchors';
 import { projectDocumentSchema, type ProjectDocument } from './project';
 
 let cachedValidate: ValidateFunction | null = null;
@@ -60,7 +62,12 @@ export function validateProjectAgainstSchema(input: unknown): ValidationIssue[] 
 
 /** Prose rules the schema cannot express. Assumes `input` is already schema-valid. */
 function projectSemanticIssues(doc: ProjectDocument): ValidationIssue[] {
-  const issues: ValidationIssue[] = [...envelopeSemanticIssues(doc)];
+  const issues: ValidationIssue[] = [
+    ...envelopeSemanticIssues(doc),
+    // Anchor uniqueness (spec §11): a reused anchor resolves to two members.
+    ...duplicateAnchorIssues(doc.subjects, 'ref', '/subjects', 'subject-ref-unique', 'subject ref'),
+    ...duplicateAnchorIssues(doc.results, 'id', '/results', 'media-id-unique', 'media id'),
+  ];
 
   const declared = new Set(
     (doc.subjects ?? [])

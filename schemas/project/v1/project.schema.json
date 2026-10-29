@@ -98,7 +98,7 @@
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor journal entries can point to."
+          "description": "Document-local anchor journal entries can point to. MUST be unique within subjects[] (semantic rule subject-ref-unique; JSON Schema cannot express it)."
         },
         "status": {
           "type": "string",

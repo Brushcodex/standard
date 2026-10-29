@@ -185,7 +185,8 @@ references, so they are defined **once** and cannot drift:
   only through `target.identity`; see §5.8.
 - **`mediaRef`** — a linked media item with its **own** rights metadata (Recipe `media` and step
   `media`, Project `results`). `url` (absolute URI) REQUIRED; optional `id` (a document-local
-  anchor, unique within the array, so a `mediaCitation` can target it), `kind`
+  anchor that **MUST** be unique within its owning array — `media-id-unique` — so a
+  `mediaCitation` can target it), `kind`
   (`image` | `video` | `other`), `relation` (`source` | `result` | `reference`), `caption`,
   `creator` (an `agent`), `license`, `rightsNote`. `creator` and `license` describe the **linked
   work**, never the document: deriving a workflow from a tutorial, class, article, or other work

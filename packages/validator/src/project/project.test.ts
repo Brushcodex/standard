@@ -156,6 +156,30 @@ describe('Project — subject-anchor integrity (semantic)', () => {
   it('accepts a project whose journal anchors all resolve', () => {
     expect(validateProjectDocument(readExample('comprehensive.valid.json')).valid).toBe(true);
   });
+
+  it('rejects two subjects sharing one ref, reporting only the later duplicate', () => {
+    const result = validateProjectDocument(readExample('invalid/duplicate-subject-ref.json'));
+    expect(result.valid).toBe(false);
+    const duplicates = result.issues.filter((i) => i.code === 'subject-ref-unique');
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]).toMatchObject({ path: '/subjects/1/ref', layer: 'semantic' });
+    expect(result.issues.some((i) => i.code === 'subject-anchor-resolves')).toBe(false);
+  });
+
+  it('rejects two result media items sharing one id (Common mediaRef rule)', () => {
+    const result = validateProjectDocument(readExample('invalid/duplicate-result-media-id.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({ code: 'media-id-unique', path: '/results/1/id', layer: 'semantic' }),
+    ]);
+  });
+
+  it('treats recipeRefs / paletteRefs as references: listing one document twice is valid', () => {
+    const base = readExample('minimal.valid.json') as Record<string, unknown>;
+    const ref = { id: 'urn:uuid:00000000-0000-4000-8000-000000000001' };
+    const result = validateProjectDocument({ ...base, recipeRefs: [ref, ref], paletteRefs: [ref, ref] });
+    expect(result.issues).toEqual([]);
+  });
 });
 
 describe('Project — shared export profile (privacy)', () => {
