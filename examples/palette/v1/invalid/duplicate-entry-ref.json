@@ -1,0 +1,19 @@
+{
+  "spec": "palette",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0121",
+  "revision": "rev-1",
+  "title": "Two entries claim the same document-local anchor",
+  "entries": [
+    { "ref": "steel", "name": "Steel", "paint": { "name": "Steel" } },
+    { "ref": "steel", "name": "Dark Steel", "paint": { "name": "Dark Steel" } },
+    { "ref": "black", "name": "Black", "paint": { "name": "Black" } },
+    {
+      "name": "Shaded steel",
+      "mix": [
+        { "paint": "steel", "parts": 2 },
+        { "paint": "black", "parts": 1 }
+      ]
+    }
+  ]
+}

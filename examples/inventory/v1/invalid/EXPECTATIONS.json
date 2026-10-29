@@ -54,6 +54,12 @@
       "layer": "semantic",
       "reason": "Schema-valid, but updatedAt precedes createdAt.",
       "expect": { "rule": "updatedAt-not-before-createdAt" }
+    },
+    {
+      "file": "duplicate-item-ref.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two items claim the same document-local anchor. Two items may describe the same paint; they may not share one ref.",
+      "expect": { "rule": "item-ref-unique" }
     }
   ]
 }

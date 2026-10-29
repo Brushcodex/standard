@@ -40,7 +40,8 @@ results, and the tools used. It **embeds the Common document envelope** and clos
 
 ## 4. Subject
 
-`name` is REQUIRED. Optional `ref` (a document-local anchor journal entries point to), `status`
+`name` is REQUIRED. Optional `ref` (a document-local anchor journal entries point to, unique within
+`subjects[]` — §11), `status`
 (`not_started` / `in_progress` / `blocked` / `done`), `progress` (0–100), `stages`
 (`{ name, status? }`, status one of `not_started` / `in_progress` / `done`), `checklist`
 (`{ task, done? }`), and `note`.
@@ -92,9 +93,21 @@ paint with no catalogue entry is valid.
 ## 11. Anchor integrity (semantic)
 
 Every `journal[].subjectRef` **MUST** resolve to a `subjects[]` entry whose `ref` equals that
-anchor. The JSON Schema cannot express this cross-reference; the reference validator enforces it as
-a semantic rule and reports the offending anchor. Envelope semantic rules (e.g.
-`updatedAt >= createdAt`) also apply.
+anchor (`subject-anchor-resolves`). Document-local anchors are unique within the array that
+declares them:
+
+- A `subjects[].ref` **MUST** be unique within `subjects[]` (`subject-ref-unique`) — a reused ref
+  names two subjects, so a journal entry anchored to it is ambiguous.
+- A `results[].id` **MUST** be unique within `results[]` (`media-id-unique`, the Common §5.6
+  `mediaRef` rule).
+
+The JSON Schema cannot express these rules (a cross-reference, or uniqueness of one property across
+array objects); the reference validator enforces them as semantic rules and reports the offending
+anchor. Envelope semantic rules (e.g. `updatedAt >= createdAt`) also apply.
+
+`recipeRefs[]` and `paletteRefs[]` are **references**, not anchors: they point outward at other
+documents by `id`, and nothing in the project resolves to them, so no uniqueness rule applies.
+Listing the same document twice is redundant, not ambiguous.
 
 ## 12. Security & privacy considerations
 

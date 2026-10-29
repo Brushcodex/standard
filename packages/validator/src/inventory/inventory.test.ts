@@ -180,6 +180,35 @@ describe('Inventory — shared export profile (privacy)', () => {
   });
 });
 
+describe('Inventory — anchor uniqueness (semantic)', () => {
+  const base = () => readExample('minimal.valid.json') as Record<string, unknown>;
+
+  it('rejects two items sharing one ref, reporting only the later duplicate', () => {
+    const result = validateInventoryDocument(readExample('invalid/duplicate-item-ref.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({ code: 'item-ref-unique', path: '/items/1/ref', layer: 'semantic' }),
+    ]);
+  });
+
+  it('accepts two items for the same paint when their refs differ or are absent (§7)', () => {
+    const paint = { manufacturer: 'Vallejo', name: 'Flat Brown' };
+    const result = validateInventoryDocument({
+      ...base(),
+      items: [{ ref: 'a', paint }, { ref: 'b', paint }, { paint }, { paint }],
+    });
+    expect(result.issues).toEqual([]);
+  });
+
+  it('the shared profile of a valid inventory keeps its refs unique', () => {
+    const full = readExample('comprehensive.valid.json');
+    expect(validateInventoryDocument(full).valid).toBe(true);
+    expect(validateInventoryDocument(toSharedInventory(parseInventoryDocument(full))).valid).toBe(
+      true,
+    );
+  });
+});
+
 describe('Inventory — parse errors', () => {
   it('throws a structured InventoryValidationError on an invalid document', () => {
     try {

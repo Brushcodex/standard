@@ -37,7 +37,7 @@
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor; also a non-destructive duplicate-detection hint."
+          "description": "Document-local anchor, unique within items[] (semantic rule item-ref-unique; JSON Schema cannot express it). Across documents it is only a non-destructive duplicate-detection hint, never an identity."
         },
         "paint": { "$ref": "#/$defs/paintRef" },
         "quantity": {

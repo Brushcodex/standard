@@ -7,7 +7,9 @@
  *                 published common schema registered so the cross-schema $ref
  *                 resolves.
  *   2. semantic — envelope prose rules (updatedAt >= createdAt) plus recipe
- *                 anchor integrity: every paint anchor used by a step, mixture,
+ *                 anchor integrity: every document-local anchor (paints[].ref,
+ *                 steps[].id, media[].id, steps[].media[].id) is unique within
+ *                 its array, every paint anchor used by a step, mixture,
  *                 or alternative must resolve to a declared paints[].ref, and
  *                 every step source citation must resolve to a declared
  *                 media[].id (or an unambiguous single 'source' media item) and
@@ -29,6 +31,7 @@ import {
   type ValidationResult,
 } from '../common/validate';
 import { toCanonicalJson } from '../common/canonical';
+import { duplicateAnchorIssues } from '../common/anchors';
 import { recipeDocumentSchema, type RecipeDocument } from './recipe';
 
 let cachedValidate: ValidateFunction | null = null;
@@ -64,6 +67,12 @@ export function validateRecipeAgainstSchema(input: unknown): ValidationIssue[] {
 /** Prose rules the schema cannot express. Assumes `input` is already schema-valid. */
 function recipeSemanticIssues(doc: RecipeDocument): ValidationIssue[] {
   const issues: ValidationIssue[] = [...envelopeSemanticIssues(doc)];
+
+  // Anchor uniqueness (spec §9): a reused anchor resolves to two members.
+  issues.push(
+    ...duplicateAnchorIssues(doc.paints, 'ref', '/paints', 'paint-ref-unique', 'paint ref'),
+    ...duplicateAnchorIssues(doc.steps, 'id', '/steps', 'step-id-unique', 'step id'),
+  );
 
   const declared = new Set(
     (doc.paints ?? []).map((paint) => paint.ref).filter((ref): ref is string => ref !== undefined),
@@ -106,7 +115,9 @@ function recipeSemanticIssues(doc: RecipeDocument): ValidationIssue[] {
 /**
  * Media anchor integrity and citation coherence (spec §7a, §9):
  *
- *   - a `media[].id` is a document-local anchor, so it MUST be unique;
+ *   - a `media[].id` is a document-local anchor, so it MUST be unique — in the
+ *     document-level `media[]` and in each `steps[].media[]` (Common §5.6
+ *     mediaRef: unique within the owning array);
  *   - a step citation naming `media` MUST resolve to one of those ids;
  *   - a citation that omits `media` is only unambiguous when exactly one media
  *     item declares `relation: "source"` — otherwise it cites nothing definite;
@@ -130,6 +141,17 @@ function mediaCitationIssues(doc: RecipeDocument): ValidationIssue[] {
       });
     }
     seen.add(item.id);
+  });
+  doc.steps.forEach((step, stepIndex) => {
+    issues.push(
+      ...duplicateAnchorIssues(
+        step.media,
+        'id',
+        `/steps/${stepIndex}/media`,
+        'media-id-unique',
+        'media id',
+      ),
+    );
   });
 
   const sourceCount = media.filter((item) => item.relation === 'source').length;

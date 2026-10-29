@@ -33,7 +33,8 @@ with `unevaluatedProperties: false`.
 
 `paint` (§5) is REQUIRED. Shareable fields:
 
-- `ref` — a document-local anchor; also a **non-destructive duplicate-detection hint** (see §7).
+- `ref` — a document-local anchor, unique within `items[]`; also a **non-destructive
+  duplicate-detection hint** across documents (see §7).
 - `quantity` (≥ 0), `unit` (`bottle`/`pot`/`tube`/`dropper`/`ml`/`g`/`other`), `bottleSizeMl` (> 0).
 - `condition` (`sealed`/`in_use`/`low`/`empty`/`dried_out`/`unknown`), `lowStock` (boolean).
 - `aliases` — the user's own unique names for the paint.
@@ -65,12 +66,23 @@ The reference implementation provides `toSharedInventory(doc)` which produces th
 the result is itself a valid Inventory document. Implementations MUST NOT require destructive
 merging to share an inventory.
 
-## 7. Duplicate detection (non-destructive)
+## 7. Anchor uniqueness and duplicate detection (non-destructive)
+
+Within one document, an `items[].ref` **MUST** be unique within `items[]` (`item-ref-unique`). JSON
+Schema cannot express uniqueness of one property across array objects, so the reference validator
+enforces this as a semantic rule and reports the offending item.
+
+That rule is about the anchor, not about the paint. Two items that describe the **same paint** — a
+second bottle recorded separately — are valid, provided they carry different `ref`s (or none).
+Uniqueness says only that one `ref` names one item.
 
 Duplicates are detected by paint identity — `catalogueId` when present, otherwise
-`manufacturer` + `name` (+ `range`) — and MAY use `ref`/`aliases` as hints. Detection is advisory:
-an implementation **MUST NOT** silently merge or delete items; it surfaces candidates for the user
-to resolve.
+`manufacturer` + `name` (+ `range`) — and MAY use `ref`/`aliases` as hints. Inside one document,
+a `ref` cannot repeat, so as a hint it matters **across** documents: when merging or importing
+another inventory, an equal `ref` on both sides suggests the same item, but it is **not** an
+identity — two independently authored inventories may use the same `ref` for different paints.
+Detection is advisory: an implementation **MUST NOT** silently merge or delete items; it surfaces
+candidates for the user to resolve.
 
 ## 8. Security & privacy considerations
 
@@ -82,9 +94,9 @@ to resolve.
 ## 9. Conformance
 
 A document conforms to Inventory v1 if it validates against `inventory.schema.json` (which includes
-the Common envelope via composition) **and** satisfies the envelope semantic rules (e.g.
-`updatedAt >= createdAt`). The reference validator (`@brushcodex/validator/inventory`) enforces both
-layers and is tested against the example corpus in `examples/inventory/v1`, including a
+the Common envelope via composition) **and** satisfies the semantic rules: the envelope rules (e.g.
+`updatedAt >= createdAt`) and the anchor uniqueness rule in §7. The reference validator
+(`@brushcodex/validator/inventory`) enforces both layers and is tested against the example corpus in `examples/inventory/v1`, including a
 `parse -> serialize -> parse` round trip that preserves every member (private data included) and
 unknown namespaced extensions, and a shared-profile test proving private data is removed while the
 result stays valid.

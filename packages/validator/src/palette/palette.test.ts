@@ -187,6 +187,31 @@ describe('Palette — anchor integrity (semantic)', () => {
   it('accepts a palette whose anchors all resolve', () => {
     expect(validatePaletteDocument(readExample('literal-only.valid.json')).valid).toBe(true);
   });
+
+  it('rejects two entries sharing one ref, reporting only the later duplicate', () => {
+    const result = validatePaletteDocument(readExample('invalid/duplicate-entry-ref.json'));
+    expect(result.valid).toBe(false);
+    const duplicates = result.issues.filter((i) => i.code === 'entry-ref-unique');
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]).toMatchObject({ path: '/entries/1/ref', layer: 'semantic' });
+    // The anchor still resolves (to two entries) — the defect is ambiguity, not a dangling ref.
+    expect(result.issues.some((i) => i.code === 'entry-anchor-resolves')).toBe(false);
+  });
+
+  it('accepts entries without a ref, and distinct refs on entries naming the same paint', () => {
+    const base = readExample('minimal.valid.json') as Record<string, unknown>;
+    const doc = {
+      ...base,
+      entries: [
+        { name: 'Steel', paint: { name: 'Steel' } },
+        { name: 'Steel again', paint: { name: 'Steel' } },
+        { ref: 'a', name: 'Steel A', paint: { name: 'Steel' } },
+        { ref: 'b', name: 'Steel B', paint: { name: 'Steel' } },
+      ],
+    };
+    const result = validatePaletteDocument(doc);
+    expect(result.issues).toEqual([]);
+  });
 });
 
 describe('Palette — parse errors', () => {

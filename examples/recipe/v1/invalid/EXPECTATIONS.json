@@ -144,6 +144,24 @@
       "layer": "schema",
       "reason": "A Painted Subject identity carries a subjectId but no designation. The literal floor is unconditional; a stable identifier does not license omitting the name the authority gives the subject.",
       "expect": { "keyword": "required", "instancePath": "/target/identity" }
+    },
+    {
+      "file": "duplicate-paint-ref.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two paints claim the same document-local anchor, so a step anchored to it resolves to two paints.",
+      "expect": { "rule": "paint-ref-unique" }
+    },
+    {
+      "file": "duplicate-step-id.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two steps claim the same document-local anchor, so the anchor names no single step.",
+      "expect": { "rule": "step-id-unique" }
+    },
+    {
+      "file": "duplicate-step-media-id.json",
+      "layer": "semantic",
+      "reason": "Schema-valid, but two media items of one step claim the same document-local anchor; a mediaRef id is unique within its owning array.",
+      "expect": { "rule": "media-id-unique" }
     }
   ]
 }

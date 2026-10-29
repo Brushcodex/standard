@@ -1,0 +1,11 @@
+{
+  "spec": "inventory",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0122",
+  "revision": "rev-1",
+  "title": "Two items claim the same document-local anchor",
+  "items": [
+    { "ref": "flat-brown", "paint": { "manufacturer": "Vallejo", "name": "Flat Brown" } },
+    { "ref": "flat-brown", "paint": { "manufacturer": "Vallejo", "name": "Leather Brown" } }
+  ]
+}
