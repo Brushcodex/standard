@@ -105,7 +105,11 @@
       "additionalProperties": false,
       "required": ["instruction"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL document-local anchor for the step. MUST be unique within steps[] (semantic rule step-id-unique; JSON Schema cannot express it)."
+        },
         "title": { "type": "string", "minLength": 1 },
         "instruction": { "type": "string", "minLength": 1 },
         "role": {

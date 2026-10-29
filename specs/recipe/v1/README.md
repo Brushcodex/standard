@@ -289,10 +289,20 @@ express this cross-reference; the BrushCodex reference validator enforces it as 
 and reports the offending anchor. Envelope semantic rules (e.g. `updatedAt >= createdAt`) also
 apply.
 
+An anchor resolves deterministically only when it names exactly one member, so each
+document-local anchor is unique within the array that declares it (rule codes in parentheses).
+JSON Schema cannot express uniqueness of one property across array objects, so these are
+semantic rules too:
+
+- A `paints[].ref` **MUST** be unique within `paints[]` (`paint-ref-unique`) — a reused ref makes
+  every step, mixture, or alternative that anchors to it ambiguous.
+- A `steps[].id` **MUST** be unique within `steps[]` (`step-id-unique`).
+
 Media anchors and citations are subject to the same treatment (rule codes in parentheses):
 
 - A `media[].id` **MUST** be unique within `media[]` (`media-id-unique`) — a reused anchor makes a
-  citation non-deterministic.
+  citation non-deterministic. The same rule applies within each `steps[].media[]` (Common §5.6
+  `mediaRef`).
 - A `steps[].source.media` anchor **MUST** resolve to a `media[].id` (`media-anchor-resolves`).
 - A citation that omits `media` **MUST** have exactly one `media[]` entry with `relation: "source"`
   to target (`media-citation-resolves`); with none, or with several, it cites nothing definite and

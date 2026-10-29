@@ -6,7 +6,9 @@
  *                 composes the Common envelope. Ajv (draft 2020-12) with the
  *                 published common schema registered so the cross-schema $ref
  *                 resolves.
- *   2. semantic — envelope prose rules (e.g. updatedAt >= createdAt).
+ *   2. semantic — envelope prose rules (e.g. updatedAt >= createdAt) plus
+ *                 anchor uniqueness: every items[].ref is unique within the
+ *                 document (spec §7; across documents it stays only a hint).
  *
  * The schemas are imported as bundled modules (not read from disk), so the
  * validator runs identically under Node/Vitest, tooling, and a bundled Next.js
@@ -25,6 +27,7 @@ import {
   type ValidationResult,
 } from '../common/validate';
 import { toCanonicalJson } from '../common/canonical';
+import { duplicateAnchorIssues } from '../common/anchors';
 import { inventoryDocumentSchema, type InventoryDocument } from './inventory';
 
 let cachedValidate: ValidateFunction | null = null;
@@ -56,7 +59,15 @@ export function validateInventoryAgainstSchema(input: unknown): ValidationIssue[
   return (validate.errors ?? []).map(ajvErrorToIssue);
 }
 
-/** Full reference validation: JSON Schema, then envelope prose rules. */
+/** Prose rules the schema cannot express. Assumes `input` is already schema-valid. */
+function inventorySemanticIssues(doc: InventoryDocument): ValidationIssue[] {
+  return [
+    ...envelopeSemanticIssues(doc),
+    ...duplicateAnchorIssues(doc.items, 'ref', '/items', 'item-ref-unique', 'item ref'),
+  ];
+}
+
+/** Full reference validation: JSON Schema, then envelope + anchor-uniqueness rules. */
 export function validateInventoryDocument(input: unknown): ValidationResult {
   // Version negotiation first (VERSIONING §8.5): an unrecognised spec version is
   // reported alone, so no misleading 1.0 schema errors are produced beside it.
@@ -69,7 +80,7 @@ export function validateInventoryDocument(input: unknown): ValidationResult {
     return { valid: false, issues: schemaIssues };
   }
   const parsed = inventoryDocumentSchema.parse(input);
-  const semantic = envelopeSemanticIssues(parsed);
+  const semantic = inventorySemanticIssues(parsed);
   return { valid: semantic.length === 0, issues: semantic };
 }
 

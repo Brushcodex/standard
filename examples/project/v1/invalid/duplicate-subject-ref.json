@@ -1,0 +1,13 @@
+{
+  "spec": "project",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0123",
+  "revision": "rev-1",
+  "title": "Two subjects claim the same document-local anchor",
+  "status": "active",
+  "subjects": [
+    { "ref": "sgt", "name": "Sergeant" },
+    { "ref": "sgt", "name": "Standard bearer" }
+  ],
+  "journal": [{ "body": "Finished the cloak.", "subjectRef": "sgt" }]
+}
