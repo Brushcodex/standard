@@ -1,0 +1,14 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:b2c3d4e5-f6a7-4823-9012-345678901bcd",
+  "revision": "rev-1",
+  "title": "An alternative's classification must be a known evidence class",
+  "paints": [{ "ref": "a", "name": "Paint A" }],
+  "steps": [
+    {
+      "instruction": "Basecoat.",
+      "alternatives": [{ "type": "eyeballed", "paint": "a" }]
+    }
+  ]
+}

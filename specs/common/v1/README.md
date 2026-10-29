@@ -168,6 +168,12 @@ references, so they are defined **once** and cannot drift:
 - **`role`** — the coarse, closed grouping vocabulary shared by Recipe steps and Palette entries
   (18 values, `primer` … `other`, including `spot_highlight`). Named specific techniques use a
   free-text field, never this enum.
+- **`evidenceClass`** — how a paint substitution was established, shared by Recipe
+  `alternative.type` and Project `substitution.type`: `authored` | `manufacturer_published` |
+  `mathematical` | `community_tested` | `verified_practical`. Closed, with deliberately **no**
+  catch-all: each value is an evidence class, and a mathematical match **MUST NOT** be presented
+  as a verified practical one. Defined once so the two specs cannot drift — a later minor that adds
+  a class adds it to both.
 - **`target`** — the subject a Recipe or Palette is for: `{ kind?, description (REQUIRED), scale?,
   substrate?, identity? }`, where `scale` is `{ system: nominal_mm | ratio, value }` and `substrate`
   is `resin` | `plastic` | `metal` | `mdf` | `foam` | `pla` | `other`. `kind`, `description`,

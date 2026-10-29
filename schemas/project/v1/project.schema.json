@@ -119,14 +119,7 @@
         "original": { "$ref": "#/$defs/paintRef" },
         "substitute": { "$ref": "#/$defs/paintRef" },
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "note": { "type": "string" }
       }

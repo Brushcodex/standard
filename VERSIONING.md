@@ -89,7 +89,8 @@ a known baseline.
   `$defs` and every spec `$ref`s them: `paintRef` and `colorValue` (Recipe/Palette/Inventory/
   Project), `resource` (Recipe `resources` / Technique `tools` / Project `toolsUsed`), `documentRef`
   (Recipe `techniqueRefs` / Project `recipeRefs`/`paletteRefs`), the `role` vocabulary (Recipe steps
-  / Palette entries), and `target` (Recipe / Palette) with its optional `subjectIdentity`
+  / Palette entries), the `evidenceClass` vocabulary (Recipe `alternative.type` / Project
+  `substitution.type`, shared 2026-10-29 — validation unchanged), and `target` (Recipe / Palette) with its optional `subjectIdentity`
   (`target.identity`, Common §5.8 — reached only through `target`, so Recipe and Palette inherit one
   definition and neither declares an identity member of its own). Adding `subjectIdentity` was a
   **minor**: two new optional members, no new closed vocabulary, and no change to any existing

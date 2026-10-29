@@ -74,7 +74,7 @@ describe('static: the built conformance bin has no repo-root escape', () => {
 });
 
 describe('behavioral: conformance runs from any working directory (plain Node)', () => {
-  it('reports 99/99 and exits 0 when run from a foreign cwd (os.tmpdir())', () => {
+  it('reports N/N for the whole corpus and exits 0 when run from a foreign cwd (os.tmpdir())', () => {
     const { status, stdout } = runNode(CONFORMANCE_BIN, [], tmpdir());
     expect(status).toBe(0);
     expect(stdout).toContain(`${fixtures.length}/${fixtures.length}`);
