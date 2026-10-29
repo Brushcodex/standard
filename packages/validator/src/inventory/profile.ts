@@ -3,8 +3,8 @@
  *
  * The "full" profile is the document as authored. The "shared" profile omits every
  * item whose `visibility` is `private`, removes the `private` object from every
- * remaining item, and removes `extensions` wherever the document carries it, leaving
- * all other fields untouched. The result is itself a valid Inventory document — no
+ * remaining item, and removes `extensions` wherever the document carries it and the
+ * envelope `integrity`, leaving all other fields untouched. The result is itself a valid Inventory document — no
  * destructive merging is required to share an inventory.
  *
  * Why `extensions` goes (fail closed): an extension is opaque, namespaced data the
@@ -14,6 +14,11 @@
  * privacy-reducing export transform, not a read/write round trip, so it does not
  * conflict with Common §6 preservation; the full profile still preserves every
  * extension.
+ *
+ * Why `integrity` goes: it is the author's hash of the full document (Common §5.5), so
+ * on the shared output it no longer matches the content, and it lets anyone who guesses
+ * the removed private content confirm the guess. It is removed, not recomputed — a
+ * shared export must not claim an integrity value its author never produced.
  *
  * In Inventory v1 the only member where Common or Inventory allows `extensions` is the
  * document envelope: Common `paintRef`, `provenanceEntry`, `agent`, `license`,
@@ -31,8 +36,8 @@ function stripPrivate(item: InventoryItem): InventoryItem {
 
 /**
  * Produce the shareable export profile of an inventory: private items are removed,
- * the `private` object is stripped from the rest, and `extensions` is removed. All
- * other fields are preserved exactly.
+ * the `private` object is stripped from the rest, and `extensions` and `integrity` are
+ * removed. All other fields are preserved exactly.
  */
 export function toSharedInventory(doc: InventoryDocument): InventoryDocument {
   const shared: InventoryDocument = {
@@ -40,6 +45,7 @@ export function toSharedInventory(doc: InventoryDocument): InventoryDocument {
     items: doc.items.filter((item) => item.visibility !== 'private').map(stripPrivate),
   };
   delete shared.extensions;
+  delete shared.integrity;
   return shared;
 }
 
