@@ -64,9 +64,34 @@ kept distinct: a `mathematical` color match MUST NOT be relabelled as a stronger
 
 `body` (non-empty) is REQUIRED. Optional `at` (RFC 3339), `minutesSpent` (≥ 0), `subjectRef` (an
 anchor into `subjects[].ref`), and `visibility` (`shareable` default, or `private`). A **shared
-export profile** MUST omit every journal entry whose `visibility` is `private`, leaving all other
-data untouched; the reference implementation provides `toSharedProject(doc)` and the result is
-itself a valid Project document.
+export profile** MUST omit every journal entry whose `visibility` is `private`, MUST remove
+`extensions` (Common §6) from every location in the document that carries it, and MUST remove the
+envelope `integrity` (Common §5.5), leaving all other data untouched; the reference implementation
+provides `toSharedProject(doc)` and the result is itself a valid Project document.
+
+**Extensions are removed because they are opaque.** An extension is namespaced data whose meaning
+only its writer knows, so the profile cannot prove it carries nothing private — an extension that
+indexes the journal, for instance, could repeat the text of an entry the profile just removed. The
+shared profile therefore fails closed. In Project v1 the only member where `extensions` is allowed
+is the document envelope (Common §4): Subject, Stage, CheckItem, Substitution, JournalEntry, and
+every Common structure a Project uses (`documentRef`, `paintRef`, `colorValue`, `mediaRef`,
+`resource`, `agent`, `license`, `provenanceEntry`, `translation`, `links`, `integrity`) are closed
+and define no `extensions` member. Should a later version open an extension point elsewhere in a
+Project document, this rule applies to it too.
+
+This is **not** a violation of the Common §6 preservation rule. Preservation governs a read/write
+round trip of a document; the shared profile is a deliberate, privacy-reducing export transform
+that produces a different, smaller document. The **full** profile preserves every extension
+unchanged, and an implementation that claims preservation support MUST still round-trip them
+there.
+
+**`integrity` is removed, not recomputed.** It is the author's hash of the canonical form of the
+full document, private journal entries and extensions included. On the shared output it no longer
+matches the content, so a consumer checking it would report corruption; and because it is a hash
+of the removed content, anyone who can guess that content could confirm the guess against it. The
+profile does not compute a new value: a shared export MUST NOT claim an integrity value its author
+never produced. A publisher MAY compute one for the shared document as a separate, deliberate step.
+`revision` is carried as authored.
 
 ## 8. Media (shared MediaRef)
 
@@ -112,7 +137,10 @@ Listing the same document twice is redundant, not ambiguous.
 ## 12. Security & privacy considerations
 
 - Journal entries and notes are personal; the **shared** profile (§7) is the safe default for
-  publishing. `results[].url`, `links.*`, and envelope URIs are untrusted; consumers MUST sanitize
+  publishing. It removes what the format marks private (private journal entries) and what the
+  format cannot see into (`extensions`, plus the now-stale `integrity`); it does not inspect free
+  text. Envelope prose, subject and stage names, substitution and tool notes, captions, and
+  shareable journal bodies are published as written. `results[].url`, `links.*`, and envelope URIs are untrusted; consumers MUST sanitize
   before rendering and MUST NOT auto-dereference without user intent.
 - Archiving a project sets `status: "archived"` and never deletes data.
 
@@ -123,4 +151,4 @@ Common envelope via composition) **and** satisfies the semantic rules in §11. T
 validator (`@brushcodex/validator/project`) enforces both layers and is tested against the example
 corpus in `examples/project/v1`, including a round trip that preserves every member (private
 journal entries included) and unknown namespaced extensions, plus a shared-profile test proving
-private journal entries are removed while the result stays valid.
+private journal entries, `extensions`, and `integrity` are removed while the result stays valid.

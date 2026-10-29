@@ -213,6 +213,21 @@ describe('Inventory — shared export profile (privacy)', () => {
     expect(sharedRest).toEqual(fullRest);
   });
 
+  it('removes integrity, which is stale and would confirm guesses at removed content', () => {
+    const source = readExample('comprehensive.valid.json') as Record<string, unknown>;
+    const integrity = { algorithm: 'sha-256', value: 'ab'.repeat(32) };
+    const full = parseInventoryDocument({ ...source, integrity });
+    // The full profile is the document as authored: integrity is retained.
+    expect(full.integrity).toEqual(integrity);
+
+    const shared = toSharedInventory(full);
+    expect(shared).not.toHaveProperty('integrity');
+    expect(validateInventoryDocument(shared)).toEqual({ valid: true, issues: [] });
+    expect(serializeInventoryDocument(shared)).not.toContain('ab'.repeat(32));
+    // Removed, not recomputed, and the revision is carried as authored.
+    expect(shared.revision).toBe(full.revision);
+  });
+
   // The document envelope is the only place Inventory v1 allows `extensions`. Every nested
   // object is closed, so the profile has nothing further to strip. If one of these ever
   // starts validating, the schema has opened a new extension point and toSharedInventory

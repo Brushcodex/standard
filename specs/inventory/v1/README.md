@@ -60,8 +60,9 @@ mechanical and auditable:
 
 - The **full** profile is the document as authored (all fields, all items).
 - The **shared** profile MUST omit every item whose `visibility` is `private`, MUST remove the
-  `private` object from every remaining item, and MUST remove `extensions` (Common §6) from every
-  location in the document that carries it. It MUST NOT alter any other field.
+  `private` object from every remaining item, MUST remove `extensions` (Common §6) from every
+  location in the document that carries it, and MUST remove the envelope `integrity` (Common
+  §5.5). It MUST NOT alter any other field.
 
 **Extensions are removed because they are opaque.** An extension is namespaced data whose meaning
 only its writer knows, so the profile cannot prove it carries nothing private — an
@@ -78,6 +79,14 @@ round trip of a document; the shared profile is a deliberate, privacy-reducing e
 that produces a different, smaller document. The **full** profile preserves every extension
 unchanged, and an implementation that claims preservation support MUST still round-trip them
 there.
+
+**`integrity` is removed, not recomputed.** It is the author's hash of the canonical form of the
+full document, private items and extensions included. On the shared output it no longer matches
+the content, so a consumer checking it would report corruption; and because it is a hash of the
+removed content, anyone who can guess that content (a storage location, a lot number) could
+confirm the guess against it. The profile does not compute a new value: a shared export MUST NOT
+claim an integrity value its author never produced. A publisher MAY compute one for the shared
+document as a separate, deliberate step. `revision` is carried as authored.
 
 The reference implementation provides `toSharedInventory(doc)` which produces the shared profile;
 the result is itself a valid Inventory document. Implementations MUST NOT require destructive
@@ -106,7 +115,7 @@ candidates for the user to resolve.
 - Inventory data is personal. Sharing an inventory shares whatever the chosen profile contains; the
   **shared** profile is the safe default for publishing. It removes the members the format marks
   as private (private items, `private` objects) and the members the format cannot see into
-  (`extensions`); it does not inspect free text. Envelope prose (`title`, `description`,
+  (`extensions`, plus the now-stale `integrity`); it does not inspect free text. Envelope prose (`title`, `description`,
   `summary`, `tags`, `provenance[].note`) and shareable item fields (`aliases`, `paint.note`) are
   published as written, so an author who names a private paint there publishes that name.
 - `paint.provenance[].sourceUrl` and envelope URIs are author-supplied and untrusted; consumers
@@ -119,5 +128,5 @@ the Common envelope via composition) **and** satisfies the semantic rules: the e
 `updatedAt >= createdAt`) and the anchor uniqueness rule in §7. The reference validator
 (`@brushcodex/validator/inventory`) enforces both layers and is tested against the example corpus in `examples/inventory/v1`, including a
 `parse -> serialize -> parse` round trip that preserves every member (private data included) and
-unknown namespaced extensions, and a shared-profile test proving private data and `extensions` are
-removed while the result stays valid.
+unknown namespaced extensions, and a shared-profile test proving private data, `extensions`, and
+`integrity` are removed while the result stays valid.

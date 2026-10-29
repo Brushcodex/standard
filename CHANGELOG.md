@@ -26,6 +26,48 @@ them caused by a change in this repository.
   conformance and the packed release gate all pass without source edits. Consumers that import
   zod types from these packages see zod 4 types.
 
+### Shared profiles also remove `integrity`; Project gets the `extensions` rule — 2026-10-29
+
+Follow-up to the entry below, from its review. Two more ways the shared export profiles carried
+data derived from what they had just removed.
+
+#### Changed
+
+- **Project §7 (normative, DRAFT, lands in place per VERSIONING §3):** `toSharedProject` had the
+  same hole as Inventory — "leaving all other data untouched" with a `{ ...doc }` copy, so
+  document `extensions` reached the shared export verbatim. The Project shared profile now MUST
+  remove `extensions` from every location that carries it, for the same fail-closed reason and
+  with the same note that this is an export transform, not a Common §6 round trip. Surveyed: the
+  envelope is the only Project v1 extension point (Subject, Stage, CheckItem, Substitution,
+  JournalEntry and every Common structure Project uses are closed). §12 now says what the profile
+  does not do (inspect free text); §13 updated.
+- **Inventory §6 and Project §7 (normative, DRAFT, in place):** both shared profiles MUST remove the
+  envelope `integrity`. It is the author's hash of the full document (Common §5.5), so on the
+  shared output it is stale — a consumer verifying it reports corruption — and it is a
+  confirmation oracle: anyone who can guess removed private content can test the guess against
+  it. It is removed, not recomputed, because a shared export must not claim an integrity value
+  its author never produced; a publisher MAY add one as a separate step. Removal is consistent
+  with Common: `integrity` is optional, and §5.5 defines it as a hash of the document it sits in.
+- **`revision` is unchanged and carried as authored**, stated in both specs. Common defines it as
+  an opaque identifier for "this exact document state" but gives no rule for minting one for a
+  derived document, so no normative change is made here; the options are recorded for the
+  maintainer.
+- **Validator:** `toSharedInventory` also deletes `integrity`; `toSharedProject` deletes
+  `extensions` and `integrity` (with or without a journal). `hasPrivateJournal` is unchanged.
+- **No accept/reject behaviour changes.** No schema or fixture change; the shared profile of a
+  valid document is still valid. `specVersion` stays `1.0.0`.
+
+#### Added
+
+- Validator tests: Inventory and Project shared profiles drop an author-supplied `integrity` and
+  keep `revision`; the Project shared profile drops document `extensions` (including a
+  journal-indexing extension that repeats a private entry, and on a project with no journal),
+  leaks none of their strings, and leaves every other member equal to the full profile's, which
+  keeps both; and `extensions` nested in a subject, stage, checklist item, recipe ref,
+  substitution, its paintRef, journal entry, result, result licence, tool, `links`, or author is
+  rejected by both the JSON Schema and the Zod model. Verified load-bearing: reverting each
+  deletion fails the corresponding test. Corpus unchanged (101 cases).
+
 ### Inventory shared profile removes `extensions` — 2026-10-29
 
 Fixes a privacy hole reported by an external implementer: shared exports containing extensions
