@@ -88,6 +88,11 @@ Palette, Inventory, Project, and Technique** (`src/modules/standards/common/enve
 the `preserves unknown namespaced extensions unchanged` case in each spec's `*.test.ts`).
 Implementations that cannot preserve extensions MUST say so and MUST NOT claim preservation.
 
+Preservation governs a round trip, not an export transform. A privacy-reducing export profile is
+a different document by design: the Inventory **shared** profile removes `extensions`, because it
+cannot see into an extension to prove it carries no private data
+([Inventory §6](../specs/inventory/v1/README.md)). The full profile still preserves them.
+
 ## 5. Reserved / conventional namespaces
 
 - `x-` short prefixes are **discouraged** (not globally unique).
