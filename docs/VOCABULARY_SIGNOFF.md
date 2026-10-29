@@ -128,6 +128,14 @@ round trip the D1/D2 research cites GPX for.
 are still DRAFT; the alternative is a permanent duplicate that only discipline keeps in step. This
 needs the owner's decision because it changes schema files outside the D1/D2 authorization.
 
+**RESOLVED 2026-10-29 — shared in Common** (owner decision). Common `$defs/evidenceClass` now holds
+the five values once; Recipe `alternative.type` and Project `substitution.type` `$ref` it, and the
+validator's `ALTERNATIVE_TYPES` / `SUBSTITUTION_TYPES` are both the Common `EVIDENCE_CLASSES`. The
+same five values are accepted at the same paths, so no document changes and no migration exists.
+Two invalid fixtures (`recipe/.../unknown-alternative-type.json`,
+`project/.../unknown-substitution-type.json`) pin the enum at both paths. The counts above are the
+2026-08-10 measurement and are left as taken: both rows still exist, now as one definition.
+
 ### Open item 2 — `stage.status` has no `blocked`, but `subject.status` does
 
 A project subject can be `blocked`; a stage inside it cannot. Nothing in the prose explains the
@@ -150,3 +158,4 @@ Walked and settled as recorded above, against the schemas measured on **2026-08-
 precondition for the coordinated v1 freeze. Two open items recorded; neither blocks. The freeze act
 itself remains the maintainer's explicit decision ([GOVERNANCE.md](../GOVERNANCE.md),
 VERSIONING §8.2), and **Open item 1 is the one thing on this page that gets harder after it.**
+Open item 1 was resolved on 2026-10-29 (above); Open item 2 remains, and remains additive.

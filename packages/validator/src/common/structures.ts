@@ -2,13 +2,15 @@
  * Shared structural building blocks used by more than one BrushCodex spec, so
  * they are defined once here rather than duplicated (and left to drift) in each
  * spec model. Mirrors `schemas/common/v1/common.schema.json#/$defs/{resource,
- * documentRef,role,target,mediaRef,mediaCitation}`.
+ * documentRef,role,evidenceClass,target,mediaRef,mediaCitation}`.
  *
  *   - `resource`     — a tool or non-paint material (Recipe.resources,
  *                      Technique.tools, Project.toolsUsed).
  *   - `documentRef`  — a soft cross-document reference by stable id URI
  *                      (Recipe.techniqueRefs, Project.recipeRefs/paletteRefs).
  *   - `ROLES`        — the coarse role vocabulary (Recipe steps, Palette entries).
+ *   - `EVIDENCE_CLASSES` — how a substitution was established (Recipe
+ *                      alternative.type, Project substitution.type).
  *   - `target`       — the subject a document is for (Recipe, Palette).
  *   - `mediaRef`     — a linked media item with its own rights metadata
  *                      (Recipe.media, Recipe step.media, Project.results).
@@ -68,6 +70,19 @@ export const ROLES = [
   'decal',
   'varnish',
   'other',
+] as const;
+
+/**
+ * How a paint substitution was established, shared by Recipe alternative.type
+ * and Project substitution.type. Kept distinct so a mathematical match never
+ * masquerades as a verified practical one; deliberately no catch-all.
+ */
+export const EVIDENCE_CLASSES = [
+  'authored',
+  'manufacturer_published',
+  'mathematical',
+  'community_tested',
+  'verified_practical',
 ] as const;
 
 export const TARGET_KINDS = [
@@ -179,6 +194,7 @@ export type MediaKind = (typeof MEDIA_KINDS)[number];
 export type Target = z.infer<typeof targetSchema>;
 export type SubjectIdentity = z.infer<typeof subjectIdentitySchema>;
 export type Role = (typeof ROLES)[number];
+export type EvidenceClass = (typeof EVIDENCE_CLASSES)[number];
 export type TargetKind = (typeof TARGET_KINDS)[number];
 export type ScaleSystem = (typeof SCALE_SYSTEMS)[number];
 export type Substrate = (typeof SUBSTRATES)[number];

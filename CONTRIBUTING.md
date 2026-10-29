@@ -33,7 +33,7 @@ here, with no web application:
 
 ```bash
 pnpm -r build && pnpm -r test    # build + unit/integration suites
-pnpm conformance                 # validate the whole corpus (99/99)
+pnpm conformance                 # validate the whole corpus (101/101)
 pnpm check:consistency           # prose and schema agree (enum values + property names)
 pnpm --filter @brushcodex/cli validate /absolute/path/to/document.json
 ```

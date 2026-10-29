@@ -507,6 +507,17 @@ export const common = {
         "other"
       ]
     },
+    "evidenceClass": {
+      "type": "string",
+      "description": "How a paint substitution was established, shared by Recipe alternative.type and Project substitution.type. Each value is an evidence class kept distinct so a mathematical match never masquerades as a verified practical one; there is deliberately no catch-all.",
+      "enum": [
+        "authored",
+        "manufacturer_published",
+        "mathematical",
+        "community_tested",
+        "verified_practical"
+      ]
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,
@@ -810,14 +821,7 @@ export const recipe = {
       "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
       "properties": {
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "paint": {
           "type": "string",
@@ -1452,14 +1456,7 @@ export const project = {
           "$ref": "#/$defs/paintRef"
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "note": {
           "type": "string"

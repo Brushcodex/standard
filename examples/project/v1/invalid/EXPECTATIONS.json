@@ -44,6 +44,12 @@
       "expect": { "keyword": "required", "instancePath": "/substitutions/0" }
     },
     {
+      "file": "unknown-substitution-type.json",
+      "layer": "schema",
+      "reason": "A substitution's type is not one of the shared Common evidenceClass values.",
+      "expect": { "keyword": "enum", "instancePath": "/substitutions/0/type" }
+    },
+    {
       "file": "wrong-spec.json",
       "layer": "schema",
       "reason": "spec is not the constant 'project'.",

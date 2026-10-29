@@ -3,7 +3,7 @@
 The [Quickstart](QUICKSTART.md) starts from the *minimal* document; this page points at the
 *comprehensive* one for each type — a realistic document that exercises the full vocabulary of its
 specification. Every file here is part of the conformance corpus, so each one **must validate**
-(they are among the 99 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
+(they are among the 101 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
 [CC0-1.0](../examples/LICENSE) — copy and adapt them freely.
 
 Each type ships two or three files under `examples/<spec>/v1/`:
@@ -73,7 +73,7 @@ OK    recipe  …/examples/recipe/v1/comprehensive.valid.json
 python validate.py examples/recipe/v1/comprehensive.valid.json   # -> valid
 ```
 
-To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (99/99).
+To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (101/101).
 
 ## Next steps
 
