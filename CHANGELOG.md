@@ -6,6 +6,36 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Substitution evidence classes defined once, in Common — 2026-10-29
+
+Resolves [VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md) Open item 1, the one pre-freeze item
+recorded as *now-or-never*. Recipe `alternative.type` and Project `substitution.type` carried the
+same five values in two schema files. Once frozen, sharing them becomes impossible (a `$ref`
+change is a schema-file edit, and frozen files are immutable), and a later `1.x` minor could add a
+class to one and not the other — a recipe could then classify a substitute in a way the project
+that accepts it cannot express.
+
+#### Changed
+
+- **New Common `$defs/evidenceClass`** — `authored` | `manufacturer_published` | `mathematical` |
+  `community_tested` | `verified_practical`, documented in Common §5.6. Recipe
+  `alternative.type` and Project `substitution.type` now `$ref` it.
+- **Validator:** `EVIDENCE_CLASSES` and `EvidenceClass` added to `common`. Recipe
+  `ALTERNATIVE_TYPES` and Project `SUBSTITUTION_TYPES` stay exported and are now that same
+  constant, so the public surface is unchanged.
+- **No accept/reject behaviour changes.** The same five values are accepted at the same paths,
+  with the same requiredness (`alternative.type` required, `substitution.type` optional). No
+  document changes, no migration. `specVersion` stays `1.0.0`; the schemas are DRAFT, where this
+  lands in place (VERSIONING §3).
+
+#### Added
+
+- `examples/recipe/v1/invalid/unknown-alternative-type.json` and
+  `examples/project/v1/invalid/unknown-substitution-type.json` — an out-of-vocabulary class at
+  each path, expected to fail on `enum`. Before this, no fixture rejected an unknown value at
+  either path, so the `$ref` was unpinned. Verified load-bearing: adding a value to the Common
+  enum makes `pnpm conformance` fail. Corpus is now 101 cases (22 valid, 79 invalid).
+
 ### Release candidate `1.0.0-rc.2` — 2026-08-30
 
 All five `@brushcodex/*` packages bump `1.0.0-rc.1 → 1.0.0-rc.2` in lockstep, through the packed

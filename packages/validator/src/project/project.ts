@@ -14,7 +14,12 @@
 import { z } from 'zod';
 import { commonDocumentSchema } from '../common/envelope';
 import { paintRefSchema } from '../common/paint';
-import { resourceSchema, documentRefSchema, mediaRefSchema } from '../common/structures';
+import {
+  EVIDENCE_CLASSES,
+  resourceSchema,
+  documentRefSchema,
+  mediaRefSchema,
+} from '../common/structures';
 
 const percentage = z.number().int().min(0).max(100);
 
@@ -22,14 +27,8 @@ export const PROJECT_STATUSES = ['active', 'on_hold', 'completed', 'archived'] a
 export const SUBJECT_STATUSES = ['not_started', 'in_progress', 'blocked', 'done'] as const;
 export const STAGE_STATUSES = ['not_started', 'in_progress', 'done'] as const;
 
-/** Accepted-substitution classes (kept distinct, as in the Recipe spec). */
-export const SUBSTITUTION_TYPES = [
-  'authored',
-  'manufacturer_published',
-  'mathematical',
-  'community_tested',
-  'verified_practical',
-] as const;
+/** Accepted-substitution classes (kept distinct, as in the Recipe spec). Shared with Recipe via the `common` EVIDENCE_CLASSES vocabulary. */
+export const SUBSTITUTION_TYPES = EVIDENCE_CLASSES;
 
 const stageSchema = z
   .object({ name: z.string().min(1), status: z.enum(STAGE_STATUSES).optional() })

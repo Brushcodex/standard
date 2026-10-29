@@ -1,0 +1,11 @@
+{
+  "spec": "project",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:4d5e6f70-8192-43a4-9b5c-6d7e8f901234",
+  "revision": "rev-1",
+  "title": "A substitution's classification must be a known evidence class",
+  "status": "active",
+  "substitutions": [
+    { "original": { "name": "Steel" }, "substitute": { "name": "Iron" }, "type": "eyeballed" }
+  ]
+}
