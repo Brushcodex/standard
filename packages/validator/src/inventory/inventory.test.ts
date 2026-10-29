@@ -177,6 +177,65 @@ describe('Inventory — shared export profile (privacy)', () => {
     toSharedInventory(full);
     expect(full.items).toHaveLength(3);
     expect(full.items[0]?.private?.storageLocation).toBe('Drawer 1, row 3');
+    expect(full.extensions).toEqual({ 'com.example.tool:sortOrder': { by: 'manufacturer' } });
+  });
+
+  it('removes document-level extensions, which it cannot prove are free of private data', () => {
+    // An extension keyed by item ref that names the private item and a storage location:
+    // copying it verbatim would leak exactly what the profile just removed.
+    const source = readExample('comprehensive.valid.json') as Record<string, unknown>;
+    const full = parseInventoryDocument({
+      ...source,
+      extensions: {
+        ...(source.extensions as Record<string, unknown>),
+        'app.example:locations': {
+          steel: 'Drawer 1, row 3',
+          'secret-recipe-base': 'Top shelf, behind the varnish',
+        },
+      },
+    });
+    // The full profile is the document as authored: extensions are retained.
+    expect(Object.keys(full.extensions ?? {}).sort()).toEqual([
+      'app.example:locations',
+      'com.example.tool:sortOrder',
+    ]);
+
+    const shared = toSharedInventory(full);
+    expect(shared).not.toHaveProperty('extensions');
+    expect(validateInventoryDocument(shared)).toEqual({ valid: true, issues: [] });
+    const serialized = serializeInventoryDocument(shared);
+    for (const leaked of ['secret-recipe-base', 'Top shelf', 'Drawer 1, row 3', 'sortOrder']) {
+      expect(serialized).not.toContain(leaked);
+    }
+    // Every other envelope member is untouched.
+    const { extensions: _fullExtensions, items: _fullItems, ...fullRest } = full;
+    const { items: _sharedItems, ...sharedRest } = shared;
+    expect(sharedRest).toEqual(fullRest);
+  });
+
+  // The document envelope is the only place Inventory v1 allows `extensions`. Every nested
+  // object is closed, so the profile has nothing further to strip. If one of these ever
+  // starts validating, the schema has opened a new extension point and toSharedInventory
+  // (spec §6) must be extended to remove it too.
+  type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const nestedObjects: Array<[string, (doc: Json) => Json | undefined]> = [
+    ['an item', (doc) => doc.items[0]],
+    ['an item private object', (doc) => doc.items[0]?.private],
+    ['a paintRef', (doc) => doc.items[0]?.paint],
+    ['a paintRef color', (doc) => doc.items[0]?.paint?.color],
+    ['a paintRef provenance entry', (doc) => doc.items[0]?.paint?.provenance?.[0]],
+    ['an author agent', (doc) => doc.authors[0]],
+  ];
+  it.each(nestedObjects)('rejects extensions nested in %s (no nested extension point)', (
+    _where,
+    at,
+  ) => {
+    const doc = structuredClone(readExample('comprehensive.valid.json')) as Json;
+    const target = at(doc);
+    expect(target).toBeDefined();
+    target!.extensions = { 'app.example:leak': 'Drawer 1, row 3' };
+    expect(validateInventoryAgainstSchema(doc).length).toBeGreaterThan(0);
+    expect(zodAccepts(doc)).toBe(false);
   });
 });
 

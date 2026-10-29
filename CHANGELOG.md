@@ -26,6 +26,47 @@ them caused by a change in this repository.
   conformance and the packed release gate all pass without source edits. Consumers that import
   zod types from these packages see zod 4 types.
 
+### Inventory shared profile removes `extensions` — 2026-10-29
+
+Fixes a privacy hole reported by an external implementer: shared exports containing extensions
+could retain metadata about private inventory items even when those items were excluded. Inventory
+§6 said the shared profile removes private items and `private` objects and "MUST NOT alter any
+other field", and `toSharedInventory` copied the document with `{ ...doc }` — so document-level
+`extensions` (Common §6: namespaced, opaque) reached the export verbatim. An
+`app.example:locations` map keyed by item `ref` would publish the storage location of an item the
+profile had just removed, in the export the spec calls "the safe default for publishing".
+
+#### Changed
+
+- **Inventory §6 (normative, DRAFT, lands in place per VERSIONING §3):** the shared profile MUST
+  also remove `extensions` from every location in the document that carries it; the "MUST NOT
+  alter any other field" sentence now follows that list. The profile fails closed because an
+  extension is opaque and cannot be proven free of private data. The prose records that the
+  envelope is the only Inventory v1 location where `extensions` is allowed (Item, `private`,
+  `paintRef`, `colorValue`, `provenanceEntry`, `agent`, `license`, `translation`, `links` and
+  `integrity` are all closed), and that this is not a breach of Common §6 preservation: the shared
+  profile is a privacy-reducing export transform, not a round trip, and the full profile still
+  preserves every extension. §8 now says what the shared profile does not do — it does not
+  inspect free text, so envelope prose and shareable item fields publish as written. §9 and
+  [docs/EXTENSIONS.md](docs/EXTENSIONS.md) §4 updated to match.
+- **Validator:** `toSharedInventory` deletes `extensions` from its result. `hasPrivateData` is
+  unchanged: its documented scope is the members the format marks private (a private item or a
+  `private` object), not opaque data.
+- **No accept/reject behaviour changes.** No schema file changes, no fixture changes; every
+  document that validated still validates and the shared profile of a valid document is still a
+  valid Inventory document. `specVersion` stays `1.0.0`.
+
+#### Added
+
+- Validator tests: the shared profile of a document carrying an item-keyed extension has no
+  `extensions` member, leaks none of its strings, and leaves every other envelope member equal to
+  the full profile's; the full profile retains both extensions; and an `extensions` member nested
+  in an item, `private`, `paintRef`, `color`, provenance entry, or author is rejected by both the
+  JSON Schema and the Zod model, pinning that the envelope is the only extension point the profile
+  has to strip. Verified load-bearing: reverting the `toSharedInventory` change fails the new
+  shared-profile test. The existing round-trip test still preserves extensions. Corpus unchanged
+  (101 cases).
+
 ### Document-local anchors are unique within their array — 2026-10-29
 
 An external implementer reported that paint and project references did not appear to require
