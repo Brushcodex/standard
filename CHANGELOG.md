@@ -6,6 +6,16 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### An export profile is a view of a revision, not a new one — 2026-10-30
+
+Common §3 says `revision` identifies "this exact document state" and that an edit MUST produce a new
+one, but said nothing about the shared export profiles, whose output differs from the source while
+carrying the same `revision`. Common §3 now states that an export profile a spec defines is not an
+edit: it is a deterministic view of one revision and carries that revision unchanged, so
+*(revision, profile)* identifies the exported state and an export can always be related to its
+source. Inventory §6 and Project §7 point at the rule. **Prose only** — no schema, fixture or
+validator change, no accept/reject change; DRAFT, so it lands in place (VERSIONING §3).
+
 ### Shared profiles also remove `integrity`; Project gets the `extensions` rule — 2026-10-29
 
 Follow-up to the entry below, from its review. Two more ways the shared export profiles carried
