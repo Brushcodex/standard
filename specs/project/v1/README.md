@@ -91,7 +91,7 @@ matches the content, so a consumer checking it would report corruption; and beca
 of the removed content, anyone who can guess that content could confirm the guess against it. The
 profile does not compute a new value: a shared export MUST NOT claim an integrity value its author
 never produced. A publisher MAY compute one for the shared document as a separate, deliberate step.
-`revision` is carried as authored.
+`revision` is carried as authored: the shared profile is a view of that revision, not an edit (Common §3).
 
 ## 8. Media (shared MediaRef)
 
