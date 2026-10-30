@@ -44,7 +44,11 @@ Every document **MUST** include:
 | `title` | string | Non-empty human-readable title. |
 
 Editing published content **MUST** produce a new `revision`; where storage permits, prior
-revisions SHOULD remain addressable (strategy §5.8).
+revisions SHOULD remain addressable (strategy §5.8). An **export profile** that a spec defines (for
+example the Inventory and Project *shared* profiles) is not an edit: it is a published,
+deterministic view of one revision, so its output carries that revision unchanged. One revision
+yields exactly one output per profile, so the pair *(revision, profile)* identifies the exported
+state, and a consumer can always relate an export to the document it came from.
 
 ## 4. Optional members
 
