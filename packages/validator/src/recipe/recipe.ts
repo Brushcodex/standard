@@ -18,6 +18,7 @@ import { commonDocumentSchema } from '../common/envelope';
 import { paintRefSchema } from '../common/paint';
 import {
   ROLES,
+  EVIDENCE_CLASSES,
   TARGET_KINDS,
   targetSchema,
   resourceSchema,
@@ -29,14 +30,8 @@ import {
 /** Semantic roles a step can play (spec §5). Shared with Palette via the `common` ROLES vocabulary. */
 export const STEP_ROLES = ROLES;
 
-/** How an alternative substitution was established (kept distinct — spec §8). */
-export const ALTERNATIVE_TYPES = [
-  'authored',
-  'manufacturer_published',
-  'mathematical',
-  'community_tested',
-  'verified_practical',
-] as const;
+/** How an alternative substitution was established (kept distinct — spec §8). Shared with Project via the `common` EVIDENCE_CLASSES vocabulary. */
+export const ALTERNATIVE_TYPES = EVIDENCE_CLASSES;
 
 export const STEP_METHODS = ['brush', 'airbrush', 'sponge', 'stipple', 'other'] as const;
 

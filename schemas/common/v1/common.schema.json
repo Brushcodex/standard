@@ -206,7 +206,7 @@
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "OPTIONAL document-local anchor other members can point to (e.g. a Recipe step or mixture). Specs without intra-document anchoring simply omit it."
+          "description": "OPTIONAL document-local anchor other members can point to (e.g. a Recipe step or mixture). Where a spec anchors to it (Recipe paints[]) it MUST be unique within that array (a semantic rule; JSON Schema cannot express it). Specs without intra-document anchoring simply omit it."
         },
         "manufacturer": { "type": "string", "minLength": 1 },
         "range": { "type": "string", "minLength": 1 },
@@ -327,6 +327,17 @@
         "other"
       ]
     },
+    "evidenceClass": {
+      "type": "string",
+      "description": "How a paint substitution was established, shared by Recipe alternative.type and Project substitution.type. Each value is an evidence class kept distinct so a mathematical match never masquerades as a verified practical one; there is deliberately no catch-all.",
+      "enum": [
+        "authored",
+        "manufacturer_published",
+        "mathematical",
+        "community_tested",
+        "verified_practical"
+      ]
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,
@@ -405,7 +416,7 @@
         "id": {
           "type": "string",
           "minLength": 1,
-          "description": "OPTIONAL document-local anchor, unique within the owning media[] array, so a mediaCitation can point at this item. Not a global identifier and never a database id."
+          "description": "OPTIONAL document-local anchor that MUST be unique within the owning array (recipe media[], a step's media[], project results[]; semantic rule media-id-unique — JSON Schema cannot express it), so a mediaCitation can point at this item. Not a global identifier and never a database id."
         },
         "url": { "type": "string", "format": "uri" },
         "kind": { "type": "string", "enum": ["image", "video", "other"] },

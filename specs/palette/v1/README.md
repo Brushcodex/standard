@@ -43,7 +43,8 @@ members below and rejects unknown top-level members.
 Each entry is a named slot. `name` is REQUIRED, and an entry **MUST** carry at least one of a
 `paint`, a literal `color`, or a `mix` (an empty named slot is not permitted). Optional members:
 
-- `ref` — a document-local anchor that mixtures and relationships point to.
+- `ref` — a document-local anchor that mixtures and relationships point to; unique within
+  `entries[]` (§7).
 - `role` — the coarse grouping vocabulary shared with Recipe (Common `role`): `primer`, `basecoat`,
   `undercoat`, `shadow`, `midtone`, `layer`, `highlight`, `edge_highlight`, `spot_highlight`, `wash`,
   `glaze`, `drybrush`, `weathering`, `metallic`, `texture`, `decal`, `varnish`, `other`.
@@ -81,10 +82,14 @@ Common semantics — there is no palette-local meaning:
 
 ## 7. Anchor integrity (semantic)
 
+An `entries[].ref` **MUST** be unique within `entries[]` (`entry-ref-unique`): a reused ref names
+two entries, so a mixture or relationship anchored to it is ambiguous.
+
 Every anchor used by `entries[].mix[].paint` and `relationships[].sequence[]` **MUST** resolve to
-an `entries[]` entry whose `ref` equals that anchor. The JSON Schema cannot express this
-cross-reference; the reference validator enforces it as a semantic rule and reports the offending
-anchor. Envelope semantic rules (e.g. `updatedAt >= createdAt`) also apply.
+an `entries[]` entry whose `ref` equals that anchor (`entry-anchor-resolves`). The JSON Schema
+cannot express either rule (uniqueness of one property across array objects, or a cross-reference);
+the reference validator enforces both as semantic rules and reports the offending anchor. Envelope
+semantic rules (e.g. `updatedAt >= createdAt`) also apply.
 
 ## 8. Security & privacy considerations
 

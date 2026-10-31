@@ -7,8 +7,9 @@
  *                 published common schema registered so the cross-schema $ref
  *                 resolves.
  *   2. semantic — envelope prose rules (updatedAt >= createdAt) plus palette
- *                 anchor integrity: every anchor used by a mixture or a
- *                 relationship must resolve to a declared entries[].ref.
+ *                 anchor integrity: every entries[].ref is unique, and every
+ *                 anchor used by a mixture or a relationship must resolve to a
+ *                 declared entries[].ref.
  *
  * The schemas are imported as bundled modules (not read from disk), so the
  * validator runs identically under Node/Vitest, tooling, and a bundled Next.js
@@ -27,6 +28,7 @@ import {
   type ValidationResult,
 } from '../common/validate';
 import { toCanonicalJson } from '../common/canonical';
+import { duplicateAnchorIssues } from '../common/anchors';
 import { paletteDocumentSchema, type PaletteDocument } from './palette';
 
 let cachedValidate: ValidateFunction | null = null;
@@ -60,7 +62,11 @@ export function validatePaletteAgainstSchema(input: unknown): ValidationIssue[] 
 
 /** Prose rules the schema cannot express. Assumes `input` is already schema-valid. */
 function paletteSemanticIssues(doc: PaletteDocument): ValidationIssue[] {
-  const issues: ValidationIssue[] = [...envelopeSemanticIssues(doc)];
+  const issues: ValidationIssue[] = [
+    ...envelopeSemanticIssues(doc),
+    // Anchor uniqueness (spec §7): a reused ref resolves to two entries.
+    ...duplicateAnchorIssues(doc.entries, 'ref', '/entries', 'entry-ref-unique', 'entry ref'),
+  ];
 
   const declared = new Set(
     doc.entries.map((entry) => entry.ref).filter((ref): ref is string => ref !== undefined),

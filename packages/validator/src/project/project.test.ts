@@ -156,6 +156,30 @@ describe('Project — subject-anchor integrity (semantic)', () => {
   it('accepts a project whose journal anchors all resolve', () => {
     expect(validateProjectDocument(readExample('comprehensive.valid.json')).valid).toBe(true);
   });
+
+  it('rejects two subjects sharing one ref, reporting only the later duplicate', () => {
+    const result = validateProjectDocument(readExample('invalid/duplicate-subject-ref.json'));
+    expect(result.valid).toBe(false);
+    const duplicates = result.issues.filter((i) => i.code === 'subject-ref-unique');
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]).toMatchObject({ path: '/subjects/1/ref', layer: 'semantic' });
+    expect(result.issues.some((i) => i.code === 'subject-anchor-resolves')).toBe(false);
+  });
+
+  it('rejects two result media items sharing one id (Common mediaRef rule)', () => {
+    const result = validateProjectDocument(readExample('invalid/duplicate-result-media-id.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({ code: 'media-id-unique', path: '/results/1/id', layer: 'semantic' }),
+    ]);
+  });
+
+  it('treats recipeRefs / paletteRefs as references: listing one document twice is valid', () => {
+    const base = readExample('minimal.valid.json') as Record<string, unknown>;
+    const ref = { id: 'urn:uuid:00000000-0000-4000-8000-000000000001' };
+    const result = validateProjectDocument({ ...base, recipeRefs: [ref, ref], paletteRefs: [ref, ref] });
+    expect(result.issues).toEqual([]);
+  });
 });
 
 describe('Project — shared export profile (privacy)', () => {
@@ -178,6 +202,86 @@ describe('Project — shared export profile (privacy)', () => {
     const full = parseProjectDocument(readExample('comprehensive.valid.json'));
     toSharedProject(full);
     expect(full.journal).toHaveLength(2);
+    expect(full.extensions).toEqual({ 'com.example.tool:board': { column: 'in-progress' } });
+  });
+
+  it('removes extensions and integrity; the full profile keeps both', () => {
+    // An extension that indexes the journal can name the private entry the profile removes,
+    // and the author's integrity hash covers that entry too.
+    const source = readExample('comprehensive.valid.json') as Record<string, unknown>;
+    const integrity = { algorithm: 'sha-256', value: 'cd'.repeat(32) };
+    const full = parseProjectDocument({
+      ...source,
+      extensions: {
+        ...(source.extensions as Record<string, unknown>),
+        'app.example:journalIndex': { '1': 'custom rust mix ratio' },
+      },
+      integrity,
+    });
+    expect(Object.keys(full.extensions ?? {}).sort()).toEqual([
+      'app.example:journalIndex',
+      'com.example.tool:board',
+    ]);
+    expect(full.integrity).toEqual(integrity);
+
+    const shared = toSharedProject(full);
+    expect(shared).not.toHaveProperty('extensions');
+    expect(shared).not.toHaveProperty('integrity');
+    expect(validateProjectDocument(shared)).toEqual({ valid: true, issues: [] });
+    const serialized = serializeProjectDocument(shared);
+    for (const leaked of ['custom rust mix ratio', 'journalIndex', 'cd'.repeat(32)]) {
+      expect(serialized).not.toContain(leaked);
+    }
+    // Every other envelope and project member is untouched.
+    const {
+      extensions: _fullExtensions,
+      integrity: _fullIntegrity,
+      journal: _fullJournal,
+      ...fullRest
+    } = full;
+    const { journal: _sharedJournal, ...sharedRest } = shared;
+    expect(sharedRest).toEqual(fullRest);
+  });
+
+  it('removes extensions from a project that has no journal', () => {
+    const shared = toSharedProject(
+      parseProjectDocument({
+        ...(readExample('minimal.valid.json') as Record<string, unknown>),
+        extensions: { 'app.example:leak': 'secret' },
+      }),
+    );
+    expect(shared).not.toHaveProperty('extensions');
+    expect(shared).not.toHaveProperty('journal');
+  });
+
+  // The document envelope is the only place Project v1 allows `extensions`. If one of these
+  // ever starts validating, the schema has opened a new extension point and toSharedProject
+  // (spec §7) must be extended to remove it too.
+  type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const nestedObjects: Array<[string, (doc: Json) => Json | undefined]> = [
+    ['a subject', (doc) => doc.subjects[0]],
+    ['a stage', (doc) => doc.subjects[0]?.stages?.[0]],
+    ['a checklist item', (doc) => doc.subjects[0]?.checklist?.[0]],
+    ['a recipe ref', (doc) => doc.recipeRefs[0]],
+    ['a substitution', (doc) => doc.substitutions[0]],
+    ['a substitution paintRef', (doc) => doc.substitutions[0]?.original],
+    ['a journal entry', (doc) => doc.journal[0]],
+    ['a result mediaRef', (doc) => doc.results[0]],
+    ['a result license', (doc) => doc.results[0]?.license],
+    ['a tool resource', (doc) => doc.toolsUsed[0]],
+    ['links', (doc) => doc.links],
+    ['an author agent', (doc) => doc.authors[0]],
+  ];
+  it.each(nestedObjects)('rejects extensions nested in %s (no nested extension point)', (
+    _where,
+    at,
+  ) => {
+    const doc = structuredClone(readExample('comprehensive.valid.json')) as Json;
+    const target = at(doc);
+    expect(target).toBeDefined();
+    target!.extensions = { 'app.example:leak': 'custom rust mix ratio' };
+    expect(validateProjectAgainstSchema(doc).length).toBeGreaterThan(0);
+    expect(zodAccepts(doc)).toBe(false);
   });
 });
 

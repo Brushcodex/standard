@@ -316,7 +316,7 @@ export const common = {
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "OPTIONAL document-local anchor other members can point to (e.g. a Recipe step or mixture). Specs without intra-document anchoring simply omit it."
+          "description": "OPTIONAL document-local anchor other members can point to (e.g. a Recipe step or mixture). Where a spec anchors to it (Recipe paints[]) it MUST be unique within that array (a semantic rule; JSON Schema cannot express it). Specs without intra-document anchoring simply omit it."
         },
         "manufacturer": {
           "type": "string",
@@ -507,6 +507,17 @@ export const common = {
         "other"
       ]
     },
+    "evidenceClass": {
+      "type": "string",
+      "description": "How a paint substitution was established, shared by Recipe alternative.type and Project substitution.type. Each value is an evidence class kept distinct so a mathematical match never masquerades as a verified practical one; there is deliberately no catch-all.",
+      "enum": [
+        "authored",
+        "manufacturer_published",
+        "mathematical",
+        "community_tested",
+        "verified_practical"
+      ]
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,
@@ -619,7 +630,7 @@ export const common = {
         "id": {
           "type": "string",
           "minLength": 1,
-          "description": "OPTIONAL document-local anchor, unique within the owning media[] array, so a mediaCitation can point at this item. Not a global identifier and never a database id."
+          "description": "OPTIONAL document-local anchor that MUST be unique within the owning array (recipe media[], a step's media[], project results[]; semantic rule media-id-unique — JSON Schema cannot express it), so a mediaCitation can point at this item. Not a global identifier and never a database id."
         },
         "url": {
           "type": "string",
@@ -810,14 +821,7 @@ export const recipe = {
       "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
       "properties": {
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "paint": {
           "type": "string",
@@ -853,7 +857,8 @@ export const recipe = {
       "properties": {
         "id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "OPTIONAL document-local anchor for the step. MUST be unique within steps[] (semantic rule step-id-unique; JSON Schema cannot express it)."
         },
         "title": {
           "type": "string",
@@ -1035,7 +1040,7 @@ export const palette = {
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor other entries/relationships can point to."
+          "description": "Document-local anchor other entries/relationships can point to. MUST be unique within entries[] (semantic rule entry-ref-unique; JSON Schema cannot express it)."
         },
         "role": {
           "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
@@ -1169,7 +1174,7 @@ export const inventory = {
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor; also a non-destructive duplicate-detection hint."
+          "description": "Document-local anchor, unique within items[] (semantic rule item-ref-unique; JSON Schema cannot express it). Across documents it is only a non-destructive duplicate-detection hint, never an identity."
         },
         "paint": {
           "$ref": "#/$defs/paintRef"
@@ -1403,7 +1408,7 @@ export const project = {
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor journal entries can point to."
+          "description": "Document-local anchor journal entries can point to. MUST be unique within subjects[] (semantic rule subject-ref-unique; JSON Schema cannot express it)."
         },
         "status": {
           "type": "string",
@@ -1452,14 +1457,7 @@ export const project = {
           "$ref": "#/$defs/paintRef"
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "note": {
           "type": "string"

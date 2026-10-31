@@ -88,14 +88,7 @@
       "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
       "properties": {
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "paint": {
           "type": "string",
@@ -112,7 +105,11 @@
       "additionalProperties": false,
       "required": ["instruction"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL document-local anchor for the step. MUST be unique within steps[] (semantic rule step-id-unique; JSON Schema cannot express it)."
+        },
         "title": { "type": "string", "minLength": 1 },
         "instruction": { "type": "string", "minLength": 1 },
         "role": {

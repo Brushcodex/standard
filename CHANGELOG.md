@@ -6,6 +6,184 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### An export profile is a view of a revision, not a new one — 2026-10-30
+
+Common §3 says `revision` identifies "this exact document state" and that an edit MUST produce a new
+one, but said nothing about the shared export profiles, whose output differs from the source while
+carrying the same `revision`. Common §3 now states that an export profile a spec defines is not an
+edit: it is a deterministic view of one revision and carries that revision unchanged, so
+*(revision, profile)* identifies the exported state and an export can always be related to its
+source. Inventory §6 and Project §7 point at the rule. **Prose only** — no schema, fixture or
+validator change, no accept/reject change; DRAFT, so it lands in place (VERSIONING §3).
+
+### Shared profiles also remove `integrity`; Project gets the `extensions` rule — 2026-10-29
+
+Follow-up to the entry below, from its review. Two more ways the shared export profiles carried
+data derived from what they had just removed.
+
+#### Changed
+
+- **Project §7 (normative, DRAFT, lands in place per VERSIONING §3):** `toSharedProject` had the
+  same hole as Inventory — "leaving all other data untouched" with a `{ ...doc }` copy, so
+  document `extensions` reached the shared export verbatim. The Project shared profile now MUST
+  remove `extensions` from every location that carries it, for the same fail-closed reason and
+  with the same note that this is an export transform, not a Common §6 round trip. Surveyed: the
+  envelope is the only Project v1 extension point (Subject, Stage, CheckItem, Substitution,
+  JournalEntry and every Common structure Project uses are closed). §12 now says what the profile
+  does not do (inspect free text); §13 updated.
+- **Inventory §6 and Project §7 (normative, DRAFT, in place):** both shared profiles MUST remove the
+  envelope `integrity`. It is the author's hash of the full document (Common §5.5), so on the
+  shared output it is stale — a consumer verifying it reports corruption — and it is a
+  confirmation oracle: anyone who can guess removed private content can test the guess against
+  it. It is removed, not recomputed, because a shared export must not claim an integrity value
+  its author never produced; a publisher MAY add one as a separate step. Removal is consistent
+  with Common: `integrity` is optional, and §5.5 defines it as a hash of the document it sits in.
+- **`revision` is unchanged and carried as authored**, stated in both specs. Common defines it as
+  an opaque identifier for "this exact document state" but gives no rule for minting one for a
+  derived document, so no normative change is made here; the options are recorded for the
+  maintainer.
+- **Validator:** `toSharedInventory` also deletes `integrity`; `toSharedProject` deletes
+  `extensions` and `integrity` (with or without a journal). `hasPrivateJournal` is unchanged.
+- **No accept/reject behaviour changes.** No schema or fixture change; the shared profile of a
+  valid document is still valid. `specVersion` stays `1.0.0`.
+
+#### Added
+
+- Validator tests: Inventory and Project shared profiles drop an author-supplied `integrity` and
+  keep `revision`; the Project shared profile drops document `extensions` (including a
+  journal-indexing extension that repeats a private entry, and on a project with no journal),
+  leaks none of their strings, and leaves every other member equal to the full profile's, which
+  keeps both; and `extensions` nested in a subject, stage, checklist item, recipe ref,
+  substitution, its paintRef, journal entry, result, result licence, tool, `links`, or author is
+  rejected by both the JSON Schema and the Zod model. Verified load-bearing: reverting each
+  deletion fails the corresponding test. Corpus unchanged (101 cases).
+
+### Inventory shared profile removes `extensions` — 2026-10-29
+
+Fixes a privacy hole reported by an external implementer: shared exports containing extensions
+could retain metadata about private inventory items even when those items were excluded. Inventory
+§6 said the shared profile removes private items and `private` objects and "MUST NOT alter any
+other field", and `toSharedInventory` copied the document with `{ ...doc }` — so document-level
+`extensions` (Common §6: namespaced, opaque) reached the export verbatim. An
+`app.example:locations` map keyed by item `ref` would publish the storage location of an item the
+profile had just removed, in the export the spec calls "the safe default for publishing".
+
+#### Changed
+
+- **Inventory §6 (normative, DRAFT, lands in place per VERSIONING §3):** the shared profile MUST
+  also remove `extensions` from every location in the document that carries it; the "MUST NOT
+  alter any other field" sentence now follows that list. The profile fails closed because an
+  extension is opaque and cannot be proven free of private data. The prose records that the
+  envelope is the only Inventory v1 location where `extensions` is allowed (Item, `private`,
+  `paintRef`, `colorValue`, `provenanceEntry`, `agent`, `license`, `translation`, `links` and
+  `integrity` are all closed), and that this is not a breach of Common §6 preservation: the shared
+  profile is a privacy-reducing export transform, not a round trip, and the full profile still
+  preserves every extension. §8 now says what the shared profile does not do — it does not
+  inspect free text, so envelope prose and shareable item fields publish as written. §9 and
+  [docs/EXTENSIONS.md](docs/EXTENSIONS.md) §4 updated to match.
+- **Validator:** `toSharedInventory` deletes `extensions` from its result. `hasPrivateData` is
+  unchanged: its documented scope is the members the format marks private (a private item or a
+  `private` object), not opaque data.
+- **No accept/reject behaviour changes.** No schema file changes, no fixture changes; every
+  document that validated still validates and the shared profile of a valid document is still a
+  valid Inventory document. `specVersion` stays `1.0.0`.
+
+#### Added
+
+- Validator tests: the shared profile of a document carrying an item-keyed extension has no
+  `extensions` member, leaks none of its strings, and leaves every other envelope member equal to
+  the full profile's; the full profile retains both extensions; and an `extensions` member nested
+  in an item, `private`, `paintRef`, `color`, provenance entry, or author is rejected by both the
+  JSON Schema and the Zod model, pinning that the envelope is the only extension point the profile
+  has to strip. Verified load-bearing: reverting the `toSharedInventory` change fails the new
+  shared-profile test. The existing round-trip test still preserves extensions. Corpus unchanged
+  (101 cases).
+
+### Document-local anchors are unique within their array — 2026-10-29
+
+An external implementer reported that paint and project references did not appear to require
+uniqueness within their scopes, which would let an anchor resolve ambiguously. Confirmed: the
+reference validators checked that every anchor **resolves**, but two members sharing one anchor
+passed, so a step, mixture, relationship, or journal entry pointing at it named two targets.
+Recipe `media[].id` was the only anchor with a uniqueness rule (`media-id-unique`); every other
+anchor now follows that precedent. JSON Schema cannot express uniqueness of one property across
+array objects (`uniqueItems` compares whole items), so each is a **semantic** rule.
+
+| Spec | Anchor | Rule | Before |
+|---|---|---|---|
+| Recipe | `paints[].ref` | `paint-ref-unique` (new) | unchecked |
+| Recipe | `steps[].id` | `step-id-unique` (new) | unchecked |
+| Recipe | `media[].id` | `media-id-unique` | already enforced |
+| Recipe | `steps[].media[].id` | `media-id-unique` (now enforced) | Common prose only |
+| Palette | `entries[].ref` | `entry-ref-unique` (new) | unchecked |
+| Inventory | `items[].ref` | `item-ref-unique` (new) | unchecked |
+| Project | `subjects[].ref` | `subject-ref-unique` (new) | unchecked |
+| Project | `results[].id` | `media-id-unique` (now enforced) | Common prose only |
+
+Not anchors, so deliberately unchanged: Project `recipeRefs[]`/`paletteRefs[]` and Recipe
+`techniqueRefs[]` point **outward** at other documents by `id`, and nothing resolves to them —
+listing one document twice is redundant, not ambiguous. Common `agent.id` is a global
+identity URI, not a document-local anchor. Technique and Bundle declare no document-local anchors.
+
+#### Changed
+
+- **Prose:** a **MUST** ("unique within `<array>`") with its rule code in Recipe §9, Palette §4/§7,
+  Inventory §4/§7, Project §4/§11, and Common §5.6 `mediaRef` (which already said "unique within
+  the array" but as unenforced prose). Schema `description`s on the same members say the same.
+- **Inventory §7 reconciled.** `ref` stays a non-destructive duplicate-detection hint; the two
+  rules apply at different scopes. Within one document a `ref` names one item; **across**
+  documents (merge, import) an equal `ref` suggests the same item but is not an identity. Two
+  items describing the same paint remain valid — uniqueness constrains the anchor, not the paint.
+- **Validator:** the Recipe, Palette, Inventory, and Project semantic layers report each later
+  duplicate at its own path (e.g. `/paints/1/ref`); the first occurrence is accepted. Inventory
+  gains a semantic layer beyond the envelope rules. No public export changes.
+- **Compatibility.** This is a **tightened constraint**: a document with a duplicate anchor that
+  validated before is now rejected. It lands in place because every schema and spec is DRAFT
+  (VERSIONING §3); `specVersion` stays `1.0.0`. No valid corpus document carries a duplicate anchor
+  (measured across all 101 pre-existing corpus documents; the only duplicate was the intended one in
+  `recipe/…/duplicate-media-id.json`), so no valid example changes. Migration
+  for an affected document: rename the later duplicate and re-point the references meant for it —
+  which references those are is the author's knowledge, so no tool can do it mechanically.
+
+#### Added
+
+- Seven invalid fixtures, each with an `EXPECTATIONS.json` entry (`layer: "semantic"`):
+  `recipe/…/duplicate-paint-ref.json`, `duplicate-step-id.json`, `duplicate-step-media-id.json`;
+  `palette/…/duplicate-entry-ref.json`; `inventory/…/duplicate-item-ref.json`;
+  `project/…/duplicate-subject-ref.json`, `duplicate-result-media-id.json`. Each verified
+  load-bearing: disabling its check makes `pnpm conformance` and the validator suite fail. Corpus
+  is now 108 cases (22 valid, 86 invalid).
+
+### Substitution evidence classes defined once, in Common — 2026-10-29
+
+Resolves [VOCABULARY_SIGNOFF.md](docs/VOCABULARY_SIGNOFF.md) Open item 1, the one pre-freeze item
+recorded as *now-or-never*. Recipe `alternative.type` and Project `substitution.type` carried the
+same five values in two schema files. Once frozen, sharing them becomes impossible (a `$ref`
+change is a schema-file edit, and frozen files are immutable), and a later `1.x` minor could add a
+class to one and not the other — a recipe could then classify a substitute in a way the project
+that accepts it cannot express.
+
+#### Changed
+
+- **New Common `$defs/evidenceClass`** — `authored` | `manufacturer_published` | `mathematical` |
+  `community_tested` | `verified_practical`, documented in Common §5.6. Recipe
+  `alternative.type` and Project `substitution.type` now `$ref` it.
+- **Validator:** `EVIDENCE_CLASSES` and `EvidenceClass` added to `common`. Recipe
+  `ALTERNATIVE_TYPES` and Project `SUBSTITUTION_TYPES` stay exported and are now that same
+  constant, so the public surface is unchanged.
+- **No accept/reject behaviour changes.** The same five values are accepted at the same paths,
+  with the same requiredness (`alternative.type` required, `substitution.type` optional). No
+  document changes, no migration. `specVersion` stays `1.0.0`; the schemas are DRAFT, where this
+  lands in place (VERSIONING §3).
+
+#### Added
+
+- `examples/recipe/v1/invalid/unknown-alternative-type.json` and
+  `examples/project/v1/invalid/unknown-substitution-type.json` — an out-of-vocabulary class at
+  each path, expected to fail on `enum`. Before this, no fixture rejected an unknown value at
+  either path, so the `$ref` was unpinned. Verified load-bearing: adding a value to the Common
+  enum makes `pnpm conformance` fail. Corpus is now 101 cases (22 valid, 79 invalid).
+
 ### Release candidate `1.0.0-rc.2` — 2026-08-30
 
 All five `@brushcodex/*` packages bump `1.0.0-rc.1 → 1.0.0-rc.2` in lockstep, through the packed

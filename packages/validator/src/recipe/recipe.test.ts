@@ -253,6 +253,67 @@ describe('Recipe — source media and step citations', () => {
     expect(duplicate.issues.some((i) => i.code === 'media-id-unique')).toBe(true);
   });
 
+  it('rejects a reused media anchor within one step, reported at the step path', () => {
+    const result = validateRecipeDocument(readExample('invalid/duplicate-step-media-id.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        code: 'media-id-unique',
+        path: '/steps/0/media/1/id',
+        layer: 'semantic',
+      }),
+    ]);
+  });
+
+  it('allows the same media id in different arrays (uniqueness is per owning array)', () => {
+    const base = readExample('minimal.valid.json') as Record<string, unknown>;
+    const photo = (n: number) => ({ id: 'photo', url: `https://example.org/p${n}.jpg` });
+    const doc = {
+      ...base,
+      media: [photo(0)],
+      steps: [
+        { instruction: 'Basecoat.', media: [photo(1)] },
+        { instruction: 'Wash.', media: [photo(2)] },
+      ],
+    };
+    expect(validateRecipeDocument(doc).issues).toEqual([]);
+  });
+
+  it('rejects two paints sharing one ref, reporting only the later duplicate', () => {
+    const result = validateRecipeDocument(readExample('invalid/duplicate-paint-ref.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({ code: 'paint-ref-unique', path: '/paints/1/ref', layer: 'semantic' }),
+    ]);
+  });
+
+  it('rejects two steps sharing one id', () => {
+    const result = validateRecipeDocument(readExample('invalid/duplicate-step-id.json'));
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual([
+      expect.objectContaining({ code: 'step-id-unique', path: '/steps/1/id', layer: 'semantic' }),
+    ]);
+  });
+
+  it('accepts paints and steps without anchors, and the same paint under two distinct refs', () => {
+    const base = readExample('minimal.valid.json') as Record<string, unknown>;
+    const doc = {
+      ...base,
+      paints: [
+        { name: 'Flat Brown' },
+        { name: 'Flat Brown' },
+        { ref: 'a', name: 'Flat Brown' },
+        { ref: 'b', name: 'Flat Brown' },
+      ],
+      steps: [
+        { instruction: 'Basecoat.', paintRefs: ['a'] },
+        { instruction: 'Layer.', paintRefs: ['b'] },
+        { id: 'wash', instruction: 'Wash.' },
+      ],
+    };
+    expect(validateRecipeDocument(doc).issues).toEqual([]);
+  });
+
   it('accepts a recipe with media but no citations, and citations on a lone source', () => {
     const base = readExample('comprehensive.valid.json') as Record<string, unknown>;
     const noCitations = {

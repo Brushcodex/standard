@@ -1,0 +1,16 @@
+{
+  "spec": "recipe",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:c4d5e6f7-8901-4234-8567-89abcdef0120",
+  "revision": "rev-1",
+  "title": "Two media items of one step claim the same document-local anchor",
+  "steps": [
+    {
+      "instruction": "Basecoat the model.",
+      "media": [
+        { "id": "after", "url": "https://example.org/photos/after-front.jpg", "kind": "image" },
+        { "id": "after", "url": "https://example.org/photos/after-back.jpg", "kind": "image" }
+      ]
+    }
+  ]
+}

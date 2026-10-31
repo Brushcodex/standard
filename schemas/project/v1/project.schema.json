@@ -98,7 +98,7 @@
         "ref": {
           "type": "string",
           "minLength": 1,
-          "description": "Document-local anchor journal entries can point to."
+          "description": "Document-local anchor journal entries can point to. MUST be unique within subjects[] (semantic rule subject-ref-unique; JSON Schema cannot express it)."
         },
         "status": {
           "type": "string",
@@ -119,14 +119,7 @@
         "original": { "$ref": "#/$defs/paintRef" },
         "substitute": { "$ref": "#/$defs/paintRef" },
         "type": {
-          "type": "string",
-          "enum": [
-            "authored",
-            "manufacturer_published",
-            "mathematical",
-            "community_tested",
-            "verified_practical"
-          ]
+          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "note": { "type": "string" }
       }
