@@ -60,6 +60,24 @@
       "layer": "semantic",
       "reason": "Schema-valid, but two items claim the same document-local anchor. Two items may describe the same paint; they may not share one ref.",
       "expect": { "rule": "item-ref-unique" }
+    },
+    {
+      "file": "not-owned-not-wanted.json",
+      "layer": "schema",
+      "reason": "An item that is not owned must be wanted; one that is neither records nothing.",
+      "expect": { "keyword": "const", "instancePath": "/items/0/wanted" }
+    },
+    {
+      "file": "not-owned-with-quantity.json",
+      "layer": "schema",
+      "reason": "An item that is not owned carries a quantity, which describes a bottle in hand.",
+      "expect": { "keyword": "false schema", "instancePath": "/items/0/quantity" }
+    },
+    {
+      "file": "not-owned-with-storage.json",
+      "layer": "schema",
+      "reason": "An item that is not owned carries a private storage location, which describes a bottle in hand.",
+      "expect": { "keyword": "false schema", "instancePath": "/items/0/private/storageLocation" }
     }
   ]
 }

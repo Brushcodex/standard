@@ -1,0 +1,40 @@
+{
+  "$schema": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
+  "spec": "inventory",
+  "specVersion": "1.0.0",
+  "id": "https://example.org/brushcodex/inventories/restock-and-wishlist",
+  "revision": "rev-2026-11-10T12-00-00Z-c3d4e5",
+  "title": "Owned, wanted, and both",
+  "description": "Exercises owned and wanted: a paint owned as before, one owned and wanted again (a restock), and one wanted but not owned (a wishlist entry).",
+  "createdAt": "2026-11-01T09:00:00Z",
+  "updatedAt": "2026-11-10T12:00:00Z",
+  "language": "en",
+  "summary": "Absent members keep their defaults: owned true, wanted false.",
+  "items": [
+    {
+      "ref": "steel",
+      "paint": { "manufacturer": "Some Brand", "range": "Metal Color", "name": "Steel" },
+      "quantity": 1,
+      "unit": "bottle",
+      "condition": "in_use"
+    },
+    {
+      "ref": "rust-wash",
+      "paint": { "manufacturer": "Another Brand", "name": "Rust Wash" },
+      "owned": true,
+      "wanted": true,
+      "quantity": 1,
+      "condition": "low",
+      "lowStock": true,
+      "private": { "storageLocation": "Wash rack", "notes": "Buy two next time." }
+    },
+    {
+      "ref": "verdigris",
+      "paint": { "manufacturer": "Some Brand", "range": "Effects", "name": "Verdigris" },
+      "owned": false,
+      "wanted": true,
+      "aliases": ["green patina"],
+      "private": { "notes": "For the bronze statue base." }
+    }
+  ]
+}

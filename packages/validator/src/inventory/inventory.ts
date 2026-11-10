@@ -39,10 +39,30 @@ const privateFieldsSchema = z
   })
   .strict();
 
+/**
+ * Members that describe a bottle in hand. An item the user does not own
+ * (`owned: false`) carries none of them (spec §4a).
+ */
+export const INVENTORY_HOLDING_MEMBERS = [
+  'quantity',
+  'unit',
+  'bottleSizeMl',
+  'condition',
+  'lowStock',
+] as const;
+export const INVENTORY_PRIVATE_HOLDING_MEMBERS = [
+  'storageLocation',
+  'lot',
+  'acquiredAt',
+  'acquiredNote',
+] as const;
+
 export const inventoryItemSchema = z
   .object({
     ref: z.string().min(1).optional(),
     paint: inventoryPaintRefSchema,
+    owned: z.boolean().optional(),
+    wanted: z.boolean().optional(),
     quantity: z.number().min(0).optional(),
     unit: z.enum(INVENTORY_UNITS).optional(),
     bottleSizeMl: z.number().positive().optional(),
@@ -57,7 +77,45 @@ export const inventoryItemSchema = z
     visibility: z.enum(['shareable', 'private']).optional(),
     private: privateFieldsSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((item, ctx) => {
+    if (item.owned !== false) return;
+    if (item.wanted !== true) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['wanted'],
+        message: 'an item that is not owned must be wanted',
+      });
+    }
+    for (const member of INVENTORY_HOLDING_MEMBERS) {
+      if (item[member] !== undefined) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [member],
+          message: `an item that is not owned cannot carry '${member}'`,
+        });
+      }
+    }
+    for (const member of INVENTORY_PRIVATE_HOLDING_MEMBERS) {
+      if (item.private?.[member] !== undefined) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['private', member],
+          message: `an item that is not owned cannot carry 'private.${member}'`,
+        });
+      }
+    }
+  });
+
+/** Whether an item counts as one of the user's paints: `owned` absent or true (spec §4a). */
+export function isOwnedItem(item: InventoryItem): boolean {
+  return item.owned !== false;
+}
+
+/** Whether an item is on the user's wishlist: `wanted` is true (spec §4a). */
+export function isWantedItem(item: InventoryItem): boolean {
+  return item.wanted === true;
+}
 
 /**
  * The typed Inventory model. Extends the Common envelope (so every envelope

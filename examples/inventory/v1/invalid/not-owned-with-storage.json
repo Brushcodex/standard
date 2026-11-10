@@ -1,0 +1,15 @@
+{
+  "spec": "inventory",
+  "specVersion": "1.0.0",
+  "id": "urn:uuid:5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a83",
+  "revision": "rev-1",
+  "title": "A paint the user does not have cannot have a storage location",
+  "items": [
+    {
+      "paint": { "manufacturer": "Some Brand", "name": "Verdigris" },
+      "owned": false,
+      "wanted": true,
+      "private": { "storageLocation": "Drawer 2" }
+    }
+  ]
+}

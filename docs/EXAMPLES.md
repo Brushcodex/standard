@@ -3,7 +3,7 @@
 The [Quickstart](QUICKSTART.md) starts from the *minimal* document; this page points at the
 *comprehensive* one for each type — a realistic document that exercises the full vocabulary of its
 specification. Every file here is part of the conformance corpus, so each one **must validate**
-(they are among the 108 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
+(they are among the 112 cases `pnpm --filter @brushcodex/cli conformance` checks). They are
 [CC0-1.0](../examples/LICENSE) — copy and adapt them freely.
 
 Each type ships two or three files under `examples/<spec>/v1/`:
@@ -18,7 +18,7 @@ Each type ships two or three files under `examples/<spec>/v1/`:
 |---|---|---|
 | **recipe** (Painting Workflow) | [comprehensive](../examples/recipe/v1/comprehensive.valid.json) · [minimal](../examples/recipe/v1/minimal.valid.json) | A full workflow: `target` substrate/scale and a Painted Subject `identity`, `paints`, `resources`, `techniqueRefs`, `media` with step citations, richly-roled `steps`, plus `attribution`, `license`, `difficulty`, timing and `dryingNotes`. |
 | **palette** | [comprehensive](../examples/palette/v1/comprehensive.valid.json) · [minimal](../examples/palette/v1/minimal.valid.json) | A palette with `intent` and a class-level `target` (no `identity` — a broad target is first-class), entries carrying paint identity and roles, and `relationships` between entries (mixes, substitutes). |
-| **inventory** | [comprehensive](../examples/inventory/v1/comprehensive.valid.json) · [minimal](../examples/inventory/v1/minimal.valid.json) | Owned paints as `items` with quantities and condition, plus a human `summary`. |
+| **inventory** | [comprehensive](../examples/inventory/v1/comprehensive.valid.json) · [minimal](../examples/inventory/v1/minimal.valid.json) · [wishlist](../examples/inventory/v1/wishlist.valid.json) | Owned paints as `items` with quantities and condition, plus a human `summary`; `wishlist` shows `owned`/`wanted`. |
 | **project** | [comprehensive](../examples/project/v1/comprehensive.valid.json) · [minimal](../examples/project/v1/minimal.valid.json) | A painting project: `status` and `progress`, `subjects`, `recipeRefs`/`paletteRefs`, `substitutions`, a `journal`, `results`, and `toolsUsed`. |
 | **technique** | [comprehensive](../examples/technique/v1/comprehensive.valid.json) · [minimal](../examples/technique/v1/minimal.valid.json) | A reusable technique: `purpose`, `tools`, `parameters`, `suitablePaintClasses`/`unsuitablePaintClasses`, `commonProblems`, `safetyNotes`, `citations`, and `variants`. |
 | **bundle** | [comprehensive](../examples/bundle/v1/comprehensive.valid.json) · [minimal](../examples/bundle/v1/minimal.valid.json) | A manifest packaging several documents as `entries`, with `authors`, `license`, and `tags` on the bundle itself. |
@@ -73,7 +73,7 @@ OK    recipe  …/examples/recipe/v1/comprehensive.valid.json
 python validate.py examples/recipe/v1/comprehensive.valid.json   # -> valid
 ```
 
-To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (108/108).
+To validate the entire corpus at once, run `pnpm --filter @brushcodex/cli conformance` (112/112).
 
 ## Next steps
 

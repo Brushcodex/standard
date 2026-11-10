@@ -19,7 +19,12 @@
  * profile, and the page says which one it is.
  */
 
-import type { InventoryDocument, InventoryItem } from '../inventory/inventory';
+import {
+  isOwnedItem,
+  isWantedItem,
+  type InventoryDocument,
+  type InventoryItem,
+} from '../inventory/inventory';
 import {
   documentLang,
   escapeHtml,
@@ -80,6 +85,9 @@ function renderItem(item: InventoryItem): string {
   const badges = [
     item.condition ? CONDITION_LABELS[item.condition] ?? item.condition : undefined,
     item.lowStock === true ? 'low stock' : undefined,
+    // Only an owned item needs the badge: a not-owned item is always wanted and
+    // already sits in the Wanted section (spec §4a).
+    isOwnedItem(item) && isWantedItem(item) ? 'wanted' : undefined,
     item.visibility === 'private' ? 'private item' : undefined,
   ]
     .filter((part): part is string => part !== undefined)
@@ -108,6 +116,8 @@ function renderItem(item: InventoryItem): string {
 function inventoryMeta(doc: InventoryDocument): string {
   const rows: Array<[string, string]> = [];
   rows.push(['Items', String(doc.items.length)]);
+  const wishlist = doc.items.filter((item) => !isOwnedItem(item)).length;
+  if (wishlist > 0) rows.push(['Wanted, not owned', String(wishlist)]);
   const privateItems = doc.items.filter((item) => item.visibility === 'private').length;
   const withPrivateData = doc.items.filter((item) => item.private !== undefined).length;
   if (privateItems > 0 || withPrivateData > 0) {
@@ -139,7 +149,10 @@ function inventoryMeta(doc: InventoryDocument): string {
  * `parseInventoryDocument` at the trust boundary).
  */
 export function renderInventoryHtml(doc: InventoryDocument): string {
-  const items = doc.items.map(renderItem).join('');
+  // Only owned items are the user's paints (spec §4a); a wishlist entry listed
+  // under "Paints owned" would tell the reader they have a paint they do not.
+  const owned = doc.items.filter(isOwnedItem).map(renderItem).join('');
+  const wishlist = doc.items.filter((item) => !isOwnedItem(item)).map(renderItem).join('');
 
   const articleBody =
     `<header>\n<h1>${escapeHtml(doc.title)}</h1>\n` +
@@ -149,7 +162,11 @@ export function renderInventoryHtml(doc: InventoryDocument): string {
     renderTags(doc.tags) +
     `</header>\n` +
     `<section class="items" aria-labelledby="items-h">\n` +
-    `<h2 id="items-h">Paints owned</h2>\n<ul class="entries">${items}</ul>\n</section>\n`;
+    `<h2 id="items-h">Paints owned</h2>\n<ul class="entries">${owned}</ul>\n</section>\n` +
+    (wishlist
+      ? `<section class="items" aria-labelledby="wanted-h">\n` +
+        `<h2 id="wanted-h">Wanted</h2>\n<ul class="entries">${wishlist}</ul>\n</section>\n`
+      : '');
 
   return renderHtmlDocument({
     lang: documentLang(doc.language),

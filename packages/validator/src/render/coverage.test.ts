@@ -117,6 +117,11 @@ const CASES = [
     render: renderInventoryHtml as (doc: unknown) => string,
   },
   {
+    spec: 'inventory (owned and wanted)',
+    document: parseInventoryDocument(readExample('inventory/v1/wishlist.valid.json')),
+    render: renderInventoryHtml as (doc: unknown) => string,
+  },
+  {
     spec: 'project',
     document: parseProjectDocument(readExample('project/v1/comprehensive.valid.json')),
     render: renderProjectHtml as (doc: unknown) => string,

@@ -6,6 +6,37 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Inventory: owned and wanted — 2026-11-10
+
+Two new optional Inventory item members, `owned` (default `true`) and `wanted` (default `false`),
+and a new **Inventory §4a "Owned and wanted"**. Additive while DRAFT: every existing document keeps
+validating and keeps its meaning, because an absent `owned` reads as owned.
+
+**Why core and not an extension.** Two implementations track a wishlist independently of
+ownership: Hobby Rack (raised during the pre-freeze review) and BrushCodex's own shopping list. An
+extension would preserve the data but no other application would understand it, so a wishlist
+could not move between them. Named consumer: importing and exporting an inventory whose items are
+owned, wanted, or both (a restock).
+
+- `owned: false` requires `wanted: true`; an item that is neither records nothing.
+- An item that is not owned carries none of the members that describe a bottle in hand
+  (`quantity`, `unit`, `bottleSizeMl`, `condition`, `lowStock`, `private.storageLocation`,
+  `private.lot`, `private.acquiredAt`, `private.acquiredNote`). Both rules are in the **schema**
+  (`if`/`then` on the item), so a plain JSON Schema validator enforces them too.
+- Any operation that treats an inventory as the paints a user has MUST count only owned items.
+- Deliberately minimal: no prices, retailers, links, priorities or target quantities.
+
+**Reference implementation.** The Zod model mirrors both rules, and `isOwnedItem` /
+`isWantedItem` apply the defaults. The Inventory renderer no longer lists every item under "Paints
+owned": wishlist entries get their own "Wanted" section, and an owned item that is also wanted is
+badged. The shared export profile keeps both members, which are shareable.
+
+**Fixtures.** `wishlist.valid.json` plus three invalid fixtures (`not-owned-not-wanted`,
+`not-owned-with-quantity`, `not-owned-with-storage`). Corpus is now 112 cases (23 valid, 89
+invalid). The whole corpus was also run through Python `jsonschema[format]` 4.25.1, which agreed
+with the reference validator on every schema-layer outcome; `docs/VALIDATE_WITH_JSONSCHEMA.md`
+records that measurement in place of the stale "99 cases".
+
 ### Paint identity over a product's life — 2026-11-10
 
 Editorial (patch): no schema, fixture, member or accept/reject change. Resolves

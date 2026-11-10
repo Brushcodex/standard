@@ -12,9 +12,9 @@ to be interpreted as described in RFC 2119 and RFC 8174.
 
 ## 1. Purpose
 
-A Paint Inventory is a portable record of a painter's personal paint collection. Every item
-records the **user's own observations** (how many they own, condition, where it is stored) — which
-are distinct from global catalogue truth. It **embeds the Common document envelope** and closes
+A Paint Inventory is a portable record of a painter's personal paint collection, including the
+paints they want but do not have yet. Every item records the **user's own observations** (how many
+they own, condition, where it is stored) — which are distinct from global catalogue truth. It **embeds the Common document envelope** and closes
 with `unevaluatedProperties: false`.
 
 ## 2. Envelope constraints
@@ -35,6 +35,8 @@ with `unevaluatedProperties: false`.
 
 - `ref` — a document-local anchor, unique within `items[]`; also a **non-destructive
   duplicate-detection hint** across documents (see §7).
+- `owned` (boolean, default `true`) and `wanted` (boolean, default `false`) — whether the user has
+  the paint and whether they intend to acquire it (§4a).
 - `quantity` (≥ 0), `unit` (`bottle`/`pot`/`tube`/`dropper`/`ml`/`g`/`other`), `bottleSizeMl` (> 0).
 - `condition` (`sealed`/`in_use`/`low`/`empty`/`dried_out`/`unknown`), `lowStock` (boolean).
 - `aliases` — the user's own unique names for the paint.
@@ -42,6 +44,43 @@ with `unevaluatedProperties: false`.
   a shared export profile (§6).
 
 Private fields live under `private` (§6) so they can be stripped as a group.
+
+## 4a. Owned and wanted
+
+Whether the user has a paint and whether they want it are independent facts, so an item records
+them as two members. A paint can be owned, wanted, or both, as when someone wants to restock a
+paint they already have.
+
+| `owned` | `wanted` | Meaning |
+|---|---|---|
+| `true` (or absent) | `false` (or absent) | In the collection. Every document written before these members existed reads this way. |
+| `true` (or absent) | `true` | In the collection, and the user wants more of it. |
+| `false` | `true` | Not in the collection; the user wants it (a wishlist entry). |
+| `false` | `false` (or absent) | **Invalid.** The item records nothing. |
+
+A reader **MUST** treat an absent `owned` as `true` and an absent `wanted` as `false`. A writer
+**MAY** omit either when it holds its default.
+
+**An item that is not owned describes no bottle.** When `owned` is `false`, `wanted` **MUST** be
+`true`, and the item **MUST NOT** carry the members that describe a bottle in hand: `quantity`,
+`unit`, `bottleSizeMl`, `condition`, `lowStock`, or the `private` members `storageLocation`, `lot`,
+`acquiredAt` and `acquiredNote`. `private.notes` remains available. The schema enforces both rules,
+so any JSON Schema validator applies them.
+
+**Only owned items are the user's paints.** Any operation that treats an inventory as the paints
+a user has (checking whether they can follow a recipe, suggesting a substitute from their own
+collection, counting their stock) **MUST** count only items whose `owned` is `true` or absent. A
+wishlist entry is not stock.
+
+**`wanted` is intent; `lowStock` is an observation.** Neither implies the other. An implementation
+**MAY** suggest wanting a paint that is low, but **MUST NOT** set `wanted` unless the user
+expressed it.
+
+The wishlist is deliberately minimal. Prices, retailers, links, priorities and target quantities
+are not part of it: they vary by market and by application, and an application that needs them
+records them under `extensions` (Common §6), which the shared profile removes (§6). A paint that
+appears in both an owned item and a wanted item is not an error; a consumer building a shopping
+list groups items by paint identity as in §7.
 
 ## 5. PaintRef — stable identity or literal fallback
 

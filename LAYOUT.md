@@ -84,14 +84,14 @@ it at build time; never hand-edit the copy.
   *directory*, so a fixture that deliberately declares the wrong `spec` still counts as invalid.
 - `invalid/EXPECTATIONS.json` — the exact constraint each invalid fixture violates.
 
-Current corpus: **108 cases — 22 valid, 86 invalid**, across 7 specs (measured 2026-10-29).
+Current corpus: **112 cases — 23 valid, 89 invalid**, across 7 specs (measured 2026-11-10).
 
 | Spec | valid | invalid |
 |---|---:|---:|
 | `common` | 2 | 10 |
 | `recipe` | 8 | 27 |
 | `palette` | 4 | 10 |
-| `inventory` | 2 | 10 |
+| `inventory` | 3 | 13 |
 | `project` | 2 | 13 |
 | `technique` | 2 | 8 |
 | `bundle` | 2 | 8 |
@@ -193,7 +193,7 @@ pnpm install
 pnpm -r build       # topological: schema -> validator -> {types, fixtures} -> cli
 pnpm -r typecheck
 pnpm -r test
-pnpm conformance    # validate the whole corpus (108/108); exit 1 on any mismatch
+pnpm conformance    # validate the whole corpus (112/112); exit 1 on any mismatch
 pnpm check:consistency   # assert every schema enum value + property is documented in the prose
 pnpm --filter @brushcodex/cli validate <absolute-file>   # one document or .brushcodex.zip
 ```
