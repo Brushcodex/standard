@@ -71,6 +71,31 @@ describe('renderInventoryHtml', () => {
     expect(html).toContain('1 private item(s)');
   });
 
+  it('lists a paint the user does not own under Wanted, never under Paints owned (§4a)', () => {
+    const html = renderInventoryHtml(
+      inventory({
+        items: [
+          { paint: { name: 'Steel' }, quantity: 1 },
+          { paint: { name: 'Rust Wash' }, wanted: true, quantity: 1 },
+          { paint: { name: 'Verdigris' }, owned: false, wanted: true },
+        ],
+      }),
+    );
+    const [ownedSection, wantedSection] = html.split('<h2 id="wanted-h">Wanted</h2>');
+    expect(ownedSection).toContain('Steel');
+    expect(ownedSection).toContain('Rust Wash');
+    expect(ownedSection).not.toContain('Verdigris');
+    expect(wantedSection).toContain('Verdigris');
+    expect(ownedSection).toMatch(/Rust Wash<\/span> <span class="badge">wanted<\/span>/);
+    expect(html).toContain('Wanted, not owned');
+  });
+
+  it('adds no Wanted section when every item is owned', () => {
+    const html = renderInventoryHtml(inventory());
+    expect(html).not.toContain('wanted-h');
+    expect(html).not.toContain('Wanted, not owned');
+  });
+
   it('says so plainly when there is no private data at all', () => {
     expect(renderInventoryHtml(inventory())).toContain('no private data present');
   });

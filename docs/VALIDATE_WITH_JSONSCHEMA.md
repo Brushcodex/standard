@@ -85,9 +85,11 @@ $ python validate.py examples/recipe/v1/invalid/missing-steps.json
 invalid at /: 'steps' is a required property [required]
 ```
 
-The accept/reject outcome matches the reference validator: the whole corpus (99 cases) is what
-`pnpm --filter @brushcodex/cli conformance` checks. This page's commands were executed against the
-corpus with Python 3.12 and `jsonschema` 4.25.
+The accept/reject outcome matches the reference validator: the whole corpus (112 cases) is what
+`pnpm --filter @brushcodex/cli conformance` checks. On 2026-11-10 the script agreed with the
+reference validator on every schema-layer outcome in the corpus, run with Python 3.13 and
+`jsonschema[format]` 4.25.1. Without the `format` extra, `uri` is not asserted and one Common
+fixture (`non-uri-id.json`) is accepted.
 
 ### Where the schema layer stops
 

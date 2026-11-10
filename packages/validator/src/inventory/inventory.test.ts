@@ -7,7 +7,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { inventoryDocumentSchema } from './inventory';
+import { inventoryDocumentSchema, isOwnedItem, isWantedItem } from './inventory';
 import {
   InventoryValidationError,
   loadInventorySchema,
@@ -26,7 +26,11 @@ function readExample(relativePath: string): unknown {
   return JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
 }
 
-const VALID_FILES = ['minimal.valid.json', 'comprehensive.valid.json'] as const;
+const VALID_FILES = [
+  'minimal.valid.json',
+  'comprehensive.valid.json',
+  'wishlist.valid.json',
+] as const;
 
 interface ExpectationCase {
   file: string;
@@ -280,6 +284,76 @@ describe('Inventory — anchor uniqueness (semantic)', () => {
     expect(validateInventoryDocument(toSharedInventory(parseInventoryDocument(full))).valid).toBe(
       true,
     );
+  });
+});
+
+describe('Inventory — owned and wanted (§4a)', () => {
+  const base = () => readExample('minimal.valid.json') as Record<string, unknown>;
+  const paint = { manufacturer: 'Some Brand', name: 'Verdigris' };
+
+  it('reads absent members as owned and not wanted, so older documents keep their meaning', () => {
+    const doc = parseInventoryDocument(readExample('wishlist.valid.json'));
+    expect(doc.items.map((item) => [isOwnedItem(item), isWantedItem(item)])).toEqual([
+      [true, false],
+      [true, true],
+      [false, true],
+    ]);
+  });
+
+  it('rejects an item that is not owned and carries no wanted member', () => {
+    const doc = { ...base(), items: [{ paint, owned: false }] };
+    expect(validateInventoryAgainstSchema(doc)).toContainEqual(
+      expect.objectContaining({ code: 'required', path: '/items/0' }),
+    );
+    expect(zodAccepts(doc)).toBe(false);
+  });
+
+  it.each(['quantity', 'unit', 'bottleSizeMl', 'condition', 'lowStock'] as const)(
+    'rejects %s on an item that is not owned, in the schema and the model alike',
+    (member) => {
+      const value = { quantity: 1, unit: 'pot', bottleSizeMl: 17, condition: 'sealed', lowStock: true }[
+        member
+      ];
+      const doc = { ...base(), items: [{ paint, owned: false, wanted: true, [member]: value }] };
+      expect(validateInventoryAgainstSchema(doc)).toContainEqual(
+        expect.objectContaining({ code: 'false schema', path: `/items/0/${member}` }),
+      );
+      expect(zodAccepts(doc)).toBe(false);
+    },
+  );
+
+  it('allows private notes on an item that is not owned, but not where it is kept', () => {
+    const withNotes = { ...base(), items: [{ paint, owned: false, wanted: true, private: { notes: 'x' } }] };
+    expect(validateInventoryDocument(withNotes)).toEqual({ valid: true, issues: [] });
+    expect(zodAccepts(withNotes)).toBe(true);
+    for (const member of ['storageLocation', 'lot', 'acquiredAt', 'acquiredNote']) {
+      const value = member === 'acquiredAt' ? '2026-01-01T00:00:00Z' : 'x';
+      const doc = {
+        ...base(),
+        items: [{ paint, owned: false, wanted: true, private: { [member]: value } }],
+      };
+      expect(validateInventoryDocument(doc).valid).toBe(false);
+      expect(zodAccepts(doc)).toBe(false);
+    }
+  });
+
+  it('places no constraint on an owned item that is also wanted (a restock)', () => {
+    const doc = {
+      ...base(),
+      items: [{ paint, owned: true, wanted: true, quantity: 0, condition: 'empty', lowStock: true }],
+    };
+    expect(validateInventoryDocument(doc)).toEqual({ valid: true, issues: [] });
+  });
+
+  it('the shared profile keeps owned and wanted, which are shareable', () => {
+    const shared = toSharedInventory(parseInventoryDocument(readExample('wishlist.valid.json')));
+    expect(shared.items.map((item) => [item.owned, item.wanted])).toEqual([
+      [undefined, undefined],
+      [true, true],
+      [false, true],
+    ]);
+    expect(shared.items.every((item) => item.private === undefined)).toBe(true);
+    expect(validateInventoryDocument(shared).valid).toBe(true);
   });
 });
 

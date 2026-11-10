@@ -1127,7 +1127,7 @@ export const inventory = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
   "title": "BrushCodex Paint Inventory v1 (draft)",
-  "description": "A portable, personal paint collection. Each item identifies a paint by a stable external identifier when available, or by literal fallback identity, and records a user's OWN observations (quantity, condition, storage) — distinct from global catalogue truth. Private fields are separated into a per-item `private` object and per-item `visibility`, so a shareable export profile can omit sensitive data without destructive merging. Embeds the Common document envelope. DRAFT: not frozen; see specs/inventory/v1/README.md.",
+  "description": "A portable, personal paint collection, including paints the user wants but does not have yet. Each item identifies a paint by a stable external identifier when available, or by literal fallback identity, and records a user's OWN observations (quantity, condition, storage) — distinct from global catalogue truth. Private fields are separated into a per-item `private` object and per-item `visibility`, so a shareable export profile can omit sensitive data without destructive merging. Embeds the Common document envelope. DRAFT: not frozen; see specs/inventory/v1/README.md.",
   "type": "object",
   "allOf": [
     {
@@ -1169,7 +1169,7 @@ export const inventory = {
       "required": [
         "paint"
       ],
-      "description": "One owned paint. Shareable fields describe the paint and the user's holding; private fields (storage, notes, lot, acquisition) live under `private` and are omitted from a shared export.",
+      "description": "One paint the user owns, wants, or both. Shareable fields describe the paint and the user's holding; private fields (storage, notes, lot, acquisition) live under `private` and are omitted from a shared export.",
       "properties": {
         "ref": {
           "type": "string",
@@ -1178,6 +1178,16 @@ export const inventory = {
         },
         "paint": {
           "$ref": "#/$defs/paintRef"
+        },
+        "owned": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the user has this paint. Absent means true, so a document written without it keeps its meaning. Only owned items count as the user's paints."
+        },
+        "wanted": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the user intends to acquire this paint, or more of it (a wishlist or restock entry). Absent means false. Independent of `owned`."
         },
         "quantity": {
           "type": "number",
@@ -1232,6 +1242,40 @@ export const inventory = {
         },
         "private": {
           "$ref": "#/$defs/privateFields"
+        }
+      },
+      "if": {
+        "required": [
+          "owned"
+        ],
+        "properties": {
+          "owned": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "$comment": "A paint the user does not have: it must be wanted (otherwise the item records nothing), and it carries none of the members that describe a bottle in hand.",
+        "required": [
+          "wanted"
+        ],
+        "properties": {
+          "wanted": {
+            "const": true
+          },
+          "quantity": false,
+          "unit": false,
+          "bottleSizeMl": false,
+          "condition": false,
+          "lowStock": false,
+          "private": {
+            "properties": {
+              "storageLocation": false,
+              "lot": false,
+              "acquiredAt": false,
+              "acquiredNote": false
+            }
+          }
         }
       }
     },
