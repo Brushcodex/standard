@@ -78,9 +78,16 @@ expressed it.
 
 The wishlist is deliberately minimal. Prices, retailers, links, priorities and target quantities
 are not part of it: they vary by market and by application, and an application that needs them
-records them under `extensions` (Common §6), which the shared profile removes (§6). A paint that
-appears in both an owned item and a wanted item is not an error; a consumer building a shopping
-list groups items by paint identity as in §7.
+records them under `extensions` (Common §6), which the shared profile removes (§6).
+
+**One paint, one item, for owned and wanted.** Wanting more of a paint the user already has is
+recorded by setting `wanted: true` on the owned item, and a writer **MUST NOT** record it as a
+second, not-owned item for the same paint: the two items together would say both that the user has
+the paint and that they do not. Several owned items for one paint (separate bottles, §7) remain
+valid. A validator cannot check this rule, because whether two items name the same paint is a
+matching question (§7), not a schema one. A reader that nevertheless receives an owned and a
+not-owned item for the same paint **SHOULD** treat the paint as owned and wanted, and **MUST NOT**
+silently delete either item (§7).
 
 ## 5. PaintRef — stable identity or literal fallback
 

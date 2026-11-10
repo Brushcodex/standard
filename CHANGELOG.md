@@ -24,6 +24,9 @@ owned, wanted, or both (a restock).
   `private.lot`, `private.acquiredAt`, `private.acquiredNote`). Both rules are in the **schema**
   (`if`/`then` on the item), so a plain JSON Schema validator enforces them too.
 - Any operation that treats an inventory as the paints a user has MUST count only owned items.
+- One paint, one item: a restock is `wanted: true` on the owned item, and a writer MUST NOT add a
+  second, not-owned item for the same paint. This binds writers; a validator cannot check it,
+  because paint matching is §7's job. Several owned items for one paint stay valid.
 - Deliberately minimal: no prices, retailers, links, priorities or target quantities.
 
 **Reference implementation.** The Zod model mirrors both rules, and `isOwnedItem` /
