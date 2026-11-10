@@ -6,6 +6,26 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Dependency advisories — 2026-11-10
+
+No format change and no package version bump: every schema, fixture and accept/reject result is
+unchanged. `pnpm audit --prod` began failing the gate on advisories published after rc.2, none of
+them caused by a change in this repository.
+
+#### Security
+
+- The `fast-uri` override moves `3.1.5 → 3.1.9`, resolving ten advisories reached through `ajv`,
+  among them [GHSA-f65p-4m7j-42xc](https://github.com/advisories/GHSA-f65p-4m7j-42xc),
+  [GHSA-fph4-wmhf-6fwf](https://github.com/advisories/GHSA-fph4-wmhf-6fwf),
+  [GHSA-jqff-g426-hqxp](https://github.com/advisories/GHSA-jqff-g426-hqxp),
+  [GHSA-5jgf-p345-68v8](https://github.com/advisories/GHSA-5jgf-p345-68v8) and
+  [GHSA-qw65-cvwx-89v3](https://github.com/advisories/GHSA-qw65-cvwx-89v3).
+- `zod` moves `3.23.8 → 4.6.7` in `@brushcodex/validator` and `@brushcodex/cli`, resolving
+  [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). No patched 3.x line
+  exists. The models compile and behave unchanged under zod 4: build, typecheck, unit tests,
+  conformance and the packed release gate all pass without source edits. Consumers that import
+  zod types from these packages see zod 4 types.
+
 ### Release candidate `1.0.0-rc.2` — 2026-08-30
 
 All five `@brushcodex/*` packages bump `1.0.0-rc.1 → 1.0.0-rc.2` in lockstep, through the packed
