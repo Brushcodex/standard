@@ -292,6 +292,51 @@ Both forms are a **convention, not a constraint** — the schema types `catalogu
 non-empty string so other namespaces (`vendor:…`, a URI, an opaque token) remain valid. Resolvers
 **MUST** treat an identifier they do not recognise as simply unresolvable.
 
+#### 5.7.1 What an identifier names over a product's life
+
+An identifier names **one physical product as a painter uses it**: what is in the pot, not what is
+printed on it. The rules below follow from that. Those that decide when an identifier is assigned
+bind the **issuer** of a namespace, whoever assigns its identifiers. A consumer does not infer
+that two identifiers name the same product: it compares them by whole-string equality (§5.7) or
+through a mapping it trusts (below), and otherwise falls back to the literals.
+
+- **Rename, rebrand, repackaging, a move between ranges.** Same contents, same identifier. This is
+  the stability rule above, restated so the list is complete.
+- **Reformulation.** When a manufacturer changes what is in the pot so that a painter gets a
+  materially different result (a different colour, coverage, finish or handling), the issuer
+  **MUST** assign a **new** identifier, even when the manufacturer keeps the name and the product
+  code. The earlier identifier keeps naming the earlier formulation and is never moved to the new
+  one, so a document written before the change keeps meaning what it meant. A change a painter
+  cannot observe is not a reformulation for this purpose. The issuer acts on evidence, such as a
+  manufacturer's announcement or an observed difference, never on speculation.
+- **Discontinuation.** An identifier is never retired. A discontinued product keeps its identifier
+  indefinitely, and a document that refers to it stays valid. Whether a product is still sold is
+  catalogue data, which this specification does not carry. A product a manufacturer offers as the
+  replacement is a different product with its own identifier: a consumer **MAY** suggest it, but
+  **MUST NOT** rewrite a document's `catalogueId` to it.
+- **Identifier and literals disagree.** Within one paint reference the identifier and the literals
+  can disagree, most often because the paint was renamed after the document was written. That is
+  expected and is not an error. A consumer that resolves the identifier **SHOULD** prefer it over
+  the literals when deciding which product is meant, and **MUST NOT** rewrite either to agree with
+  the other: the literals record what the author saw.
+- **Different namespaces.** Two issuers can assign different identifiers to the same product, and
+  this specification defines no mapping between namespaces. A consumer **MUST NOT** treat
+  identifiers from different namespaces as naming the same product unless it holds a mapping it
+  trusts; otherwise it falls back to the literals. A match on literals alone is a **candidate**,
+  never proof, because literals cannot tell apart two formulations sold under one name. An importer
+  **SHOULD NOT** silently merge an incoming paint into an existing record on literal evidence alone
+  when it knows that record's literals cover more than one formulation.
+- **Application-issued identifiers.** Any implementation may issue identifiers in its own namespace
+  and carry them in `catalogueId`. Such an identifier is portable in the sense of this section when
+  its issuer uses a namespace prefix it controls (for example `example-app:paint:…`), assigns each
+  identifier once and never reuses it, keeps it stable across renames and rebrands, follows the
+  reformulation and discontinuation rules above, and never exposes an internal database key
+  (§5.6). Publishing the catalogue behind it is not a precondition: an identifier nobody else can
+  resolve yet still survives a round trip (§5.7), and a later mapping can make use of it.
+
+The LEGACY slugged form cannot express a reformulation that keeps its name, which is one more
+reason it is an alias of the assigned identifier and not the identity itself.
+
 None of this weakens §5.7's opening rule. `manufacturer`, `range`, `name` and `code` remain
 DESCRIPTIVE literals and the guaranteed floor for reading a document; they are evidence about a
 paint, never its permanent identity. An implementation with no catalogue at all still reads every
