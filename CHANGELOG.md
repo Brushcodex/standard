@@ -6,6 +6,28 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Paint identity over a product's life — 2026-11-10
+
+Editorial (patch): no schema, fixture, member or accept/reject change. Resolves
+[#20](https://github.com/Brushcodex/standard/issues/20).
+
+**`common` §5.7.1 "What an identifier names over a product's life"** is new. §5.7 already said that
+a `catalogueId` survives renames and rebrands and is never reused; it said nothing about
+reformulations, discontinued products, or what a consumer does when the identifier and the
+literals disagree or two applications use different namespaces. An importer matching paints
+across independently maintained catalogues had to guess, and two importers could guess
+differently. The section now says:
+
+- an identifier names what is in the pot, so a reformulation that changes the result gets a
+  **new** identifier, while the earlier one keeps naming the earlier formulation;
+- an identifier is never retired; a manufacturer's replacement product may be suggested but never
+  written over a document's `catalogueId`;
+- when identifier and literals disagree, a resolving consumer prefers the identifier and rewrites
+  neither;
+- identifiers from different namespaces are never assumed equal without a trusted mapping, and a
+  literal-only match is a candidate, not proof;
+- when an application-issued identifier counts as portable.
+
 ### Dependency advisories — 2026-11-10
 
 No format change and no package version bump: every schema, fixture and accept/reject result is
