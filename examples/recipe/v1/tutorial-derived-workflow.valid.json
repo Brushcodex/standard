@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/recipe/v1/recipe.schema.json",
   "spec": "recipe",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/workflows/tutorial-derived-cloak",

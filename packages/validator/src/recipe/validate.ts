@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Recipe v1 document format.
+ * Reference validator for the Open Paint Format Recipe v1 document format.
  *
  * Two layers, matching the Common validator:
  *   1. schema   — validated against the normative recipe JSON Schema, which
@@ -219,7 +219,7 @@ export class RecipeValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Recipe document: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Recipe document: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'RecipeValidationError';
     this.issues = issues;
   }

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This document governs the BrushCodex **open standard** (`specs/`, `schemas/`, `examples/`,
+This document governs the **Open Paint Format** open standard (`specs/`, `schemas/`, `examples/`,
 `conformance/`, and future `packages/`). It does not govern the reference application's
 releases (those live in `brushcodex-community`).
 

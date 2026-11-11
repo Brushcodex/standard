@@ -1,7 +1,7 @@
 /**
  * Renderer coverage: every value in a document reaches the reader.
  *
- * The reference renderers are how the project demonstrates that a BrushCodex
+ * The reference renderers are how the project demonstrates that an Open Paint Format
  * document is usable with no application present. A renderer that quietly omits
  * a defined member weakens exactly that claim — and it happened: `resources`,
  * `techniqueRefs`, `target.scale`/`substrate`, `paintRef.chemistry` and a

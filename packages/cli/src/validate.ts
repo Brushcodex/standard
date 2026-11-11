@@ -1,11 +1,11 @@
 /**
- * BrushCodex document validator — a standalone CLI (run via `tsx`) that validates
- * any BrushCodex document or bundle archive against the published specifications,
+ * Open Paint Format document validator — a standalone CLI (run via `tsx`) that validates
+ * any Open Paint Format document or bundle archive against the published specifications,
  * WITHOUT the web application. It depends only on `@brushcodex/validator`, proving
  * the formats can be validated by an independent consumer.
  *
- *   pnpm --filter @brushcodex/cli validate my.brushrecipe.json
- *   pnpm --filter @brushcodex/cli validate --json my.brushrecipe.json a.brushcodex.zip
+ *   pnpm --filter @brushcodex/cli validate my.paintrecipe.json
+ *   pnpm --filter @brushcodex/cli validate --json my.paintrecipe.json a.paintbundle.zip
  *
  * Exit code: 0 when every input is valid, 1 when any is invalid, 2 on usage error.
  */
@@ -17,7 +17,7 @@ import { bundle, validateAnyDocument } from '@brushcodex/validator';
  * One problem with a file, in the CLI's own machine-readable shape. For documents
  * these are the validator's issues verbatim (layer `schema` | `semantic`); the CLI
  * adds three file-level layers of its own — `io` (the file could not be read),
- * `syntax` (the bytes are not JSON), and `archive` (a `.brushcodex.zip` could not be
+ * `syntax` (the bytes are not JSON), and `archive` (a `.paintbundle.zip` could not be
  * opened) — so `--json` consumers can branch on `layer`/`code` and locate every
  * problem by `path` without re-parsing.
  */

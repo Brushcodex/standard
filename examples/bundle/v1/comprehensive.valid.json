@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/bundle/v1/bundle.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/bundle/v1/bundle.schema.json",
   "spec": "bundle",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/bundles/rusted-armour",
@@ -13,17 +13,17 @@
   "summary": "Everything needed to reproduce the rusted-armour scheme.",
   "entries": [
     {
-      "path": "documents/rusted-armour.brushrecipe.json",
+      "path": "documents/rusted-armour.paintrecipe.json",
       "spec": "recipe",
       "mediaType": "application/json"
     },
     {
-      "path": "documents/rusted-steel.brushpalette.json",
+      "path": "documents/rusted-steel.paintpalette.json",
       "spec": "palette",
       "mediaType": "application/json"
     },
     {
-      "path": "documents/edge-highlighting.brushtechnique.json",
+      "path": "documents/edge-highlighting.painttechnique.json",
       "spec": "technique",
       "mediaType": "application/json"
     },

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/common/v1/common.schema.json",
-  "title": "BrushCodex Common Document Envelope v1 (draft)",
-  "description": "Shared envelope embedded by every BrushCodex document (recipe, palette, inventory, project, technique). Defines stable identity, versioning, attribution, licensing, provenance, links (revision/fork lineage), translations, namespaced extensions, and integrity. Concrete specifications compose `$defs/envelopeCore` via allOf and close the object with `unevaluatedProperties: false`. DRAFT: not frozen; see specs/common/v1/README.md.",
+  "$id": "https://openpaintformat.org/schemas/common/v1/common.schema.json",
+  "title": "Open Paint Format Common Document Envelope v1 (draft)",
+  "description": "Shared envelope embedded by every Open Paint Format document (recipe, palette, inventory, project, technique). Defines stable identity, versioning, attribution, licensing, provenance, links (revision/fork lineage), translations, namespaced extensions, and integrity. Concrete specifications compose `$defs/envelopeCore` via allOf and close the object with `unevaluatedProperties: false`. DRAFT: not frozen; see specs/common/v1/README.md.",
   "type": "object",
   "allOf": [{ "$ref": "#/$defs/envelopeCore" }],
   "unevaluatedProperties": false,
@@ -201,7 +201,7 @@
     "paintRef": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Canonical paint reference shared by every BrushCodex spec (Recipe, Palette, Inventory, Project). At least one of manufacturer or name MUST be present; nothing else is required, so a literal paint with no catalogue id or color stays valid (the literal fallback for paints with no shared catalogue entry).",
+      "description": "Canonical paint reference shared by every Open Paint Format spec (Recipe, Palette, Inventory, Project). At least one of manufacturer or name MUST be present; nothing else is required, so a literal paint with no catalogue id or color stays valid (the literal fallback for paints with no shared catalogue entry).",
       "properties": {
         "ref": {
           "type": "string",
@@ -293,7 +293,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["id"],
-      "description": "A soft reference to another BrushCodex document by its stable id URI. The referenced document need not be resolvable by the consumer; an unresolved reference is not an error. Shared by Project (recipeRefs/paletteRefs) and Recipe (techniqueRefs).",
+      "description": "A soft reference to another Open Paint Format document by its stable id URI. The referenced document need not be resolvable by the consumer; an unresolved reference is not an error. Shared by Project (recipeRefs/paletteRefs) and Recipe (techniqueRefs).",
       "properties": {
         "id": {
           "type": "string",

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/inventory/v1/inventory.schema.json",
   "spec": "inventory",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/inventories/my-metals",

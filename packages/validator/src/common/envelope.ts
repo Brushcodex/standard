@@ -1,8 +1,8 @@
 /**
- * BrushCodex Common Document Envelope v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Common Document Envelope v1 (DRAFT) — reference TypeScript model.
  *
  * This is the framework-agnostic, implementation-neutral model for the shared
- * metadata carried by every BrushCodex document. It mirrors the normative
+ * metadata carried by every Open Paint Format document. It mirrors the normative
  * artifacts and is kept honest against them by the test suite:
  *
  *   - normative prose:  specs/common/v1/README.md

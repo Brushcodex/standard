@@ -1,5 +1,5 @@
 /**
- * BrushCodex Technique v1 (DRAFT) — public surface of the reference model and
+ * Open Paint Format Technique v1 (DRAFT) — public surface of the reference model and
  * validator. See specs/technique/v1/README.md for the normative specification.
  */
 

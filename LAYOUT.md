@@ -61,7 +61,7 @@ If prose and schema disagree, that is a **defect to fix**, not an implementer's 
 
 One directory per spec, one per version: `specs/<spec>/v<N>/README.md`. Seven specs, all
 **Draft v1**: `common` (the envelope every document carries), `recipe`, `palette`, `inventory`,
-`project`, `technique`, `bundle` (the `.brushcodex.zip` manifest).
+`project`, `technique`, `bundle` (the `.paintbundle.zip` manifest).
 
 Draft text may change incompatibly. Once a version is frozen it is immutable — corrections ship
 as `v<N+1>`.
@@ -69,7 +69,7 @@ as `v<N+1>`.
 ### `schemas/` — what a validator enforces
 
 `schemas/<spec>/v<N>/<spec>.schema.json`, draft 2020-12. Schemas reference each other by
-absolute `$id` (`https://brushcodex.com/schemas/...`), so any conforming validator that loads
+absolute `$id` (`https://openpaintformat.org/schemas/...`), so any conforming validator that loads
 all seven can validate a document against its declared `spec`.
 
 **This directory is the single source of truth.** `packages/schema/generated/` is produced from
@@ -195,7 +195,7 @@ pnpm -r typecheck
 pnpm -r test
 pnpm conformance    # validate the whole corpus (112/112); exit 1 on any mismatch
 pnpm check:consistency   # assert every schema enum value + property is documented in the prose
-pnpm --filter @brushcodex/cli validate <absolute-file>   # one document or .brushcodex.zip
+pnpm --filter @brushcodex/cli validate <absolute-file>   # one document or .paintbundle.zip
 ```
 
 > `validate` runs with `packages/cli` as its working directory. **Pass an absolute path** — a

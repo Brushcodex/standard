@@ -1,5 +1,5 @@
 /**
- * BrushCodex Recipe -> static HTML renderer (reference, framework-agnostic).
+ * Open Paint Format Recipe -> static HTML renderer (reference, framework-agnostic).
  *
  * Turns a validated Recipe v1 document into a single self-contained HTML page:
  * no external network requests, inline CSS, printable, and responsive. It depends

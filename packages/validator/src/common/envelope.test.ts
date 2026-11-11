@@ -1,5 +1,5 @@
 /**
- * Conformance tests for the BrushCodex Common Document Envelope v1 (DRAFT).
+ * Conformance tests for the Open Paint Format Common Document Envelope v1 (DRAFT).
  *
  * These tests exercise the *published* artifacts — the JSON Schema and the
  * example corpus on disk — so prose, schema, examples, and the reference model
@@ -53,7 +53,7 @@ describe('Common envelope — published JSON Schema', () => {
   it('is a well-formed draft 2020-12 schema with the expected identity', () => {
     const schema = loadCommonSchema();
     expect(schema.$schema).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(schema.$id).toBe('https://brushcodex.com/schemas/common/v1/common.schema.json');
+    expect(schema.$id).toBe('https://openpaintformat.org/schemas/common/v1/common.schema.json');
     // The object is closed via unevaluatedProperties so the envelope can be
     // composed (allOf'd) by concrete specs; required lives in the reusable core.
     expect(schema.unevaluatedProperties).toBe(false);

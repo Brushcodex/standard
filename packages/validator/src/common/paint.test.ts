@@ -94,10 +94,10 @@ describe('canonical paint reference — single source of truth', () => {
     '%s schema $refs the Common paintRef + colorValue (no inline copy)',
     (_name, schema) => {
       expect(schema.$defs.paintRef?.$ref).toBe(
-        'https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef',
+        'https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef',
       );
       expect(schema.$defs.colorValue?.$ref).toBe(
-        'https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue',
+        'https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue',
       );
     },
   );

@@ -1,6 +1,6 @@
-# BrushCodex Open Standards
+# Open Paint Format
 
-This directory holds the **normative** specification text for the BrushCodex family of
+This directory holds the **normative** specification text for the Open Paint Format family of
 portable, implementation-neutral formats for miniature-painting knowledge. It is deliberately
 separate from:
 
@@ -37,7 +37,7 @@ incompatible ways. Once a specification version is frozen and released, its JSON
 | Paint inventory | Draft v1 | [inventory/v1/](inventory/v1/README.md) |
 | Project | Draft v1 | [project/v1/](project/v1/README.md) |
 | Technique | Draft v1 | [technique/v1/](technique/v1/README.md) |
-| Bundle (`.brushcodex.zip` manifest) | Draft v1 | [bundle/v1/](bundle/v1/README.md) |
+| Bundle (`.paintbundle.zip` manifest) | Draft v1 | [bundle/v1/](bundle/v1/README.md) |
 
 Identifiers in these formats never require a central BrushCodex registry, and documents remain
 usable when no BrushCodex service is available.

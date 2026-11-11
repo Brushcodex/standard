@@ -1,4 +1,4 @@
-// @brushcodex/schema — the canonical BrushCodex JSON Schemas as data. Zero dependencies.
+// @brushcodex/schema — the canonical Open Paint Format JSON Schemas as data. Zero dependencies.
 //
 // Self-contained: the schemas are inlined into generated/schemas.generated.js by
 // scripts/generate.mjs from the canonical root schemas/ (single source of truth), so the

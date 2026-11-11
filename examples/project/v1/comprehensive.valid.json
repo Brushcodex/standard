@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/project/v1/project.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/project/v1/project.schema.json",
   "spec": "project",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/projects/marine-squad",

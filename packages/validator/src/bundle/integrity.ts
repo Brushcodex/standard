@@ -1,5 +1,5 @@
 /**
- * Per-entry integrity verification for BrushCodex bundles.
+ * Per-entry integrity verification for Open Paint Format bundles.
  *
  * A bundle entry may carry an optional `integrity` hash of the entry's bytes
  * (bundle spec section 3). `writeBundleWithIntegrity` stamps these; this verifier

@@ -1,10 +1,10 @@
-# BrushCodex Recipe (Painting Workflow) — v1 (DRAFT)
+# Open Paint Format Recipe (Painting Workflow) — v1 (DRAFT)
 
 - **Spec name:** `recipe`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/recipe/v1/recipe.schema.json`](../../../schemas/recipe/v1/recipe.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.recipe+json`
-- **File suffix (provisional):** `.brushrecipe.json`
+- **Media type (provisional):** `application/vnd.openpaintformat.recipe+json`
+- **File suffix (provisional):** `.paintrecipe.json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
@@ -18,7 +18,7 @@ may be a reusable scheme for an army, a plan prepared before painting, an as-pai
 complex miniature, a personal variation of another workflow, or guidance presented as a tutorial.
 No one usage is privileged by the format.
 
-`recipe` remains the stable technical spec name and `.brushrecipe.json` remains the provisional
+`recipe` remains the stable technical spec name and `.paintrecipe.json` remains the provisional
 file suffix. Human-facing applications and documentation MAY label the document a **Painting
 Workflow**. Calling it a workflow does not change its wire format or create a second document type.
 
@@ -164,7 +164,7 @@ everything else is optional:
   the binder-family subset of Technique's paintClass vocabulary; `chemistry` is distinct from
   paintClass.
 - `catalogueId` — an OPTIONAL external stable identifier (opaque token or URI). It is **never**
-  required and **MUST NOT** be a BrushCodex internal database id.
+  required and **MUST NOT** be an internal database id.
 - `color` — an OPTIONAL `{ hex }` sRGB value. Its meaning is defined by `provenance`; a hex value
   **MUST NOT** be presented as a physical measurement unless a provenance entry says so.
 - `provenance` — Common provenance entries (source class, confidence, review status, …).

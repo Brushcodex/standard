@@ -1,5 +1,5 @@
 /**
- * BrushCodex Palette -> static HTML renderer (reference, framework-agnostic).
+ * Open Paint Format Palette -> static HTML renderer (reference, framework-agnostic).
  *
  * Turns a validated Palette v1 document into a self-contained HTML page - a
  * swatch-card view of the named entries plus their relationships. Like the recipe

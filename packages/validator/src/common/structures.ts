@@ -1,5 +1,5 @@
 /**
- * Shared structural building blocks used by more than one BrushCodex spec, so
+ * Shared structural building blocks used by more than one Open Paint Format spec, so
  * they are defined once here rather than duplicated (and left to drift) in each
  * spec model. Mirrors `schemas/common/v1/common.schema.json#/$defs/{resource,
  * documentRef,role,evidenceClass,target,mediaRef,mediaCitation}`.
@@ -40,7 +40,7 @@ export const resourceSchema = z
   .strict();
 
 /**
- * A soft reference to another BrushCodex document by its stable id URI. The
+ * A soft reference to another Open Paint Format document by its stable id URI. The
  * referenced document need not be resolvable by the consumer; an unresolved
  * reference is not an error.
  */

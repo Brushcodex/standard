@@ -31,8 +31,8 @@ const OPTIONS: WriteBundleOptions = {
   id: 'urn:uuid:00000000-0000-4000-8000-0000000000ac',
   title: 'Sample bundle',
   documents: [
-    { path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe },
-    { path: 'palettes/rust.brushpalette.json', spec: 'palette', document: palette },
+    { path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe },
+    { path: 'palettes/rust.paintpalette.json', spec: 'palette', document: palette },
   ],
   media: [
     { path: 'media/base.png', mediaType: 'image/png', bytes: new Uint8Array([137, 80, 78, 71]) },
@@ -72,10 +72,10 @@ describe('verifyBundleIntegrity', () => {
     // Repackage the archive with one document's bytes altered; the manifest keeps
     // the original hashes, so verification must flag exactly that entry.
     const files = unzipSync(zip);
-    files['recipes/red.brushrecipe.json'] = new TextEncoder().encode('{"tampered":true}');
+    files['recipes/red.paintrecipe.json'] = new TextEncoder().encode('{"tampered":true}');
     const report = await verifyBundleIntegrity(zipSync(files));
     expect(report.ok).toBe(false);
-    const recipeEntry = report.entries.find((e) => e.path === 'recipes/red.brushrecipe.json');
+    const recipeEntry = report.entries.find((e) => e.path === 'recipes/red.paintrecipe.json');
     expect(recipeEntry?.status).toBe('mismatch');
     // The untouched entries still verify.
     expect(report.entries.find((e) => e.path === 'media/base.png')?.status).toBe('valid');

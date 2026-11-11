@@ -1,6 +1,6 @@
 /**
  * Specification registry — a single dispatch from a `spec` name to its reference
- * validator, covering every BrushCodex document format. Used by the standalone
+ * validator, covering every Open Paint Format document format. Used by the standalone
  * validator CLI and the conformance runner (both run without the web application).
  */
 

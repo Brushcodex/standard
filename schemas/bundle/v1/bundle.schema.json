@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/bundle/v1/bundle.schema.json",
-  "title": "BrushCodex Bundle Manifest v1 (draft)",
-  "description": "The manifest of a portable BrushCodex bundle (a ZIP named `.brushcodex.zip`). It lists the standard documents and permitted media the archive contains. Embeds the Common document envelope. The manifest itself lives at `manifest.json` inside the archive and does not list itself. Safe archive handling (path-traversal, archive-bomb, and unsupported-content rejection) is enforced by the reference reader, not the schema. DRAFT: not frozen; see specs/bundle/v1/README.md.",
+  "$id": "https://openpaintformat.org/schemas/bundle/v1/bundle.schema.json",
+  "title": "Open Paint Format Bundle Manifest v1 (draft)",
+  "description": "The manifest of a portable Open Paint Format bundle (a ZIP named `.paintbundle.zip`). It lists the standard documents and permitted media the archive contains. Embeds the Common document envelope. The manifest itself lives at `manifest.json` inside the archive and does not list itself. Safe archive handling (path-traversal, archive-bomb, and unsupported-content rejection) is enforced by the reference reader, not the schema. DRAFT: not frozen; see specs/bundle/v1/README.md.",
   "type": "object",
   "allOf": [
-    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    { "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
     {
       "type": "object",
       "required": ["entries"],
@@ -46,7 +46,7 @@
           "description": "Content type. Documents use application/json (or a vendor +json type); media MUST be a permitted image type (see the reference reader)."
         },
         "integrity": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/integrity"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/integrity"
         }
       }
     }

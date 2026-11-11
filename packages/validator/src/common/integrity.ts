@@ -1,5 +1,5 @@
 /**
- * Content-integrity hashing for BrushCodex documents (common spec section 5.5).
+ * Content-integrity hashing for Open Paint Format documents (common spec section 5.5).
  *
  * The integrity hash is computed over the **canonical serialization** (./canonical)
  * of the document with the top-level `integrity` member removed, so a document's

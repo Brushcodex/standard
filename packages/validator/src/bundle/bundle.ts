@@ -1,7 +1,7 @@
 /**
- * BrushCodex Bundle Manifest v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Bundle Manifest v1 (DRAFT) — reference TypeScript model.
  *
- * The manifest (embedded as `manifest.json` in a `.brushcodex.zip`) lists the
+ * The manifest (embedded as `manifest.json` in a `.paintbundle.zip`) lists the
  * standard documents and permitted media the archive contains. It embeds the
  * Common document envelope.
  *

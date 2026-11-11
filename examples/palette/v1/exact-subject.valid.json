@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/palette/v1/palette.schema.json",
   "spec": "palette",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/palettes/vanguard-sergeant-rank-markings",

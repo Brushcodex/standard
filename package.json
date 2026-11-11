@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "BrushCodex open standard \u2014 specs, schemas, conformance corpus, and toolkit packages.",
+  "description": "Open Paint Format \u2014 specs, schemas, conformance corpus, and toolkit packages.",
   "packageManager": "pnpm@8.15.0",
   "engines": {
     "node": ">=20.11.0"

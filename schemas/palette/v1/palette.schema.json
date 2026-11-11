@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
-  "title": "BrushCodex Palette v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/palette/v1/palette.schema.json",
+  "title": "Open Paint Format Palette v1 (draft)",
   "description": "A reusable, named set of paints, mixtures, and colors with semantic roles and optional relationships (e.g. a shadow-to-highlight sequence). Embeds the Common document envelope. Unlike a Painting Workflow ('recipe') it is not an ordered process. A palette MUST remain valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/palette/v1/README.md.",
   "type": "object",
   "allOf": [
-    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    { "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
     {
       "type": "object",
       "required": ["entries"],
@@ -17,7 +17,7 @@
           "description": "Free-text aesthetic or material intent (e.g. 'cold steel with warm rust')."
         },
         "target": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/target"
         },
         "entries": {
           "type": "array",
@@ -34,10 +34,10 @@
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "mixEntry": {
       "type": "object",
@@ -69,7 +69,7 @@
           "description": "Document-local anchor other entries/relationships can point to. MUST be unique within entries[] (semantic rule entry-ref-unique; JSON Schema cannot express it)."
         },
         "role": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/role"
         },
         "paint": { "$ref": "#/$defs/paintRef" },
         "color": { "$ref": "#/$defs/colorValue" },
@@ -82,7 +82,7 @@
         "provenance": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/provenanceEntry"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/provenanceEntry"
           }
         },
         "note": { "type": "string" }

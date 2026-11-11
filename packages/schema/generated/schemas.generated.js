@@ -4,9 +4,9 @@
 
 export const common = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/common/v1/common.schema.json",
-  "title": "BrushCodex Common Document Envelope v1 (draft)",
-  "description": "Shared envelope embedded by every BrushCodex document (recipe, palette, inventory, project, technique). Defines stable identity, versioning, attribution, licensing, provenance, links (revision/fork lineage), translations, namespaced extensions, and integrity. Concrete specifications compose `$defs/envelopeCore` via allOf and close the object with `unevaluatedProperties: false`. DRAFT: not frozen; see specs/common/v1/README.md.",
+  "$id": "https://openpaintformat.org/schemas/common/v1/common.schema.json",
+  "title": "Open Paint Format Common Document Envelope v1 (draft)",
+  "description": "Shared envelope embedded by every Open Paint Format document (recipe, palette, inventory, project, technique). Defines stable identity, versioning, attribution, licensing, provenance, links (revision/fork lineage), translations, namespaced extensions, and integrity. Concrete specifications compose `$defs/envelopeCore` via allOf and close the object with `unevaluatedProperties: false`. DRAFT: not frozen; see specs/common/v1/README.md.",
   "type": "object",
   "allOf": [
     {
@@ -311,7 +311,7 @@ export const common = {
     "paintRef": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Canonical paint reference shared by every BrushCodex spec (Recipe, Palette, Inventory, Project). At least one of manufacturer or name MUST be present; nothing else is required, so a literal paint with no catalogue id or color stays valid (the literal fallback for paints with no shared catalogue entry).",
+      "description": "Canonical paint reference shared by every Open Paint Format spec (Recipe, Palette, Inventory, Project). At least one of manufacturer or name MUST be present; nothing else is required, so a literal paint with no catalogue id or color stays valid (the literal fallback for paints with no shared catalogue entry).",
       "properties": {
         "ref": {
           "type": "string",
@@ -471,7 +471,7 @@ export const common = {
       "required": [
         "id"
       ],
-      "description": "A soft reference to another BrushCodex document by its stable id URI. The referenced document need not be resolvable by the consumer; an unresolved reference is not an error. Shared by Project (recipeRefs/paletteRefs) and Recipe (techniqueRefs).",
+      "description": "A soft reference to another Open Paint Format document by its stable id URI. The referenced document need not be resolvable by the consumer; an unresolved reference is not an error. Shared by Project (recipeRefs/paletteRefs) and Recipe (techniqueRefs).",
       "properties": {
         "id": {
           "type": "string",
@@ -705,13 +705,13 @@ export const common = {
 
 export const recipe = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
-  "title": "BrushCodex Recipe v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/recipe/v1/recipe.schema.json",
+  "title": "Open Paint Format Recipe v1 (draft)",
   "description": "A Painting Workflow: an ordered, reproducible record of paints, mixtures, materials, techniques, and actions used or intended to be used to paint a subject. It may be a reusable scheme, a plan, an as-painted record, a derived workflow, or published guidance. 'recipe' is the stable technical spec name. Embeds the Common document envelope and remains valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/recipe/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -741,7 +741,7 @@ export const recipe = {
           "type": "string"
         },
         "target": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/target"
         },
         "paints": {
           "type": "array",
@@ -753,14 +753,14 @@ export const recipe = {
         "resources": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/resource"
           },
           "description": "Tools and non-paint materials needed to reproduce the workflow (brushes, airbrush, wet palette, sponge, UV lamp, gloves, PVA, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where not represented as paints). Tools are never paintRefs, unconditionally; a consumable material is a resource when used in the process and a paintRef when it joins a mixture at an authored ratio."
         },
         "techniqueRefs": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/documentRef"
           },
           "description": "Soft references to Technique documents this workflow uses, by stable id URI. Consumers resolve them if held; an unresolved reference is not an error."
         },
@@ -784,10 +784,10 @@ export const recipe = {
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "mixEntry": {
       "type": "object",
@@ -810,7 +810,7 @@ export const recipe = {
       }
     },
     "mediaRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/mediaRef"
     },
     "alternative": {
       "type": "object",
@@ -821,7 +821,7 @@ export const recipe = {
       "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
       "properties": {
         "type": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "paint": {
           "type": "string",
@@ -869,7 +869,7 @@ export const recipe = {
           "minLength": 1
         },
         "role": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/role"
         },
         "technique": {
           "type": "string",
@@ -938,7 +938,7 @@ export const recipe = {
           }
         },
         "source": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaCitation",
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/mediaCitation",
           "description": "The passage of a linked source item this step was taken from (for example 1:00-1:35 of a video, class recording, or demonstration in recipe.media). Deliberately singular: a step derives from one passage. Additional material a step merely shows belongs in step.media."
         },
         "alternatives": {
@@ -954,13 +954,13 @@ export const recipe = {
 
 export const palette = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/palette/v1/palette.schema.json",
-  "title": "BrushCodex Palette v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/palette/v1/palette.schema.json",
+  "title": "Open Paint Format Palette v1 (draft)",
   "description": "A reusable, named set of paints, mixtures, and colors with semantic roles and optional relationships (e.g. a shadow-to-highlight sequence). Embeds the Common document envelope. Unlike a Painting Workflow ('recipe') it is not an ordered process. A palette MUST remain valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/palette/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -979,7 +979,7 @@ export const palette = {
           "description": "Free-text aesthetic or material intent (e.g. 'cold steel with warm rust')."
         },
         "target": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/target"
         },
         "entries": {
           "type": "array",
@@ -1000,10 +1000,10 @@ export const palette = {
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "mixEntry": {
       "type": "object",
@@ -1043,7 +1043,7 @@ export const palette = {
           "description": "Document-local anchor other entries/relationships can point to. MUST be unique within entries[] (semantic rule entry-ref-unique; JSON Schema cannot express it)."
         },
         "role": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/role"
         },
         "paint": {
           "$ref": "#/$defs/paintRef"
@@ -1062,7 +1062,7 @@ export const palette = {
         "provenance": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/provenanceEntry"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/provenanceEntry"
           }
         },
         "note": {
@@ -1125,13 +1125,13 @@ export const palette = {
 
 export const inventory = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/inventory/v1/inventory.schema.json",
-  "title": "BrushCodex Paint Inventory v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/inventory/v1/inventory.schema.json",
+  "title": "Open Paint Format Paint Inventory v1 (draft)",
   "description": "A portable, personal paint collection, including paints the user wants but does not have yet. Each item identifies a paint by a stable external identifier when available, or by literal fallback identity, and records a user's OWN observations (quantity, condition, storage) — distinct from global catalogue truth. Private fields are separated into a per-item `private` object and per-item `visibility`, so a shareable export profile can omit sensitive data without destructive merging. Embeds the Common document envelope. DRAFT: not frozen; see specs/inventory/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -1158,10 +1158,10 @@ export const inventory = {
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "item": {
       "type": "object",
@@ -1309,13 +1309,13 @@ export const inventory = {
 
 export const project = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/project/v1/project.schema.json",
-  "title": "BrushCodex Project v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/project/v1/project.schema.json",
+  "title": "Open Paint Format Project v1 (draft)",
   "description": "A portable painting project: one or more miniatures/subprojects with stages and checklists, selected Painting Workflow ('recipe') and Palette documents, accepted substitutions (classified), a journal with time logs, results, and tools used. Private journal entries can be omitted from a shared export. Archive is a non-destructive status. Embeds the Common document envelope; links.source records source material or context and links.forkOrigin a personal fork. DRAFT: not frozen; see specs/project/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -1355,14 +1355,14 @@ export const project = {
         "recipeRefs": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/documentRef"
           },
           "description": "Selected Painting Workflow documents using the 'recipe' spec (by stable id URI)."
         },
         "paletteRefs": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/documentRef"
           },
           "description": "Selected palette documents (by stable id URI)."
         },
@@ -1387,7 +1387,7 @@ export const project = {
         "toolsUsed": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/resource"
           }
         }
       }
@@ -1396,10 +1396,10 @@ export const project = {
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "stage": {
       "type": "object",
@@ -1501,7 +1501,7 @@ export const project = {
           "$ref": "#/$defs/paintRef"
         },
         "type": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "note": {
           "type": "string"
@@ -1543,20 +1543,20 @@ export const project = {
       }
     },
     "mediaRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/mediaRef"
     }
   }
 };
 
 export const technique = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/technique/v1/technique.schema.json",
-  "title": "BrushCodex Technique v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/technique/v1/technique.schema.json",
+  "title": "Open Paint Format Technique v1 (draft)",
   "description": "A reusable technique definition: purpose, prerequisites, tools/materials, ordered instructions or parameter guidance, suitable/unsuitable paint classes, common problems and corrections, safety notes, citations, and variants. Embeds the Common document envelope. Referenced by recipes. DRAFT: not frozen; see specs/technique/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -1591,7 +1591,7 @@ export const technique = {
         "tools": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/resource"
           }
         },
         "steps": {
@@ -1761,13 +1761,13 @@ export const technique = {
 
 export const bundle = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/bundle/v1/bundle.schema.json",
-  "title": "BrushCodex Bundle Manifest v1 (draft)",
-  "description": "The manifest of a portable BrushCodex bundle (a ZIP named `.brushcodex.zip`). It lists the standard documents and permitted media the archive contains. Embeds the Common document envelope. The manifest itself lives at `manifest.json` inside the archive and does not list itself. Safe archive handling (path-traversal, archive-bomb, and unsupported-content rejection) is enforced by the reference reader, not the schema. DRAFT: not frozen; see specs/bundle/v1/README.md.",
+  "$id": "https://openpaintformat.org/schemas/bundle/v1/bundle.schema.json",
+  "title": "Open Paint Format Bundle Manifest v1 (draft)",
+  "description": "The manifest of a portable Open Paint Format bundle (a ZIP named `.paintbundle.zip`). It lists the standard documents and permitted media the archive contains. Embeds the Common document envelope. The manifest itself lives at `manifest.json` inside the archive and does not list itself. Safe archive handling (path-traversal, archive-bomb, and unsupported-content rejection) is enforced by the reference reader, not the schema. DRAFT: not frozen; see specs/bundle/v1/README.md.",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore"
     },
     {
       "type": "object",
@@ -1827,7 +1827,7 @@ export const bundle = {
           "description": "Content type. Documents use application/json (or a vendor +json type); media MUST be a permitted image type (see the reference reader)."
         },
         "integrity": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/integrity"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/integrity"
         }
       }
     }

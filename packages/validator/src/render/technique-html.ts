@@ -1,5 +1,5 @@
 /**
- * BrushCodex Technique -> static HTML renderer (reference, framework-agnostic).
+ * Open Paint Format Technique -> static HTML renderer (reference, framework-agnostic).
  *
  * Turns a validated Technique v1 document into a self-contained, printable HTML
  * page: purpose, prerequisites, tools, ordered steps, parameter guidance, paint-

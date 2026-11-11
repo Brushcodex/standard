@@ -2,7 +2,7 @@
 
 **Status: DECIDED and APPLIED** (adopted by the maintainer, 2026-07-15).
 
-This document records how the **BrushCodex open standard** licenses its artifacts. It is
+This document records how the **Open Paint Format** licenses its artifacts. It is
 **not legal advice.** The licenses below are **applied** in this repository (see the `LICENSE`
 files listed in §6).
 
@@ -58,7 +58,7 @@ Full license texts live at
 
 ## 5. User data and document content
 
-BrushCodex documents belong to their authors. Each document carries its own license in the
+Open Paint Format documents belong to their authors. Each document carries its own license in the
 Common envelope `license` field, independent of the license on the standard itself. Nothing in
 this repository claims rights over documents authored in these formats.
 

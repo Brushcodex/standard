@@ -3,7 +3,7 @@
   "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
-  "description": "Reference validators, conformance runner, and renderer for the BrushCodex open standard. Framework-agnostic; runs without any web application.",
+  "description": "Reference validators, conformance runner, and renderer for the Open Paint Format. Framework-agnostic; runs without any web application.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

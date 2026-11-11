@@ -1,6 +1,6 @@
 # packages/
 
-The **application-independent** toolkit for the BrushCodex standard, as a pnpm workspace. It
+The **application-independent** toolkit for the Open Paint Format, as a pnpm workspace. It
 runs under Node with no web application. Extracted from the reference app at commit `9bd4bb0`
 (see [../PROVENANCE.md](../PROVENANCE.md)).
 

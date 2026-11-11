@@ -1,10 +1,10 @@
-# BrushCodex Bundle — v1 (DRAFT)
+# Open Paint Format Bundle — v1 (DRAFT)
 
 - **Spec name:** `bundle`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema (manifest):** [`schemas/bundle/v1/bundle.schema.json`](../../../schemas/bundle/v1/bundle.schema.json)
-- **Archive suffix (provisional):** `.brushcodex.zip`
-- **Media type (provisional):** `application/vnd.brushcodex.bundle+zip`
+- **Archive suffix (provisional):** `.paintbundle.zip`
+- **Media type (provisional):** `application/vnd.openpaintformat.bundle+zip`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
@@ -12,9 +12,9 @@ to be interpreted as described in RFC 2119 and RFC 8174.
 
 ## 1. Purpose
 
-A Bundle packages several related BrushCodex documents (and permitted media) into one portable
+A Bundle packages several related Open Paint Format documents (and permitted media) into one portable
 ZIP archive — e.g. a recipe with its palette, technique, and result photos. A bundle is a ZIP
-named `.brushcodex.zip` containing:
+named `.paintbundle.zip` containing:
 
 - **`manifest.json`** — the bundle manifest (this specification), at the archive root.
 - Zero or more **standard document** files (recipe, palette, technique, inventory, project,

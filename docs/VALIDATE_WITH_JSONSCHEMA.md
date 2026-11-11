@@ -1,4 +1,4 @@
-# Validating a BrushCodex document from another language (Python)
+# Validating an Open Paint Format document from another language (Python)
 
 You do **not** need the `@brushcodex/*` packages to validate a document. The normative JSON
 Schemas under [`../schemas`](../schemas) are enough: any conforming Draft 2020-12 validator can
@@ -7,7 +7,7 @@ same shape applies to any language with a JSON Schema library.
 
 ## The one thing that matters: load all seven schemas
 
-Each schema has an absolute `$id` (`https://brushcodex.com/schemas/<spec>/v1/<spec>.schema.json`)
+Each schema has an absolute `$id` (`https://openpaintformat.org/schemas/<spec>/v1/<spec>.schema.json`)
 and the specs reference each other by that absolute `$id` — e.g. `recipe` refers to
 `common.schema.json#/$defs/envelopeCore`. So you must register **all seven** schemas before
 validating any one of them, or the cross-references will not resolve.
@@ -37,7 +37,7 @@ def validate(doc_path):
     """Return a list of validation errors (empty == valid) for one document."""
     doc = json.loads(Path(doc_path).read_text(encoding="utf-8"))
     by_id, registry = load_registry()
-    schema_id = f"https://brushcodex.com/schemas/{doc['spec']}/v1/{doc['spec']}.schema.json"
+    schema_id = f"https://openpaintformat.org/schemas/{doc['spec']}/v1/{doc['spec']}.schema.json"
     validator = Draft202012Validator(
         by_id[schema_id],
         registry=registry,

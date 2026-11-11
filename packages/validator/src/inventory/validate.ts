@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Paint Inventory v1 document format.
+ * Reference validator for the Open Paint Format Paint Inventory v1 document format.
  *
  * Two layers, matching the other spec validators:
  *   1. schema   — validated against the normative inventory JSON Schema, which
@@ -89,7 +89,7 @@ export class InventoryValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Inventory document: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Inventory document: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'InventoryValidationError';
     this.issues = issues;
   }

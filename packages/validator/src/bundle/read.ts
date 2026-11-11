@@ -1,5 +1,5 @@
 /**
- * Safe reader for BrushCodex bundles (`.brushcodex.zip`).
+ * Safe reader for Open Paint Format bundles (`.paintbundle.zip`).
  *
  * Every entry is checked against the safe-archive rules (./safe) BEFORE it is
  * decompressed (fflate's `filter` receives the uncompressed size from the archive

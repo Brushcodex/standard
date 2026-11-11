@@ -1,5 +1,5 @@
 /**
- * BrushCodex Common Document Envelope v1 (DRAFT) — public surface of the
+ * Open Paint Format Common Document Envelope v1 (DRAFT) — public surface of the
  * reference model, validator, and canonical serializer.
  *
  * See specs/common/v1/README.md for the normative specification.

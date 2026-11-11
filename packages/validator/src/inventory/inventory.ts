@@ -1,5 +1,5 @@
 /**
- * BrushCodex Paint Inventory v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Paint Inventory v1 (DRAFT) — reference TypeScript model.
  *
  * An Inventory embeds the Common document envelope (the Zod envelope model is
  * extended, not duplicated) and adds a list of owned paints. Each item records

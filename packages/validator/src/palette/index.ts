@@ -1,5 +1,5 @@
 /**
- * BrushCodex Palette v1 (DRAFT) — public surface of the reference model and
+ * Open Paint Format Palette v1 (DRAFT) — public surface of the reference model and
  * validator. See specs/palette/v1/README.md for the normative specification.
  */
 

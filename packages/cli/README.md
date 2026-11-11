@@ -1,15 +1,15 @@
 # @brushcodex/cli
 
-Command-line tools for the BrushCodex open standard — no web application. The two bins prove the
+Command-line tools for the Open Paint Format — no web application. The two bins prove the
 formats can be validated by an independent consumer:
 
-- **`brushcodex-validate`** — validate documents / `.brushcodex.zip` bundles against the specs.
+- **`brushcodex-validate`** — validate documents / `.paintbundle.zip` bundles against the specs.
 - **`brushcodex-conformance`** — run the whole canonical conformance corpus.
 
 ```bash
-# Validate user documents and/or .brushcodex.zip bundles:
-pnpm --filter @brushcodex/cli validate my.brushrecipe.json
-pnpm --filter @brushcodex/cli validate --json a.brushrecipe.json a.brushcodex.zip
+# Validate user documents and/or .paintbundle.zip bundles:
+pnpm --filter @brushcodex/cli validate my.paintrecipe.json
+pnpm --filter @brushcodex/cli validate --json a.paintrecipe.json a.paintbundle.zip
 
 # Run the whole conformance corpus (loaded from @brushcodex/fixtures):
 pnpm --filter @brushcodex/cli conformance

@@ -307,7 +307,7 @@ export function renderHtmlDocument(params: {
     `</head>\n` +
     `<body>\n<main>\n` +
     `<article>\n${articleBody}</article>\n` +
-    `<footer>Rendered from a BrushCodex ${escapeHtml(spec)} v${escapeHtml(
+    `<footer>Rendered from an Open Paint Format ${escapeHtml(spec)} v${escapeHtml(
       specVersion,
     )} document — an approximate visual rendering.${caveat}</footer>\n` +
     `</main>\n</body>\n</html>\n`

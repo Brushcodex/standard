@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Common Document Envelope v1.
+ * Reference validator for the Open Paint Format Common Document Envelope v1.
  *
  * Two validation layers, matching the specification's conformance section:
  *
@@ -231,7 +231,7 @@ export class CommonValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Common document: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Common document: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'CommonValidationError';
     this.issues = issues;
   }

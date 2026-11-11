@@ -1,5 +1,5 @@
 /**
- * BrushCodex Recipe v1 (DRAFT) — public surface of the reference model and
+ * Open Paint Format Recipe v1 (DRAFT) — public surface of the reference model and
  * validator. See specs/recipe/v1/README.md for the normative specification.
  */
 

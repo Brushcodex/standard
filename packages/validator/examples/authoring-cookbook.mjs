@@ -1,7 +1,7 @@
 /**
  * Authoring cookbook — runnable companion to docs/AUTHORING.md.
  *
- * Builds one valid document of every core BrushCodex type using the
+ * Builds one valid document of every core Open Paint Format type using the
  * `@brushcodex/validator/authoring` helpers, then validates each one through
  * `validateAnyDocument` — the same entry an outside consumer uses — and prints a
  * per-type result. Exits non-zero if any authored document fails to validate.
@@ -85,7 +85,7 @@ const docs = {
     {
       title: 'A single-recipe bundle',
       entries: [
-        { path: 'documents/recipe.brushrecipe.json', spec: 'recipe', mediaType: 'application/json' },
+        { path: 'documents/recipe.paintrecipe.json', spec: 'recipe', mediaType: 'application/json' },
       ],
     },
     opts,

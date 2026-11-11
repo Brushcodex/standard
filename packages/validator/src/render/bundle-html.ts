@@ -1,7 +1,7 @@
 /**
- * BrushCodex Bundle -> static site renderer (reference, framework-agnostic).
+ * Open Paint Format Bundle -> static site renderer (reference, framework-agnostic).
  *
- * Turns a validated `.brushcodex.zip` (read by the bundle reader) into a small,
+ * Turns a validated `.paintbundle.zip` (read by the bundle reader) into a small,
  * self-contained static site: an `index.html` overview plus one rendered HTML page
  * per contained document — every spec the format defines has a renderer, so a
  * bundle becomes fully browsable offline. Packaged media are listed on the index

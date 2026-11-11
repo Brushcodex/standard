@@ -141,8 +141,8 @@ describe('packed-layout simulation: install tree, source repo irrelevant', () =>
 describe('validate bin: external user files (no corpus dependency)', () => {
   it('accepts a valid document (exit 0) and rejects an invalid one (exit 1)', () => {
     const dir = mkdtempSync(join(tmpdir(), 'bcx-cli-validate-'));
-    const validFile = join(dir, 'ok.brushrecipe.json');
-    const invalidFile = join(dir, 'bad.brushrecipe.json');
+    const validFile = join(dir, 'ok.paintrecipe.json');
+    const invalidFile = join(dir, 'bad.paintrecipe.json');
     // Minimal valid recipe (from the manifest) vs. a document missing required members.
     writeFileSync(validFile, readFileSync(join(examplesRoot, 'recipe', 'v1', 'minimal.valid.json')));
     writeFileSync(invalidFile, JSON.stringify({ spec: 'recipe', specVersion: '1.0.0' }));
@@ -153,8 +153,8 @@ describe('validate bin: external user files (no corpus dependency)', () => {
 
   it('validates several files at once, exits 1 if any is invalid, and prints an N/M summary', () => {
     const dir = mkdtempSync(join(tmpdir(), 'bcx-cli-multi-'));
-    const good = join(dir, 'good.brushrecipe.json');
-    const bad = join(dir, 'bad.brushrecipe.json');
+    const good = join(dir, 'good.paintrecipe.json');
+    const bad = join(dir, 'bad.paintrecipe.json');
     writeFileSync(good, readFileSync(join(examplesRoot, 'recipe', 'v1', 'minimal.valid.json')));
     writeFileSync(bad, JSON.stringify({ spec: 'recipe', specVersion: '1.0.0' }));
 
@@ -205,7 +205,7 @@ describe('validate --json: structured, machine-readable issues', () => {
 
   it('classifies unparseable input as a syntax-layer not-json issue', () => {
     const dir = mkdtempSync(join(tmpdir(), 'bcx-cli-json-'));
-    const notJson = join(dir, 'broken.brushrecipe.json');
+    const notJson = join(dir, 'broken.paintrecipe.json');
     writeFileSync(notJson, '{ this is not json');
     const { status, stdout } = runNode(VALIDATE_BIN, ['--json', notJson], dir);
     expect(status).toBe(1);
@@ -218,7 +218,7 @@ describe('validate --json: structured, machine-readable issues', () => {
   });
 
   it('distinguishes a missing/unreadable file from invalid JSON', () => {
-    const missing = join(mkdtempSync(join(tmpdir(), 'bcx-cli-missing-')), 'nope.brushrecipe.json');
+    const missing = join(mkdtempSync(join(tmpdir(), 'bcx-cli-missing-')), 'nope.paintrecipe.json');
     const { status, stdout } = runNode(VALIDATE_BIN, ['--json', missing], tmpdir());
     expect(status).toBe(1);
 
@@ -241,7 +241,7 @@ describe('validate --json: structured, machine-readable issues', () => {
   });
 });
 
-describe('validate bin: .brushcodex.zip bundle archives', () => {
+describe('validate bin: .paintbundle.zip bundle archives', () => {
   it('accepts a well-formed bundle and reports its document/media counts', () => {
     const dir = mkdtempSync(join(tmpdir(), 'bcx-cli-bundle-'));
     const recipe = JSON.parse(
@@ -253,7 +253,7 @@ describe('validate bin: .brushcodex.zip bundle archives', () => {
       title: 'CLI test bundle',
       documents: [{ path: 'recipe.json', spec: 'recipe', document: recipe }],
     });
-    const zipFile = join(dir, 'archive.brushcodex.zip');
+    const zipFile = join(dir, 'archive.paintbundle.zip');
     writeFileSync(zipFile, zip);
 
     const human = runNode(VALIDATE_BIN, [zipFile], dir);
@@ -271,7 +271,7 @@ describe('validate bin: .brushcodex.zip bundle archives', () => {
 
   it('rejects an unreadable archive with an archive-layer bundle-unreadable issue', () => {
     const dir = mkdtempSync(join(tmpdir(), 'bcx-cli-badzip-'));
-    const badZip = join(dir, 'corrupt.brushcodex.zip');
+    const badZip = join(dir, 'corrupt.paintbundle.zip');
     writeFileSync(badZip, 'this is not a zip archive');
 
     const { status, stdout } = runNode(VALIDATE_BIN, ['--json', badZip], dir);
@@ -283,7 +283,7 @@ describe('validate bin: .brushcodex.zip bundle archives', () => {
   });
 
   it('reports a missing archive as io/unreadable, not a corrupt archive', () => {
-    const missing = join(mkdtempSync(join(tmpdir(), 'bcx-cli-missingzip-')), 'gone.brushcodex.zip');
+    const missing = join(mkdtempSync(join(tmpdir(), 'bcx-cli-missingzip-')), 'gone.paintbundle.zip');
     const { status, stdout } = runNode(VALIDATE_BIN, ['--json', missing], tmpdir());
     expect(status).toBe(1);
     const result = parseSingle(stdout);

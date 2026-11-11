@@ -1,12 +1,12 @@
-# Quickstart — validate your first BrushCodex document in 5 minutes
+# Quickstart — validate your first Open Paint Format document in 5 minutes
 
 **New here?** This is the shortest path from "what is this?" to a document you authored and
 proved valid, using only this repository — no account, no server, no BrushCodex service.
 
-## What BrushCodex is
+## What Open Paint Format is
 
-BrushCodex is an **open, implementation-neutral family of versioned specifications** for
-portable miniature-painting knowledge. A BrushCodex *document* is a plain JSON file that
+Open Paint Format is an **open, implementation-neutral family of versioned specifications** for
+portable miniature-painting knowledge, maintained by BrushCodex. An Open Paint Format *document* is a plain JSON file that
 declares which specification it follows and carries a small shared envelope (identity,
 versioning, provenance, licensing). There are seven document types:
 
@@ -47,7 +47,7 @@ pnpm -r build    # required — the toolkit runs from built output, not from sou
 A minimal document needs the envelope (`spec`, `specVersion`, `id`, `revision`) plus the one
 or two members its type requires. For a Painting Workflow (technical spec name `recipe`), that is
 a `title` and at least one step.
-Save this as `hello.brushrecipe.json` **anywhere on disk**:
+Save this as `hello.paintrecipe.json` **anywhere on disk**:
 
 ```json
 {
@@ -75,10 +75,10 @@ spec ships its own `examples/<spec>/v1/minimal.valid.json` you can start from.
 
 ## Step 2 — Validate it
 
-The CLI validates one document (or a `.brushcodex.zip` bundle) against the spec it declares:
+The CLI validates one document (or a `.paintbundle.zip` bundle) against the spec it declares:
 
 ```bash
-pnpm --filter @brushcodex/cli validate /absolute/path/to/hello.brushrecipe.json
+pnpm --filter @brushcodex/cli validate /absolute/path/to/hello.paintrecipe.json
 ```
 
 > **Pass an absolute path.** `validate` runs with `packages/cli` as its working directory, so a
@@ -87,7 +87,7 @@ pnpm --filter @brushcodex/cli validate /absolute/path/to/hello.brushrecipe.json
 You get one `OK`/`FAIL` line per file and a summary; exit code `0` means every file is valid:
 
 ```text
-OK    recipe  /absolute/path/to/hello.brushrecipe.json
+OK    recipe  /absolute/path/to/hello.paintrecipe.json
 
 1/1 valid.
 ```
@@ -97,7 +97,7 @@ Add `--json` for machine-readable output — an array of one object per input fi
 ```json
 [
   {
-    "file": "/absolute/path/to/hello.brushrecipe.json",
+    "file": "/absolute/path/to/hello.paintrecipe.json",
     "kind": "document",
     "spec": "recipe",
     "valid": true,
@@ -112,7 +112,7 @@ Validation earns its keep by catching mistakes. Delete the `steps` line from the
 validate again:
 
 ```text
-FAIL  recipe  /absolute/path/to/broken.brushrecipe.json
+FAIL  recipe  /absolute/path/to/broken.paintrecipe.json
         - (root) must have required property 'steps' (steps)
 
 0/1 valid.

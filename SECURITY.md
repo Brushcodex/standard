@@ -1,6 +1,6 @@
 # Security Policy
 
-BrushCodex is a set of specifications, JSON Schemas, and a reference validation
+Open Paint Format is a set of specifications, JSON Schemas, and a reference validation
 toolkit — there is no hosted service in this repository. Security-relevant issues
 are most likely in the reference tooling under `packages/` (for example, a way to
 make the validator crash, hang, or wrongly accept a malformed document).
@@ -25,4 +25,4 @@ within a few days and will keep you posted on the fix.
 - **Out of scope:** third-party applications that implement the standard, and any
   hosted BrushCodex service — they have their own reporting channels.
 
-Thank you for helping keep BrushCodex and its implementers safe.
+Thank you for helping keep Open Paint Format and its implementers safe.

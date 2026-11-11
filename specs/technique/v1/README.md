@@ -1,10 +1,10 @@
-# BrushCodex Technique — v1 (DRAFT)
+# Open Paint Format Technique — v1 (DRAFT)
 
 - **Spec name:** `technique`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/technique/v1/technique.schema.json`](../../../schemas/technique/v1/technique.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.technique+json`
-- **File suffix (provisional):** `.brushtechnique.json`
+- **Media type (provisional):** `application/vnd.openpaintformat.technique+json`
+- **File suffix (provisional):** `.painttechnique.json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
