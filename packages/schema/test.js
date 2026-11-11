@@ -9,7 +9,7 @@ for (const name of SPEC_NAMES) {
   const schema = schemas[name];
   assert.ok(schema && typeof schema === 'object', `${name}: schema object loaded`);
   assert.ok(
-    typeof schema.$id === 'string' && schema.$id.startsWith('https://brushcodex.com/schemas/'),
+    typeof schema.$id === 'string' && schema.$id.startsWith('https://openpaintformat.org/schemas/'),
     `${name}: has a canonical $id`,
   );
   assert.equal(schemaById[schema.$id], schema, `${name}: indexed by $id`);

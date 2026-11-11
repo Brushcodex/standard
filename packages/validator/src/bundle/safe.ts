@@ -1,5 +1,5 @@
 /**
- * Safe-archive handling for BrushCodex bundles (bundle spec §5).
+ * Safe-archive handling for Open Paint Format bundles (bundle spec §5).
  *
  * Bundles are untrusted ZIP input. These guards reject path traversal, absolute
  * paths, unsupported/executable content, and archive bombs BEFORE any entry is

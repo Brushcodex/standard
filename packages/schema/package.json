@@ -3,7 +3,7 @@
   "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
-  "description": "The BrushCodex open-standard JSON Schemas, as data (zero dependencies).",
+  "description": "The Open Paint Format JSON Schemas, as data (zero dependencies).",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

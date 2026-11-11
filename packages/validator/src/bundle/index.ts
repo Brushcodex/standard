@@ -1,5 +1,5 @@
 /**
- * BrushCodex Bundle v1 (DRAFT) — public surface of the manifest model, validator,
+ * Open Paint Format Bundle v1 (DRAFT) — public surface of the manifest model, validator,
  * safe-archive guards, and the safe reader/writer. See specs/bundle/v1/README.md.
  */
 

@@ -49,7 +49,7 @@ describe('renderPaletteHtml', () => {
     expect(html).not.toMatch(/src\s*=\s*["']https?:/i);
     expect(html).not.toMatch(/@import/);
     // Footer names the palette spec.
-    expect(html).toContain('BrushCodex palette v1.0.0');
+    expect(html).toContain('Open Paint Format palette v1.0.0');
   });
 
   it('escapes HTML in every document-derived string (XSS safety)', () => {
@@ -204,6 +204,6 @@ describe('renderDocumentHtml dispatcher', () => {
   it('dispatches a palette document to the palette renderer', () => {
     const html = renderDocumentHtml(makePalette());
     expect(html).toContain('<h1>Test palette</h1>');
-    expect(html).toContain('BrushCodex palette v1.0.0');
+    expect(html).toContain('Open Paint Format palette v1.0.0');
   });
 });

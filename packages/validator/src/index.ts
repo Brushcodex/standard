@@ -1,6 +1,6 @@
 /**
  * @brushcodex/validator — reference validators, conformance runner, and renderer
- * for the BrushCodex open standard.
+ * for the Open Paint Format.
  *
  * Framework-agnostic and application-independent: it runs under Node/Vitest and
  * tooling without any web application. It loads the normative JSON Schemas from

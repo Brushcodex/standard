@@ -1,5 +1,5 @@
 /**
- * BrushCodex Inventory -> static HTML renderer (reference, framework-agnostic).
+ * Open Paint Format Inventory -> static HTML renderer (reference, framework-agnostic).
  *
  * Turns a validated Inventory v1 document into a self-contained HTML page: what
  * the painter owns, how much is left, and where it is kept. Like the other

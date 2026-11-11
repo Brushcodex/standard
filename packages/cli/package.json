@@ -3,7 +3,7 @@
   "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
-  "description": "Command-line tools for the BrushCodex open standard: validate documents/bundles and run conformance.",
+  "description": "Command-line tools for the Open Paint Format: validate documents/bundles and run conformance.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

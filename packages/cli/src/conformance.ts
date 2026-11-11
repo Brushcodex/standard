@@ -1,5 +1,5 @@
 /**
- * BrushCodex conformance runner — validates the canonical example corpus with the
+ * Open Paint Format conformance runner — validates the canonical example corpus with the
  * reference validators and reports pass/fail, WITHOUT the web application.
  *
  * The corpus is loaded through the `@brushcodex/fixtures` package (its shipped

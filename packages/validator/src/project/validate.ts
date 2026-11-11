@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Project v1 document format.
+ * Reference validator for the Open Paint Format Project v1 document format.
  *
  * Two layers, matching the other spec validators:
  *   1. schema   — validated against the normative project JSON Schema, which
@@ -111,7 +111,7 @@ export class ProjectValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Project document: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Project document: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'ProjectValidationError';
     this.issues = issues;
   }

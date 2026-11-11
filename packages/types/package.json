@@ -3,7 +3,7 @@
   "version": "1.0.0-rc.2",
   "private": true,
   "type": "module",
-  "description": "Canonical BrushCodex document TypeScript types, re-exported from the reference model.",
+  "description": "Canonical Open Paint Format document TypeScript types, re-exported from the reference model.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

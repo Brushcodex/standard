@@ -1,5 +1,5 @@
 /**
- * Conformance tests for the BrushCodex Project v1 (DRAFT), including subject-anchor
+ * Conformance tests for the Open Paint Format Project v1 (DRAFT), including subject-anchor
  * integrity and the privacy shared-profile (private journal entries removed while
  * the result stays valid).
  */
@@ -45,11 +45,11 @@ describe('Project — published JSON Schema', () => {
   it('is a well-formed draft 2020-12 schema that composes the Common envelope', () => {
     const schema = loadProjectSchema();
     expect(schema.$schema).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(schema.$id).toBe('https://brushcodex.com/schemas/project/v1/project.schema.json');
+    expect(schema.$id).toBe('https://openpaintformat.org/schemas/project/v1/project.schema.json');
     expect(schema.unevaluatedProperties).toBe(false);
     const allOf = schema.allOf as Array<{ $ref?: string }>;
     expect(allOf[0]?.$ref).toBe(
-      'https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
+      'https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
     );
   });
 });

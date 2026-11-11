@@ -1,6 +1,6 @@
 # Painting Workflows
 
-A BrushCodex Recipe document represents a **Painting Workflow**: an ordered, reproducible record of
+An Open Paint Format Recipe document represents a **Painting Workflow**: an ordered, reproducible record of
 paints, mixtures, materials, techniques, and actions used — or intended to be used — to paint a
 subject.
 

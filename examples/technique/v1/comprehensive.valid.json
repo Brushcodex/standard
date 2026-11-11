@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/technique/v1/technique.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/technique/v1/technique.schema.json",
   "spec": "technique",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/techniques/edge-highlighting",

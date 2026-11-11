@@ -1,4 +1,4 @@
-# BrushCodex Standard
+# Open Paint Format
 
 The **open, implementation-neutral family of versioned specifications** for portable
 miniature-painting knowledge: Painting Workflows (technical spec name `recipe`), palettes,
@@ -6,9 +6,10 @@ inventories, projects, techniques, and the
 bundle manifest that packages them — each with a common document envelope carrying identity,
 versioning, provenance, licensing, and extensions.
 
-This repository is the **canonical home** of the standard. The BrushCodex web application
-(`brushcodex-community`) is a *reference implementation* that proves the specs are useful; it
-is not part of the standard. Documents in these formats never require a central BrushCodex
+This repository is the **canonical home** of the standard. Open Paint Format is maintained by
+BrushCodex, and the BrushCodex web application (`brushcodex-community`) is a *reference
+implementation* that proves the specs are useful; it is not part of the standard. Until
+`1.0.0-rc.3` the format was published as the BrushCodex Standard. Documents in these formats never require a central BrushCodex
 registry and remain usable when no BrushCodex service is available.
 
 > **Status: DRAFT.** Every specification here is DRAFT until explicitly frozen by the
@@ -21,7 +22,7 @@ document in about five minutes. The full path from first contact to extending a 
 
 Using only this repository — no account, no server, no BrushCodex service — you can:
 
-1. **Understand** — what BrushCodex is and its seven document types. The
+1. **Understand** — what Open Paint Format is and its seven document types. The
    [Quickstart](docs/QUICKSTART.md) opens with the essentials; the normative definitions live in
    [`specs/`](specs/), and [LAYOUT.md](LAYOUT.md) maps every directory.
 2. **Author** — build a valid document of any type with the reference helpers, using the
@@ -73,7 +74,7 @@ application:
 pnpm install
 pnpm -r build                                             # required before any command below
 pnpm --filter @brushcodex/cli conformance                 # validate the whole corpus (112/112)
-pnpm --filter @brushcodex/cli validate /abs/path/doc.json # validate one document / .brushcodex.zip
+pnpm --filter @brushcodex/cli validate /abs/path/doc.json # validate one document / .paintbundle.zip
 pnpm -r test                                              # schema, validator, fixtures, and CLI suites
 ```
 
@@ -91,7 +92,7 @@ pnpm -r test                                              # schema, validator, f
 - **`@brushcodex/fixtures`** — the self-contained example and conformance corpus.
 - **`@brushcodex/cli`** — `validate` + `conformance` commands.
 
-Schemas reference each other by absolute `$id` (`https://brushcodex.com/schemas/...`), so any
+Schemas reference each other by absolute `$id` (`https://openpaintformat.org/schemas/...`), so any
 draft-2020-12 validator that loads all seven can validate a document against its declared `spec`.
 For a worked example in another language, see
 [docs/VALIDATE_WITH_JSONSCHEMA.md](docs/VALIDATE_WITH_JSONSCHEMA.md) — validating from Python with

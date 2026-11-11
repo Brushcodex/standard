@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/technique/v1/technique.schema.json",
-  "title": "BrushCodex Technique v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/technique/v1/technique.schema.json",
+  "title": "Open Paint Format Technique v1 (draft)",
   "description": "A reusable technique definition: purpose, prerequisites, tools/materials, ordered instructions or parameter guidance, suitable/unsuitable paint classes, common problems and corrections, safety notes, citations, and variants. Embeds the Common document envelope. Referenced by recipes. DRAFT: not frozen; see specs/technique/v1/README.md.",
   "type": "object",
   "allOf": [
-    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    { "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
     {
       "type": "object",
       "required": ["purpose"],
@@ -28,7 +28,7 @@
         "tools": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/resource"
           }
         },
         "steps": {

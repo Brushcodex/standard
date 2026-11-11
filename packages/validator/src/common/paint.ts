@@ -1,5 +1,5 @@
 /**
- * Canonical paint reference + color value, shared by every BrushCodex spec
+ * Canonical paint reference + color value, shared by every Open Paint Format spec
  * (Recipe, Palette, Inventory, Project).
  *
  * These were previously duplicated in each spec model and had drifted (the

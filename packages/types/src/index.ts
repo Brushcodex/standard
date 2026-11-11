@@ -1,5 +1,5 @@
 /**
- * @brushcodex/types — canonical BrushCodex document TypeScript types.
+ * @brushcodex/types — canonical Open Paint Format document TypeScript types.
  *
  * These re-export the single canonical model defined (via Zod) in @brushcodex/validator.
  *

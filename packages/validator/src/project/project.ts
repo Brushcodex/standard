@@ -1,5 +1,5 @@
 /**
- * BrushCodex Project v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Project v1 (DRAFT) — reference TypeScript model.
  *
  * A Project embeds the Common document envelope (the Zod envelope model is
  * extended, not duplicated) and adds subjects (miniatures/subprojects) with stages

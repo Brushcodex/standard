@@ -136,7 +136,7 @@ import { createBundleManifest } from '@brushcodex/validator/authoring';
 const bundle = createBundleManifest({
   title: 'A single-recipe bundle',
   entries: [
-    { path: 'documents/recipe.brushrecipe.json', spec: 'recipe', mediaType: 'application/json' },
+    { path: 'documents/recipe.paintrecipe.json', spec: 'recipe', mediaType: 'application/json' },
   ],
 });
 ```

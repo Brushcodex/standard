@@ -6,6 +6,41 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### The format is now Open Paint Format — 2026-11-11
+
+The specification takes a neutral name before the v1 freeze, so an application can adopt it
+without carrying another application's brand. BrushCodex remains the maintainer, and its web
+application remains the reference implementation. Raised in
+[#17](https://github.com/Brushcodex/standard/issues/17).
+
+**What changes** (identifiers, in priority order from the issue):
+
+| | Was | Now |
+|---|---|---|
+| Name | BrushCodex Standard | Open Paint Format |
+| Schema `$id` | `https://brushcodex.com/schemas/<spec>/v1/<spec>.schema.json` | `https://openpaintformat.org/schemas/<spec>/v1/<spec>.schema.json` |
+| Media types | `application/vnd.brushcodex.<spec>+json`, `…bundle+zip` | `application/vnd.openpaintformat.<spec>+json`, `…bundle+zip` |
+| File suffixes | `.brushrecipe.json` (and palette, inventory, project, technique), `.brushcodex.zip` | `.paintrecipe.json` (and so on), `.paintbundle.zip` |
+
+Media types and suffixes stay **provisional** (VERSIONING §7). The validator's error messages and
+the reference renderer's page footer now name Open Paint Format.
+
+**What does not change.** No member, constraint, vocabulary or accept/reject result. `spec`
+values (`recipe`, `inventory`, …) and `specVersion` are unchanged. Package names stay
+`@brushcodex/*`, as implementation-specific names. `brushcodex:paint:` and `brushcodex:subject:`
+identifiers are the BrushCodex catalogue's own namespace (Common §5.7.1), and `org.brushcodex.*`
+is BrushCodex's extension namespace; both are correctly named after their issuer.
+
+**Migration.** A document written against an earlier candidate stays valid: `$schema` is an
+optional, informational `uri-reference`, so the old URL in it is not an error, and validators
+select a schema by `spec`. A tool that registers schemas by `$id` must refresh its registry,
+exactly as for the 2026-08 identifier change. `openpaintformat.org` does not serve the schemas
+yet; nothing here requires it to, because every validator in this repository registers the
+schemas locally.
+
+Historical records keep the old name: earlier entries in this file, dated proposals under `docs/`,
+the vocabulary sign-off, and `PROVENANCE.md`'s account of the first public snapshot.
+
 ### Inventory: owned and wanted — 2026-11-10
 
 Two new optional Inventory item members, `owned` (default `true`) and `wanted` (default `false`),

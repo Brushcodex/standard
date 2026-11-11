@@ -48,7 +48,7 @@ describe('renderTechniqueHtml', () => {
     expect(html).not.toMatch(/<script\b/);
     expect(html).not.toMatch(/src\s*=\s*["']https?:/i);
     expect(html).not.toMatch(/@import/);
-    expect(html).toContain('BrushCodex technique v1.0.0'); // footer
+    expect(html).toContain('Open Paint Format technique v1.0.0'); // footer
     // A technique carries no color, so the footer omits the swatch caveat.
     expect(html).not.toContain('physical measurements');
   });
@@ -159,6 +159,6 @@ describe('renderDocumentHtml dispatcher', () => {
   it('dispatches a technique document to the technique renderer', () => {
     const html = renderDocumentHtml(makeTechnique());
     expect(html).toContain('<h1>Test technique</h1>');
-    expect(html).toContain('BrushCodex technique v1.0.0');
+    expect(html).toContain('Open Paint Format technique v1.0.0');
   });
 });

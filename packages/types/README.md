@@ -1,6 +1,6 @@
 # @brushcodex/types
 
-Canonical TypeScript types for the seven BrushCodex document formats — a dependency-light type
+Canonical TypeScript types for the seven Open Paint Format document formats — a dependency-light type
 entry point with no runtime code.
 
 ```ts

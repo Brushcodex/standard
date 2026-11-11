@@ -1,5 +1,5 @@
 /**
- * BrushCodex Palette v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Palette v1 (DRAFT) — reference TypeScript model.
  *
  * A Palette embeds the Common document envelope (the Zod envelope model is
  * extended, not duplicated) and adds named entries (paint / literal color /

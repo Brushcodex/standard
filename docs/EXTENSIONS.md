@@ -1,6 +1,6 @@
 # Extension Namespaces & Preservation
 
-BrushCodex documents use a small, stable core plus **namespaced extensions**, so implementations
+Open Paint Format documents use a small, stable core plus **namespaced extensions**, so implementations
 can experiment without fragmenting the format or requiring an enormous mandatory schema
 (strategy §3.5, §5.9).
 

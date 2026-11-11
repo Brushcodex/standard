@@ -270,7 +270,7 @@ function check(name, cond, detail) {
 
 // A. schema (root export; no subpaths defined for this package)
 check('A schema: 7 specs', SPEC_NAMES.length === 7, 'got ' + SPEC_NAMES.length);
-check('A schema: canonical $id on each', Object.values(schemas).every((s) => typeof s.$id === 'string' && s.$id.startsWith('https://brushcodex.com/schemas/')));
+check('A schema: canonical $id on each', Object.values(schemas).every((s) => typeof s.$id === 'string' && s.$id.startsWith('https://openpaintformat.org/schemas/')));
 check('A schema: schemaById indexes each', Object.values(schemas).every((s) => schemaById[s.$id] === s));
 
 // C. validator (root + per-spec subpath)
@@ -327,8 +327,8 @@ const CONSUMER_MAKE_EXTERNAL = `import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadFixtureText } from '@brushcodex/fixtures/node';
 const out = process.argv[2];
-writeFileSync(join(out, 'external-valid.brushrecipe.json'), loadFixtureText('recipe/minimal.valid'));
-writeFileSync(join(out, 'external-invalid.brushrecipe.json'), JSON.stringify({ spec: 'recipe', specVersion: '1.0.0' }, null, 2));
+writeFileSync(join(out, 'external-valid.paintrecipe.json'), loadFixtureText('recipe/minimal.valid'));
+writeFileSync(join(out, 'external-invalid.paintrecipe.json'), JSON.stringify({ spec: 'recipe', specVersion: '1.0.0' }, null, 2));
 console.log('external documents written to ' + out);
 `;
 
@@ -483,8 +483,8 @@ function cliChecks(consumer, base, label, cwd) {
   const cliDist = join(consumer, 'node_modules', '@brushcodex', 'cli', 'dist');
   const conf = join(cliDist, 'conformance.js');
   const val = join(cliDist, 'validate.js');
-  const validFile = join(base, 'external-valid.brushrecipe.json');
-  const invalidFile = join(base, 'external-invalid.brushrecipe.json');
+  const validFile = join(base, 'external-valid.paintrecipe.json');
+  const invalidFile = join(base, 'external-invalid.paintrecipe.json');
 
   // Direct package binary (raw dist under plain Node), from a foreign cwd.
   const c1 = runNode(conf, [], cwd);

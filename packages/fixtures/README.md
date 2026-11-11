@@ -1,6 +1,6 @@
 # @brushcodex/fixtures
 
-The canonical BrushCodex **example & conformance fixture corpus**, as a self-contained package:
+The canonical Open Paint Format **example & conformance fixture corpus**, as a self-contained package:
 a stable, typed **manifest** plus a small **Node loader**. The corpus travels _inside_ the package
 (`corpus/examples/**`), so a consumer validates against it without ever reading the standard's
 source repository.

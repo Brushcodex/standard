@@ -1,10 +1,10 @@
-# BrushCodex Paint Inventory — v1 (DRAFT)
+# Open Paint Format Paint Inventory — v1 (DRAFT)
 
 - **Spec name:** `inventory`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/inventory/v1/inventory.schema.json`](../../../schemas/inventory/v1/inventory.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.inventory+json`
-- **File suffix (provisional):** `.brushinventory.json`
+- **Media type (provisional):** `application/vnd.openpaintformat.inventory+json`
+- **File suffix (provisional):** `.paintinventory.json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are

@@ -62,7 +62,7 @@ refactor** and never publishes. See [docs/RELEASING.md](docs/RELEASING.md).
 
 ## Style
 
-- Schemas: draft 2020-12, absolute `$id` under `https://brushcodex.com/schemas/...`,
+- Schemas: draft 2020-12, absolute `$id` under `https://openpaintformat.org/schemas/...`,
   `unevaluatedProperties: false` on closed objects, namespaced `extensions` for open data.
 - Prose: Markdown, LF line endings (`.gitattributes`), RFC 2119 keywords capitalized.
 - Do not relicense; do not add application- or extraction-specific fields to core.

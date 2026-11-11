@@ -1,5 +1,5 @@
 /**
- * BrushCodex Recipe v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Recipe v1 (DRAFT) — reference TypeScript model.
  *
  * A Recipe embeds the Common document envelope (single source of truth: the Zod
  * envelope model is extended, not duplicated) and adds ordered steps, paints,

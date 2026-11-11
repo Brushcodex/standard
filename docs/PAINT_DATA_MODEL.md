@@ -1,7 +1,7 @@
 # Paint & Color Data Model
 
 > **Informative, not normative.** This document explains *how* paint and color data is
-> represented across the BrushCodex specs, and *why*. The binding rules live in the
+> represented across the Open Paint Format specs, and *why*. The binding rules live in the
 > `common`, `palette`, `recipe`, `inventory`, and `project` schemas and their prose. A color's
 > *meaning* is declared by each item's `provenance` (defined in the `common` envelope); this
 > document covers the *shape* and the document↔catalogue relationship.
@@ -10,7 +10,7 @@
 
 A format spreads only if adopting it costs nothing. So the governing design rule is:
 
-> **Every BrushCodex document is self-contained. It MUST stay valid and useful with no
+> **Every Open Paint Format document is self-contained. It MUST stay valid and useful with no
 > central catalogue, no color value, and no BrushCodex service running.**
 
 An app can read a recipe or palette and understand every paint from the fields written

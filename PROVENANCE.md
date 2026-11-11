@@ -3,7 +3,8 @@
 This public repository begins with a reviewed snapshot of the BrushCodex Standard's
 `0.9.0-draft` candidate, prepared on 2026-08-03. The snapshot includes the normative
 specifications and schemas, the example and conformance corpus, and the independent
-TypeScript reference toolkit.
+TypeScript reference toolkit. The format was renamed Open Paint Format in November 2026,
+before its 1.0 freeze.
 
 ## Public-history boundary
 

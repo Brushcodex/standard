@@ -1,5 +1,5 @@
 /**
- * Conformance tests for the BrushCodex Technique v1 (DRAFT).
+ * Conformance tests for the Open Paint Format Technique v1 (DRAFT).
  *
  * Exercises the published artifacts on disk — the technique JSON Schema (which
  * composes the Common envelope) and the example corpus — so prose, schema,
@@ -46,11 +46,11 @@ describe('Technique — published JSON Schema', () => {
   it('is a well-formed draft 2020-12 schema that composes the Common envelope', () => {
     const schema = loadTechniqueSchema();
     expect(schema.$schema).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(schema.$id).toBe('https://brushcodex.com/schemas/technique/v1/technique.schema.json');
+    expect(schema.$id).toBe('https://openpaintformat.org/schemas/technique/v1/technique.schema.json');
     expect(schema.unevaluatedProperties).toBe(false);
     const allOf = schema.allOf as Array<{ $ref?: string }>;
     expect(allOf[0]?.$ref).toBe(
-      'https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
+      'https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
     );
   });
 });

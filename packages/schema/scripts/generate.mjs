@@ -30,8 +30,8 @@ for (const spec of SPECS) {
     console.error(`FATAL: ${spec} schema is not readable/valid JSON: ${error.message}`);
     process.exit(1);
   }
-  if (typeof json.$id !== 'string' || !json.$id.startsWith('https://brushcodex.com/schemas/')) {
-    console.error(`FATAL: ${spec} schema is missing a canonical https://brushcodex.com/... $id`);
+  if (typeof json.$id !== 'string' || !json.$id.startsWith('https://openpaintformat.org/schemas/')) {
+    console.error(`FATAL: ${spec} schema is missing a canonical https://openpaintformat.org/... $id`);
     process.exit(1);
   }
   lines.push(`export const ${spec} = ${JSON.stringify(json, null, 2)};`);

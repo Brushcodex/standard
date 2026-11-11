@@ -1,10 +1,10 @@
-# BrushCodex Project — v1 (DRAFT)
+# Open Paint Format Project — v1 (DRAFT)
 
 - **Spec name:** `project`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/project/v1/project.schema.json`](../../../schemas/project/v1/project.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.project+json`
-- **File suffix (provisional):** `.brushproject.json`
+- **Media type (provisional):** `application/vnd.openpaintformat.project+json`
+- **File suffix (provisional):** `.paintproject.json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
@@ -48,7 +48,7 @@ results, and the tools used. It **embeds the Common document envelope** and clos
 
 ## 5. DocumentRef (shared)
 
-A soft reference to another BrushCodex document by its stable `id` URI — the shared Common
+A soft reference to another Open Paint Format document by its stable `id` URI — the shared Common
 `documentRef`, also used by Recipe `techniqueRefs`. `id` (absolute URI) is REQUIRED; `title` is
 optional. Selections reference recipes/palettes **by id**, never by an internal database key; an
 unresolved reference is not an error.

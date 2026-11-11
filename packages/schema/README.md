@@ -1,12 +1,12 @@
 # @brushcodex/schema
 
-The BrushCodex open-standard JSON Schemas, as importable data. **Zero dependencies.**
+The Open Paint Format JSON Schemas, as importable data. **Zero dependencies.**
 
 ```js
 import { schemas, schemaById, SPEC_NAMES } from '@brushcodex/schema';
 
 schemas.recipe;              // the Recipe v1 JSON Schema (draft 2020-12) as an object
-schemaById['https://brushcodex.com/schemas/common/v1/common.schema.json'];
+schemaById['https://openpaintformat.org/schemas/common/v1/common.schema.json'];
 SPEC_NAMES;                  // ['common','recipe','palette','inventory','project','technique','bundle']
 ```
 

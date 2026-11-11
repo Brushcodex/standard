@@ -1,6 +1,6 @@
 # @brushcodex/validator
 
-Reference validators, conformance runner, and HTML renderer for the BrushCodex open standard.
+Reference validators, conformance runner, and HTML renderer for the Open Paint Format.
 Framework-agnostic and application-independent — it runs under Node/Vitest and tooling without
 any web application.
 

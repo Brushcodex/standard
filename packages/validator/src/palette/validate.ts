@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Palette v1 document format.
+ * Reference validator for the Open Paint Format Palette v1 document format.
  *
  * Two layers, matching the Recipe validator:
  *   1. schema   — validated against the normative palette JSON Schema, which
@@ -120,7 +120,7 @@ export class PaletteValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Palette document: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Palette document: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'PaletteValidationError';
     this.issues = issues;
   }

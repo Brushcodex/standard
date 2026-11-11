@@ -1,5 +1,5 @@
 /**
- * Reference validator for the BrushCodex Bundle manifest v1, plus a spec-dispatch
+ * Reference validator for the Open Paint Format Bundle manifest v1, plus a spec-dispatch
  * helper used when validating documents contained in a bundle.
  *
  * The manifest is validated against the normative JSON Schema (which composes the
@@ -68,7 +68,7 @@ export class BundleManifestValidationError extends Error {
   readonly issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[]) {
-    super(`Invalid BrushCodex Bundle manifest: ${issues.map((i) => i.message).join('; ')}`);
+    super(`Invalid Open Paint Format Bundle manifest: ${issues.map((i) => i.message).join('; ')}`);
     this.name = 'BundleManifestValidationError';
     this.issues = issues;
   }

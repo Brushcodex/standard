@@ -1,10 +1,10 @@
-# BrushCodex Palette — v1 (DRAFT)
+# Open Paint Format Palette — v1 (DRAFT)
 
 - **Spec name:** `palette`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/palette/v1/palette.schema.json`](../../../schemas/palette/v1/palette.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.palette+json`
-- **File suffix (provisional):** `.brushpalette.json`
+- **Media type (provisional):** `application/vnd.openpaintformat.palette+json`
+- **File suffix (provisional):** `.paintpalette.json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
@@ -65,7 +65,7 @@ An ordered or grouped association between entries. `type` (one of `shadow_to_hig
 
 A palette **MUST** be valid using purely literal paint references, with **no** central catalogue
 entry and **no** color value. A PaintRef MUST include at least one of `manufacturer` or `name`;
-`range`, `code`, `catalogueId` (an OPTIONAL external identifier, never a BrushCodex internal
+`range`, `code`, `catalogueId` (an OPTIONAL external identifier, never an internal
 database id), `color` (`{ hex }`), `provenance`, and `note` are optional. A hex value **MUST NOT**
 be presented as a physical measurement unless a provenance entry says so.
 

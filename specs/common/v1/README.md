@@ -1,9 +1,9 @@
-# BrushCodex Common Document Envelope — v1 (DRAFT)
+# Open Paint Format Common Document Envelope — v1 (DRAFT)
 
 - **Spec name:** `common`
 - **Version:** `1.0.0` (draft; not frozen)
 - **JSON Schema:** [`schemas/common/v1/common.schema.json`](../../../schemas/common/v1/common.schema.json)
-- **Media type (provisional):** `application/vnd.brushcodex.common+json`
+- **Media type (provisional):** `application/vnd.openpaintformat.common+json`
 - **Status:** DRAFT — MAY change incompatibly until frozen.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHOULD**, **SHOULD NOT**, and **MAY** are
@@ -11,7 +11,7 @@ to be interpreted as described in RFC 2119 and RFC 8174.
 
 ## 1. Purpose
 
-The Common envelope is the shared metadata carried by **every** BrushCodex document (recipe,
+The Common envelope is the shared metadata carried by **every** Open Paint Format document (recipe,
 palette, inventory, project, technique). It establishes stable identity, versioning,
 attribution, licensing, provenance, cross-document links (revision and fork lineage),
 translations, namespaced extensions, and optional integrity information.
@@ -101,7 +101,8 @@ Credit for a specific linked work belongs on that work instead: `mediaRef.creato
 
 At least one of `spdxId` or `name` **MUST** be present. Optional `url` and `notice`. Use the
 SPDX tokens `NONE`/`NOASSERTION` or a `LicenseRef-…` id when a standard SPDX id does not apply.
-A license value is a **claim by the author**; it is not verified by BrushCodex.
+A license value is a **claim by the author**; it is not verified by this specification or its
+maintainers.
 
 ### 5.3 Provenance entry
 

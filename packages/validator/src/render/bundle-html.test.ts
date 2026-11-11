@@ -74,31 +74,31 @@ function indexFile(files: ReturnType<typeof renderBundleSite>): { name: string; 
 describe('renderBundleSite', () => {
   it('emits an index page plus one page per renderable document', () => {
     const files = siteFor([
-      { path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe },
-      { path: 'palettes/rust.brushpalette.json', spec: 'palette', document: palette },
-      { path: 'techniques/edge.brushtechnique.json', spec: 'technique', document: technique },
+      { path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe },
+      { path: 'palettes/rust.paintpalette.json', spec: 'palette', document: palette },
+      { path: 'techniques/edge.painttechnique.json', spec: 'technique', document: technique },
     ]);
     const names = files.map((f) => f.name);
     expect(names[0]).toBe('index.html');
-    expect(names).toContain('recipes_red.brushrecipe.html');
-    expect(names).toContain('palettes_rust.brushpalette.html');
-    expect(names).toContain('techniques_edge.brushtechnique.html');
+    expect(names).toContain('recipes_red.paintrecipe.html');
+    expect(names).toContain('palettes_rust.paintpalette.html');
+    expect(names).toContain('techniques_edge.painttechnique.html');
     expect(files).toHaveLength(4); // index + 3 pages
 
     // Each page is a full self-contained document rendered from its spec.
-    const recipePage = files.find((f) => f.name === 'recipes_red.brushrecipe.html');
+    const recipePage = files.find((f) => f.name === 'recipes_red.paintrecipe.html');
     expect(recipePage?.html.startsWith('<!doctype html>')).toBe(true);
     expect(recipePage?.html).toContain('<h1>Red armour</h1>');
   });
 
   it('links renderable documents from the index and self-contains it', () => {
     const index = indexFile(
-      siteFor([{ path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe }]),
+      siteFor([{ path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe }]),
     );
     expect(index.name).toBe('index.html');
     expect(index.html).toContain('<h1>Sample bundle</h1>');
     expect(index.html).toContain('A packaged set of documents.'); // summary
-    expect(index.html).toContain('href="recipes_red.brushrecipe.html"');
+    expect(index.html).toContain('href="recipes_red.paintrecipe.html"');
     expect(index.html).toContain('Painting workflow');
     expect(index.html).toContain('Red armour'); // the linked title
     // Self-contained.
@@ -111,23 +111,23 @@ describe('renderBundleSite', () => {
     // Inventory and Project used to be listed but not rendered, which left two of
     // the format's document types unreadable without an application.
     const files = siteFor([
-      { path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe },
-      { path: 'inventory/mine.brushinventory.json', spec: 'inventory', document: inventory },
+      { path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe },
+      { path: 'inventory/mine.paintinventory.json', spec: 'inventory', document: inventory },
     ]);
     const index = indexFile(files);
     expect(index.html).toContain('My paints');
-    expect(index.html).toContain('href="inventory_mine.brushinventory.html"');
-    expect(files.map((f) => f.name)).toContain('inventory_mine.brushinventory.html');
+    expect(index.html).toContain('href="inventory_mine.paintinventory.html"');
+    expect(files.map((f) => f.name)).toContain('inventory_mine.paintinventory.html');
     expect(index.html).not.toContain('No renderer for this spec');
 
     // The rendered page is a real inventory page, not a placeholder.
-    const page = files.find((f) => f.name === 'inventory_mine.brushinventory.html');
+    const page = files.find((f) => f.name === 'inventory_mine.paintinventory.html');
     expect(page?.html).toContain('Paints owned');
   });
 
   it('lists packaged media on the index', () => {
     const index = indexFile(
-      siteFor([{ path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe }], {
+      siteFor([{ path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe }], {
         withMedia: true,
       }),
     );
@@ -138,7 +138,7 @@ describe('renderBundleSite', () => {
 
   it('escapes a hostile bundle title on the index (XSS safety)', () => {
     const index = indexFile(
-      siteFor([{ path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe }], {
+      siteFor([{ path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe }], {
         title: 'Evil <script>alert(1)</script>',
       }),
     );
@@ -148,20 +148,20 @@ describe('renderBundleSite', () => {
   });
 
   it('disambiguates two entry paths that flatten to the same filename', () => {
-    // `recipes/red…` and `recipes_red…` both flatten to `recipes_red.brushrecipe.html`.
+    // `recipes/red…` and `recipes_red…` both flatten to `recipes_red.paintrecipe.html`.
     const files = siteFor([
-      { path: 'recipes/red.brushrecipe.json', spec: 'recipe', document: recipe },
-      { path: 'recipes_red.brushrecipe.json', spec: 'recipe', document: recipe },
+      { path: 'recipes/red.paintrecipe.json', spec: 'recipe', document: recipe },
+      { path: 'recipes_red.paintrecipe.json', spec: 'recipe', document: recipe },
     ]);
     const pageNames = files.filter((f) => f.name !== 'index.html').map((f) => f.name);
     // Two distinct pages are written (no silent overwrite).
     expect(new Set(pageNames).size).toBe(2);
-    expect(pageNames).toContain('recipes_red.brushrecipe.html');
-    expect(pageNames).toContain('recipes_red.brushrecipe-2.html');
+    expect(pageNames).toContain('recipes_red.paintrecipe.html');
+    expect(pageNames).toContain('recipes_red.paintrecipe-2.html');
     // The index links each to its own file.
     const [index] = files;
-    expect(index?.html).toContain('href="recipes_red.brushrecipe.html"');
-    expect(index?.html).toContain('href="recipes_red.brushrecipe-2.html"');
+    expect(index?.html).toContain('href="recipes_red.paintrecipe.html"');
+    expect(index?.html).toContain('href="recipes_red.paintrecipe-2.html"');
   });
 
   it('never lets a document overwrite the overview index.html', () => {
@@ -178,9 +178,9 @@ describe('renderBundleSite', () => {
 
 describe('bundleDocFileName', () => {
   it('flattens a nested entry path to a safe .html filename', () => {
-    expect(bundleDocFileName('recipes/red.brushrecipe.json')).toBe('recipes_red.brushrecipe.html');
+    expect(bundleDocFileName('recipes/red.paintrecipe.json')).toBe('recipes_red.paintrecipe.html');
     expect(bundleDocFileName('a/b/c.json')).toBe('a_b_c.html');
-    expect(bundleDocFileName('top.brushpalette.json')).toBe('top.brushpalette.html');
+    expect(bundleDocFileName('top.paintpalette.json')).toBe('top.paintpalette.html');
   });
 
   it('never yields a path separator (no sub-directories, no traversal)', () => {

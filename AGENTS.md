@@ -1,7 +1,7 @@
 # AGENTS.md — brushcodex-standard
 
 Read this first. This repository is the **canonical, application-independent** home of the
-BrushCodex open standard. It is the canonical, upstream repository of a multi-repository
+Open Paint Format. It is the canonical, upstream repository of a multi-repository
 project: the standard depends on nothing else, and the other repositories (a reference web
 application and downstream datasets) consume it.
 
@@ -78,7 +78,7 @@ pnpm -r typecheck
 pnpm -r test              # @brushcodex/schema + validator + fixtures + cli suites
 pnpm conformance          # validate the whole corpus (112/112); exit 1 on any mismatch
 pnpm check:consistency    # assert every schema enum value + property is documented in the prose
-pnpm --filter @brushcodex/cli validate <absolute-file>   # one document / .brushcodex.zip
+pnpm --filter @brushcodex/cli validate <absolute-file>   # one document / .paintbundle.zip
 ```
 
 `validate` runs with `packages/cli` as its cwd — pass an **absolute** path, or a repo-relative

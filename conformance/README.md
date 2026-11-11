@@ -1,7 +1,7 @@
-# BrushCodex Conformance Corpus
+# Open Paint Format Conformance Corpus
 
 This directory documents the **conformance corpus** — the set of example documents
-under [`../examples`](../examples) that every BrushCodex implementation should agree
+under [`../examples`](../examples) that every Open Paint Format implementation should agree
 on — and the standalone tools that run against it.
 
 The corpus and tools run **without** the reference web application. They depend only
@@ -40,8 +40,8 @@ exercised by the package tests (`@brushcodex/validator` and `@brushcodex/fixture
 ## Validating your own files
 
 ```bash
-pnpm --filter @brushcodex/cli validate /abs/path/my.brushrecipe.json
-pnpm --filter @brushcodex/cli validate --json /abs/a.brushpalette.json /abs/a.brushcodex.zip
+pnpm --filter @brushcodex/cli validate /abs/path/my.paintrecipe.json
+pnpm --filter @brushcodex/cli validate --json /abs/a.paintpalette.json /abs/a.paintbundle.zip
 ```
 
 > Run from this repo, `validate` uses `packages/cli` as its working directory, so **pass
@@ -58,5 +58,5 @@ To check a **different** implementation against the corpus, validate every
 `*.valid.json` with your validator (expect accept) and every `invalid/*.json` (expect
 reject). Round-trip tools should additionally confirm that `parse → serialize → parse`
 preserves every supported member and unknown namespaced extensions. A conformant
-reader of `.brushcodex.zip` bundles MUST enforce the safe-archive rules in
+reader of `.paintbundle.zip` bundles MUST enforce the safe-archive rules in
 [`../specs/bundle/v1/README.md`](../specs/bundle/v1/README.md) §5.

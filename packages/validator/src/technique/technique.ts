@@ -1,5 +1,5 @@
 /**
- * BrushCodex Technique v1 (DRAFT) — reference TypeScript model.
+ * Open Paint Format Technique v1 (DRAFT) — reference TypeScript model.
  *
  * A Technique embeds the Common document envelope (the Zod envelope model is
  * extended, not duplicated) and adds a reusable technique definition: purpose,

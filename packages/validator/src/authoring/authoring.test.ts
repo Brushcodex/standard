@@ -153,7 +153,7 @@ describe('createDocument', () => {
     expect(() => createRecipe({ steps: [{ instruction: 'Basecoat.' }] } as never, {
       now: NOW,
       uuid: uuidSource(),
-    })).toThrow(/Invalid BrushCodex Recipe document/);
+    })).toThrow(/Invalid Open Paint Format Recipe document/);
 
     try {
       createRecipe({ steps: [{ instruction: 'Basecoat.' }] } as never, { now: NOW, uuid: uuidSource() });
@@ -208,7 +208,7 @@ describe('reviseDocument', () => {
   it('re-validates, so a revision cannot silently become non-conformant', () => {
     const before = base();
     expect(() => reviseDocument<'recipe'>(before, { title: '' } as never)).toThrow(
-      /Invalid BrushCodex Recipe document/,
+      /Invalid Open Paint Format Recipe document/,
     );
   });
 

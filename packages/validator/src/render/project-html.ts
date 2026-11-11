@@ -1,5 +1,5 @@
 /**
- * BrushCodex Project -> static HTML renderer (reference, framework-agnostic).
+ * Open Paint Format Project -> static HTML renderer (reference, framework-agnostic).
  *
  * Turns a validated Project v1 document into a self-contained HTML page: what is
  * being painted, how far along each subject is, what was substituted and why,

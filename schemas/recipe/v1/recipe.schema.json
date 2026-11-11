@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://brushcodex.com/schemas/recipe/v1/recipe.schema.json",
-  "title": "BrushCodex Recipe v1 (draft)",
+  "$id": "https://openpaintformat.org/schemas/recipe/v1/recipe.schema.json",
+  "title": "Open Paint Format Recipe v1 (draft)",
   "description": "A Painting Workflow: an ordered, reproducible record of paints, mixtures, materials, techniques, and actions used or intended to be used to paint a subject. It may be a reusable scheme, a plan, an as-painted record, a derived workflow, or published guidance. 'recipe' is the stable technical spec name. Embeds the Common document envelope and remains valid with literal paint references and no central catalogue entry or color value. DRAFT: not frozen; see specs/recipe/v1/README.md.",
   "type": "object",
   "allOf": [
-    { "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
+    { "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore" },
     {
       "type": "object",
       "required": ["steps"],
@@ -19,7 +19,7 @@
         "estimatedActiveMinutes": { "type": "integer", "minimum": 0 },
         "dryingNotes": { "type": "string" },
         "target": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/target"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/target"
         },
         "paints": {
           "type": "array",
@@ -29,14 +29,14 @@
         "resources": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/resource"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/resource"
           },
           "description": "Tools and non-paint materials needed to reproduce the workflow (brushes, airbrush, wet palette, sponge, UV lamp, gloves, PVA, static grass, pigments, IPA, sandpaper, resin, and mediums/varnish where not represented as paints). Tools are never paintRefs, unconditionally; a consumable material is a resource when used in the process and a paintRef when it joins a mixture at an authored ratio."
         },
         "techniqueRefs": {
           "type": "array",
           "items": {
-            "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/documentRef"
+            "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/documentRef"
           },
           "description": "Soft references to Technique documents this workflow uses, by stable id URI. Consumers resolve them if held; an unresolved reference is not an error."
         },
@@ -56,10 +56,10 @@
   "unevaluatedProperties": false,
   "$defs": {
     "colorValue": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/colorValue"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/colorValue"
     },
     "paintRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/paintRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/paintRef"
     },
     "mixEntry": {
       "type": "object",
@@ -79,7 +79,7 @@
       }
     },
     "mediaRef": {
-      "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaRef"
+      "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/mediaRef"
     },
     "alternative": {
       "type": "object",
@@ -88,7 +88,7 @@
       "description": "A substitution, classified by how it was established. Kept distinct so a mathematical match never masquerades as a verified practical substitute.",
       "properties": {
         "type": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/evidenceClass"
         },
         "paint": {
           "type": "string",
@@ -113,7 +113,7 @@
         "title": { "type": "string", "minLength": 1 },
         "instruction": { "type": "string", "minLength": 1 },
         "role": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/role"
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/role"
         },
         "technique": {
           "type": "string",
@@ -148,7 +148,7 @@
         "warnings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
         "media": { "type": "array", "items": { "$ref": "#/$defs/mediaRef" } },
         "source": {
-          "$ref": "https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/mediaCitation",
+          "$ref": "https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/mediaCitation",
           "description": "The passage of a linked source item this step was taken from (for example 1:00-1:35 of a video, class recording, or demonstration in recipe.media). Deliberately singular: a step derives from one passage. Additional material a step merely shows belongs in step.media."
         },
         "alternatives": { "type": "array", "items": { "$ref": "#/$defs/alternative" } }

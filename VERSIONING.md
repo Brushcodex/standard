@@ -1,6 +1,6 @@
 # Specification Versioning & Compatibility Policy
 
-How BrushCodex open-standard specifications are versioned, frozen, and evolved. This governs
+How Open Paint Format specifications are versioned, frozen, and evolved. This governs
 `specs/**`, `schemas/**`, and `examples/**`. It does **not** govern any implementing
 application's release version.
 
@@ -80,7 +80,7 @@ a known baseline.
   Inventory, Project, and Technique are now all Draft v1, so Common is free to freeze together with
   them. Performing the coordinated freeze is the maintainer's explicit act (GOVERNANCE; §8.2).
 - **Media types & file suffixes — STILL PROVISIONAL** (the one genuinely open item).
-  `application/vnd.brushcodex.*+json` and `.brush*.json` await ergonomics testing before they are
+  `application/vnd.openpaintformat.*+json` and `.paint*.json` await ergonomics testing before they are
   fixed. A v1 freeze does **not** lock them: §8.1 freezes the schema, its closed vocabularies,
   required members, and the validator-enforced semantics — not a provisional media type or suffix.
   They can be finalized before or after the freeze without a new major version, so they do not

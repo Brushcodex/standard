@@ -1,5 +1,5 @@
 /**
- * Conformance + security tests for BrushCodex Bundle v1 (DRAFT).
+ * Conformance + security tests for Open Paint Format Bundle v1 (DRAFT).
  *
  * Covers the manifest schema against its corpus, the safe-archive guards
  * (path traversal, unsupported content, oversized/over-count archives), a real
@@ -78,7 +78,7 @@ function validManifest(entries: unknown[]): Record<string, unknown> {
 describe('Bundle manifest — published JSON Schema', () => {
   it('is a well-formed draft 2020-12 schema that composes the Common envelope', () => {
     const schema = loadBundleSchema();
-    expect(schema.$id).toBe('https://brushcodex.com/schemas/bundle/v1/bundle.schema.json');
+    expect(schema.$id).toBe('https://openpaintformat.org/schemas/bundle/v1/bundle.schema.json');
     expect(schema.unevaluatedProperties).toBe(false);
   });
 
@@ -172,8 +172,8 @@ describe('Bundle — write then read round trip', () => {
       id: 'urn:brushcodex:bundle:test',
       title: 'Rusted armour bundle',
       documents: [
-        { path: 'documents/recipe.brushrecipe.json', spec: 'recipe', document: MINIMAL_RECIPE },
-        { path: 'documents/palette.brushpalette.json', spec: 'palette', document: MINIMAL_PALETTE },
+        { path: 'documents/recipe.paintrecipe.json', spec: 'recipe', document: MINIMAL_RECIPE },
+        { path: 'documents/palette.paintpalette.json', spec: 'palette', document: MINIMAL_PALETTE },
       ],
     });
     expect(zip).toBeInstanceOf(Uint8Array);

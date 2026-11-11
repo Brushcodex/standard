@@ -1,5 +1,5 @@
 {
-  "$schema": "https://brushcodex.com/schemas/common/v1/common.schema.json",
+  "$schema": "https://openpaintformat.org/schemas/common/v1/common.schema.json",
   "spec": "common",
   "specVersion": "1.0.0",
   "id": "https://example.org/brushcodex/documents/atlas-blue-envelope",
@@ -22,7 +22,7 @@
     "spdxId": "CC-BY-4.0",
     "name": "Creative Commons Attribution 4.0 International",
     "url": "https://creativecommons.org/licenses/by/4.0/",
-    "notice": "Author-declared license; not verified by BrushCodex."
+    "notice": "Author-declared license; not verified by the publisher."
   },
   "links": {
     "source": "https://example.org/source/original-notes",

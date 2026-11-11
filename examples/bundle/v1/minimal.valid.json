@@ -6,7 +6,7 @@
   "title": "A single-recipe bundle",
   "entries": [
     {
-      "path": "documents/recipe.brushrecipe.json",
+      "path": "documents/recipe.paintrecipe.json",
       "spec": "recipe",
       "mediaType": "application/json"
     }

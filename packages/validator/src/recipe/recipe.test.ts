@@ -1,5 +1,5 @@
 /**
- * Conformance tests for the BrushCodex Recipe v1 (DRAFT).
+ * Conformance tests for the Open Paint Format Recipe v1 (DRAFT).
  *
  * Exercises the published artifacts on disk — the recipe JSON Schema (which
  * composes the Common envelope) and the example corpus — so prose, schema,
@@ -53,11 +53,11 @@ describe('Recipe — published JSON Schema', () => {
   it('is a well-formed draft 2020-12 schema that composes the Common envelope', () => {
     const schema = loadRecipeSchema();
     expect(schema.$schema).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(schema.$id).toBe('https://brushcodex.com/schemas/recipe/v1/recipe.schema.json');
+    expect(schema.$id).toBe('https://openpaintformat.org/schemas/recipe/v1/recipe.schema.json');
     expect(schema.unevaluatedProperties).toBe(false);
     const allOf = schema.allOf as Array<{ $ref?: string }>;
     expect(allOf[0]?.$ref).toBe(
-      'https://brushcodex.com/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
+      'https://openpaintformat.org/schemas/common/v1/common.schema.json#/$defs/envelopeCore',
     );
   });
 });

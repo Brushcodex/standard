@@ -1,5 +1,5 @@
 /**
- * Writer for BrushCodex bundles. Builds a manifest from the given documents and
+ * Writer for Open Paint Format bundles. Builds a manifest from the given documents and
  * media, refuses unsafe paths / unpermitted media, validates the manifest before
  * writing, and returns the ZIP bytes.
  */
