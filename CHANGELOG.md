@@ -6,6 +6,14 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### The repository moved to github.com/openpaintformat — 2026-11-12
+
+The repository now lives at <https://github.com/openpaintformat/standard>. Issues, pull
+requests and history moved with it, and GitHub redirects the old `Brushcodex/standard` URLs,
+so existing links keep working; links earlier in this changelog are left as written. Every
+package's `repository` and `bugs` now point to the new address, and `homepage` is
+<https://openpaintformat.org>. The `@brushcodex/*` package names do not change.
+
 ### The format is now Open Paint Format — 2026-11-11
 
 The specification takes a neutral name before the v1 freeze, so an application can adopt it

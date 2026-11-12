@@ -100,18 +100,18 @@ export function findManifestViolations(name, manifest, required = REQUIRED_RUNTI
 
   if (manifest.private !== true) violations.push(`${name}: must retain "private": true`);
   if (manifest.license !== 'Apache-2.0') violations.push(`${name}: license must be Apache-2.0`);
-  if (manifest.repository?.type !== 'git' || manifest.repository?.url !== 'https://github.com/Brushcodex/standard.git') {
-    violations.push(`${name}: repository must identify https://github.com/Brushcodex/standard.git as git`);
+  if (manifest.repository?.type !== 'git' || manifest.repository?.url !== 'https://github.com/openpaintformat/standard.git') {
+    violations.push(`${name}: repository must identify https://github.com/openpaintformat/standard.git as git`);
   }
   if (manifest.repository?.directory !== packageDirectory) {
     violations.push(`${name}: repository.directory must be ${packageDirectory}`);
   }
-  if (manifest.homepage !== 'https://brushcodex.com/standard') {
-    violations.push(`${name}: homepage must be https://brushcodex.com/standard`);
+  if (manifest.homepage !== 'https://openpaintformat.org') {
+    violations.push(`${name}: homepage must be https://openpaintformat.org`);
   }
   const bugsUrl = typeof manifest.bugs === 'string' ? manifest.bugs : manifest.bugs?.url;
-  if (bugsUrl !== 'https://github.com/Brushcodex/standard/issues') {
-    violations.push(`${name}: bugs must point to https://github.com/Brushcodex/standard/issues`);
+  if (bugsUrl !== 'https://github.com/openpaintformat/standard/issues') {
+    violations.push(`${name}: bugs must point to https://github.com/openpaintformat/standard/issues`);
   }
   if (manifest.engines?.node !== '>=20.11.0') {
     violations.push(`${name}: engines.node must be >=20.11.0`);
