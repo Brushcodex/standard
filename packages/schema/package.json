@@ -7,11 +7,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Brushcodex/standard.git",
+    "url": "https://github.com/openpaintformat/standard.git",
     "directory": "packages/schema"
   },
-  "homepage": "https://brushcodex.com/standard",
-  "bugs": "https://github.com/Brushcodex/standard/issues",
+  "homepage": "https://openpaintformat.org",
+  "bugs": "https://github.com/openpaintformat/standard/issues",
   "engines": {
     "node": ">=20.11.0"
   },
