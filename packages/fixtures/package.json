@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@brushcodex/validator": "workspace:*",
-    "@types/node": "20.14.13",
+    "@types/node": "26.6.6",
     "typescript": "5.5.4",
     "vitest": "4.1.12"
   }
