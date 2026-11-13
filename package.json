@@ -10,7 +10,8 @@
   },
   "pnpm": {
     "overrides": {
-      "fast-uri": "3.1.9"
+      "fast-uri": "3.1.9",
+      "vite": "6.4.5"
     }
   },
   "scripts": {

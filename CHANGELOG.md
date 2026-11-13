@@ -6,6 +6,17 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Development dependencies — 2026-11-12
+
+Dependabot reported advisories, several critical, against the test toolchain: `vitest` 2.0.5 and
+its `tinypool`, `vite`, `esbuild`, `postcss`, `nanoid` and `source-map-js`. None ships in a
+published package, so `pnpm audit --prod` was already clean, but a contributor runs this code.
+`vitest` moves to 4.1.12, which supports Node 20 and no longer uses `tinypool`; `esbuild` moves
+to 0.25.12; `vite` is pinned to 6.4.5 by override, because the vite 7 line needs Node 20.19 and
+CI runs 20.11.0; the transitive packages were refreshed within their ranges. vitest 5 was not
+taken because it requires Node 22. `pnpm audit` (all scopes) now reports no known
+vulnerabilities. No test source changed.
+
 ### The repository moved to github.com/openpaintformat — 2026-11-12
 
 The repository now lives at <https://github.com/openpaintformat/standard>. Issues, pull
