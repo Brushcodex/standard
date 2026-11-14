@@ -1,6 +1,6 @@
 {
   "name": "@brushcodex/fixtures",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "private": true,
   "type": "module",
   "description": "The canonical Open Paint Format example & conformance fixture corpus, as a self-contained package: a stable manifest plus a Node loader. Ships the corpus so consumers never read the source repo.",

@@ -6,6 +6,36 @@ specs also carry their own `specVersion`.
 
 ## [Unreleased]
 
+### Release candidate `1.0.0-rc.3` — 2026-11-14
+
+All five `@brushcodex/*` packages bump `1.0.0-rc.2 → 1.0.0-rc.3` in lockstep, through the packed
+release gate (`pnpm verify:packed`, `pnpm test:gate`). Packages remain `private` and
+**unpublished**. This is the candidate for the v1 review window; the freeze is planned for
+2026-12-01 and remains the maintainer's explicit act (VERSIONING.md §8.2).
+
+**What an rc.2 consumer must change** (each entry below has the detail):
+
+- **The name and identifiers.** Schema `$id`s move to
+  `https://openpaintformat.org/schemas/<spec>/v1/<spec>.schema.json`, media types to
+  `application/vnd.openpaintformat.<spec>+json`, file suffixes to `.paint<spec>.json` and
+  `.paintbundle.zip`. Validator error messages and renderer footers name Open Paint Format. A
+  consumer that compares `$id` strings, registers media types or matches suffixes updates them;
+  document content does not change.
+- **Anchor uniqueness.** `ref`-style document-local anchors must be unique within their array; a
+  document that repeated one now fails a semantic rule.
+- **Shared export profiles** remove `extensions` and `integrity`, and keep `revision` as authored.
+
+**What an rc.2 consumer gains without changing anything:** Inventory `owned`/`wanted` (absent
+means owned and not wanted, so existing documents keep their meaning), the paint-identity
+lifecycle prose (Common §5.7.1), and the substitution evidence classes defined once in Common.
+
+**No specification version moves.** `specVersion` stays `1.0.0`; everything under `specs/**` is
+still DRAFT until the freeze. The package version and the spec version are different axes
+(VERSIONING.md §1).
+
+The packed-gate description in docs/RELEASING.md still quoted the rc.2 corpus size (99); it now
+reads 112, the size the gate asserts.
+
 ### Development dependencies — 2026-11-12
 
 Dependabot reported advisories, several critical, against the test toolchain: `vitest` 2.0.5 and
